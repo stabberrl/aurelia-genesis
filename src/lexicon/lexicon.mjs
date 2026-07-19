@@ -78,6 +78,31 @@ export class Lexicon {
         created_at TEXT NOT NULL,
         PRIMARY KEY (soul_id, source_word, target_word, relation)
       );
+      CREATE TABLE IF NOT EXISTS episodic_memories (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        soul_id TEXT NOT NULL,
+        kind TEXT NOT NULL,
+        cue TEXT NOT NULL DEFAULT '',
+        subject TEXT NOT NULL DEFAULT '',
+        predicate TEXT NOT NULL DEFAULT '',
+        value REAL,
+        source_event_id TEXT,
+        occurred_at INTEGER NOT NULL,
+        UNIQUE (soul_id, kind, source_event_id)
+      );
+      CREATE INDEX IF NOT EXISTS episodic_memories_soul_time_idx
+        ON episodic_memories(soul_id, occurred_at DESC);
+      CREATE TABLE IF NOT EXISTS learned_associations (
+        soul_id TEXT NOT NULL,
+        cue TEXT NOT NULL,
+        subject TEXT NOT NULL,
+        predicate TEXT NOT NULL,
+        weight REAL NOT NULL,
+        evidence_count INTEGER NOT NULL,
+        value_sum REAL NOT NULL,
+        last_reinforced_at INTEGER NOT NULL,
+        PRIMARY KEY (soul_id, cue, subject, predicate)
+      );
       CREATE TABLE IF NOT EXISTS metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL);
     `);
     this.findStatement = this.db.prepare(`
@@ -120,6 +145,10 @@ export class Lexicon {
   observe(event) {
     if (event.type !== "perception" || event.value?.type !== "number") return false;
     this.observeStatement.run(event.id, event.soulId, event.subject, event.predicate, event.value.data, event.timestamp);
+    this.db.prepare(`INSERT OR IGNORE INTO episodic_memories
+      (soul_id, kind, subject, predicate, value, source_event_id, occurred_at)
+      VALUES (?, 'perception', ?, ?, ?, ?, ?)`)
+      .run(event.soulId, event.subject, event.predicate, event.value.data, event.id, event.timestamp);
     return true;
   }
 
@@ -139,7 +168,11 @@ export class Lexicon {
         this.exposeStatement.run(soulId, word, encounteredAt);
         for (const perception of recent) {
           this.groundStatement.run(soulId, word, perception.subject, perception.predicate, perception.value, perception.value, perception.value, encounteredAt);
+          this.reinforceAssociation(soulId, word, perception, timestamp);
         }
+        this.db.prepare(`INSERT INTO episodic_memories
+          (soul_id, kind, cue, occurred_at) VALUES (?, 'lexical', ?, ?)`)
+          .run(soulId, word, timestamp);
         results.push({ word, entries, groundedIn: recent });
       }
       this.db.exec("COMMIT");
@@ -148,6 +181,71 @@ export class Lexicon {
       throw error;
     }
     return results;
+  }
+
+  associationWeight(row, asOf = Date.now() * 1000, halfLifeDays = 14) {
+    const elapsedDays = Math.max(0, asOf - row.lastReinforcedAt) / 86_400_000_000;
+    return Math.max(0, Math.min(1, row.weight * (0.5 ** (elapsedDays / halfLifeDays))));
+  }
+
+  reinforceAssociation(soulId, cue, perception, timestamp, learningRate = 0.28) {
+    const current = this.db.prepare(`SELECT weight, evidence_count AS evidenceCount,
+      value_sum AS valueSum, last_reinforced_at AS lastReinforcedAt
+      FROM learned_associations WHERE soul_id = ? AND cue = ? AND subject = ? AND predicate = ?`)
+      .get(soulId, cue, perception.subject, perception.predicate);
+    const decayed = current ? this.associationWeight(current, timestamp) : 0;
+    const salience = 0.25 + 0.75 * Math.min(1, Math.abs(perception.value));
+    const weight = decayed + learningRate * salience * (1 - decayed);
+    this.db.prepare(`INSERT INTO learned_associations
+      (soul_id, cue, subject, predicate, weight, evidence_count, value_sum, last_reinforced_at)
+      VALUES (?, ?, ?, ?, ?, 1, ?, ?)
+      ON CONFLICT (soul_id, cue, subject, predicate) DO UPDATE SET
+        weight = excluded.weight,
+        evidence_count = evidence_count + 1,
+        value_sum = value_sum + excluded.value_sum,
+        last_reinforced_at = excluded.last_reinforced_at`)
+      .run(soulId, cue, perception.subject, perception.predicate, weight, perception.value, timestamp);
+    return weight;
+  }
+
+  learnedAssociations(soulId, { cue, limit = 50, asOf = Date.now() * 1000 } = {}) {
+    const rows = cue
+      ? this.db.prepare(`SELECT cue, subject, predicate, weight, evidence_count AS evidenceCount,
+          value_sum AS valueSum, last_reinforced_at AS lastReinforcedAt
+          FROM learned_associations WHERE soul_id = ? AND cue = ?`).all(soulId, normalizeWord(cue))
+      : this.db.prepare(`SELECT cue, subject, predicate, weight, evidence_count AS evidenceCount,
+          value_sum AS valueSum, last_reinforced_at AS lastReinforcedAt
+          FROM learned_associations WHERE soul_id = ?`).all(soulId);
+    return rows.map((row) => ({
+      cue: row.cue,
+      subject: row.subject,
+      predicate: row.predicate,
+      weight: this.associationWeight(row, asOf),
+      evidenceCount: Number(row.evidenceCount),
+      meanValue: row.valueSum / row.evidenceCount,
+      lastReinforcedAt: Number(row.lastReinforcedAt),
+    })).sort((a, b) => b.weight - a.weight || b.evidenceCount - a.evidenceCount).slice(0, Math.max(1, Math.min(Number(limit) || 50, 200)));
+  }
+
+  episodes(soulId, limit = 50) {
+    return this.db.prepare(`SELECT id, kind, cue, subject, predicate, value,
+      source_event_id AS sourceEventId, occurred_at AS occurredAt
+      FROM episodic_memories WHERE soul_id = ? ORDER BY occurred_at DESC, id DESC LIMIT ?`)
+      .all(soulId, Math.max(1, Math.min(Number(limit) || 50, 200)));
+  }
+
+  recognize(soulId, cue, perception, { asOf = Date.now() * 1000, threshold = 0.45 } = {}) {
+    const association = this.learnedAssociations(soulId, { cue, asOf, limit: 200 })
+      .find((item) => item.subject === perception.subject && item.predicate === perception.predicate);
+    if (!association) return { recognized: false, confidence: 0, evidenceCount: 0, association: null };
+    const similarity = Math.max(0, 1 - Math.abs(association.meanValue - Number(perception.value)));
+    const confidence = association.weight * similarity;
+    return {
+      recognized: association.evidenceCount >= 2 && confidence >= threshold,
+      confidence,
+      evidenceCount: association.evidenceCount,
+      association,
+    };
   }
 
   status() {
@@ -174,6 +272,8 @@ export class Lexicon {
     const grounding = this.db.prepare("SELECT COUNT(*) AS count, COALESCE(SUM(samples), 0) AS samples FROM groundings WHERE soul_id = ?").get(soulId);
     const curriculum = this.db.prepare("SELECT COUNT(*) AS concepts FROM curriculum_concepts WHERE soul_id = ?").get(soulId);
     const semantics = this.db.prepare("SELECT COUNT(*) AS associations FROM semantic_associations WHERE soul_id = ?").get(soulId);
+    const episodes = this.db.prepare("SELECT COUNT(*) AS count FROM episodic_memories WHERE soul_id = ?").get(soulId);
+    const plastic = this.db.prepare("SELECT COUNT(*) AS count FROM learned_associations WHERE soul_id = ?").get(soulId);
     const recent = this.db.prepare(`
       SELECT kind, label, occurred_at AS occurredAt FROM (
         SELECT 'word' AS kind, normalized AS label, CAST(strftime('%s', first_seen_at) AS INTEGER) * 1000000 AS occurred_at
@@ -194,6 +294,9 @@ export class Lexicon {
       groundingSamples: Number(grounding.samples),
       injectedConcepts: Number(curriculum.concepts),
       semanticAssociations: Number(semantics.associations),
+      episodicMemories: Number(episodes.count),
+      plasticAssociations: Number(plastic.count),
+      strongestAssociations: this.learnedAssociations(soulId, { limit: 12 }),
       concepts: this.concepts(soulId, 36),
       recent,
     };

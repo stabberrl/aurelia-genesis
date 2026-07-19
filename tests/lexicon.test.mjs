@@ -58,6 +58,9 @@ test("una palabra se fundamenta en percepciones temporalmente cercanas", async (
       groundingSamples: 1,
       injectedConcepts: 0,
       semanticAssociations: 0,
+      episodicMemories: 2,
+      plasticAssociations: 1,
+      strongestAssociations: lexicon.development("soul-001-alba-0001").strongestAssociations,
       concepts: lexicon.concepts("soul-001-alba-0001", 36),
       recent: [
         { kind: "word", label: "luz", occurredAt: lexicon.development("soul-001-alba-0001").recent[0].occurredAt },
@@ -85,6 +88,78 @@ test("el currículo inyectado permanece separado de la experiencia", async () =>
     assert.equal(development.semanticAssociations, 1);
     assert.equal(development.vocabulary, 0);
     assert.equal(development.associations, 0);
+    assert.equal(development.episodicMemories, 0);
+    assert.equal(development.plasticAssociations, 0);
+  } finally {
+    lexicon.close();
+    await fs.rm(directory, { recursive: true, force: true });
+  }
+});
+
+test("Naia forma recuerdos episódicos sin mezclarlos con el currículo", async () => {
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "fluctlight-episodes-"));
+  const lexicon = new Lexicon(path.join(directory, "test.sqlite"));
+  try {
+    lexicon.db.prepare(`INSERT INTO entries
+      (word, normalized, pos, senses_json, forms_json, source_url)
+      VALUES (?, ?, ?, ?, ?, ?)`)
+      .run("luz", "luz", "noun", "[]", "[]", "test");
+    lexicon.observe({ id: "episode-light", soulId: "soul-001-alba-0001", type: "perception", subject: "garden", predicate: "light", value: { type: "number", data: 0.7 }, timestamp: 1_000_000 });
+    lexicon.encounter("soul-001-alba-0001", "luz", { timestamp: 2_000_000 });
+    const episodes = lexicon.episodes("soul-001-alba-0001");
+    assert.equal(episodes.length, 2);
+    assert.equal(episodes[0].kind, "lexical");
+    assert.equal(episodes[0].cue, "luz");
+    assert.equal(episodes[1].kind, "perception");
+    assert.equal(episodes[1].sourceEventId, "episode-light");
+  } finally {
+    lexicon.close();
+    await fs.rm(directory, { recursive: true, force: true });
+  }
+});
+
+test("la asociación se refuerza con experiencia repetida y reconoce un caso nuevo", async () => {
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "fluctlight-plasticity-"));
+  const lexicon = new Lexicon(path.join(directory, "test.sqlite"));
+  try {
+    lexicon.db.prepare(`INSERT INTO entries
+      (word, normalized, pos, senses_json, forms_json, source_url)
+      VALUES (?, ?, ?, ?, ?, ?)`)
+      .run("luz", "luz", "noun", "[]", "[]", "test");
+    const soulId = "soul-001-alba-0001";
+    lexicon.observe({ id: "light-1", soulId, type: "perception", subject: "garden", predicate: "light", value: { type: "number", data: 0.7 }, timestamp: 1_000_000 });
+    lexicon.encounter(soulId, "luz", { timestamp: 2_000_000 });
+    const first = lexicon.learnedAssociations(soulId, { cue: "luz", asOf: 2_000_000 })[0];
+    assert.equal(lexicon.recognize(soulId, "luz", { subject: "garden", predicate: "light", value: 0.8 }, { asOf: 2_000_000 }).recognized, false);
+
+    lexicon.observe({ id: "light-2", soulId, type: "perception", subject: "garden", predicate: "light", value: { type: "number", data: 0.9 }, timestamp: 3_000_000 });
+    lexicon.encounter(soulId, "luz", { timestamp: 4_000_000 });
+    const second = lexicon.learnedAssociations(soulId, { cue: "luz", asOf: 4_000_000 })[0];
+    const recognition = lexicon.recognize(soulId, "luz", { subject: "garden", predicate: "light", value: 0.8 }, { asOf: 4_000_000 });
+    assert.ok(second.weight > first.weight);
+    assert.equal(second.evidenceCount, 3);
+    assert.equal(recognition.recognized, true);
+    assert.ok(recognition.confidence >= 0.45);
+  } finally {
+    lexicon.close();
+    await fs.rm(directory, { recursive: true, force: true });
+  }
+});
+
+test("una asociación no reforzada pierde fuerza con el tiempo", async () => {
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "fluctlight-decay-"));
+  const lexicon = new Lexicon(path.join(directory, "test.sqlite"));
+  try {
+    lexicon.db.prepare(`INSERT INTO entries
+      (word, normalized, pos, senses_json, forms_json, source_url)
+      VALUES (?, ?, ?, ?, ?, ?)`)
+      .run("luz", "luz", "noun", "[]", "[]", "test");
+    const soulId = "soul-001-alba-0001";
+    lexicon.observe({ id: "light-decay", soulId, type: "perception", subject: "garden", predicate: "light", value: { type: "number", data: 1 }, timestamp: 1_000_000 });
+    lexicon.encounter(soulId, "luz", { timestamp: 2_000_000 });
+    const fresh = lexicon.learnedAssociations(soulId, { cue: "luz", asOf: 2_000_000 })[0].weight;
+    const afterHalfLife = lexicon.learnedAssociations(soulId, { cue: "luz", asOf: 2_000_000 + 14 * 86_400_000_000 })[0].weight;
+    assert.ok(Math.abs(afterHalfLife - fresh / 2) < 0.000001);
   } finally {
     lexicon.close();
     await fs.rm(directory, { recursive: true, force: true });

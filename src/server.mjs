@@ -108,6 +108,19 @@ const server = http.createServer(async (request, response) => {
       if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
       return json(response, 200, lexicon.development(soulId));
     }
+    if (request.method === "GET" && url.pathname === "/api/memory/episodes") {
+      const soulId = url.searchParams.get("soulId") || "";
+      if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
+      return json(response, 200, { soulId, episodes: lexicon.episodes(soulId) });
+    }
+    if (request.method === "POST" && url.pathname === "/api/learning/recognize") {
+      const { soulId, cue, subject, predicate, value } = await readJsonBody(request);
+      if (!validateSoulId(soulId) || typeof cue !== "string" || !cue.trim()
+        || typeof subject !== "string" || typeof predicate !== "string" || !Number.isFinite(value)) {
+        return json(response, 400, { error: "La prueba de reconocimiento no es válida." });
+      }
+      return json(response, 200, { soulId, cue, ...lexicon.recognize(soulId, cue, { subject, predicate, value }) });
+    }
     if (request.method === "POST" && url.pathname === "/api/lexicon/encounter") {
       const { soulId, text } = await readJsonBody(request);
       if (!validateSoulId(soulId) || typeof text !== "string" || !text.trim()) {

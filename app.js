@@ -166,7 +166,14 @@ function polar(index, total, radius, phase = -Math.PI / 2) {
 
 function renderBrainMap(data) {
   const svg = $("#brain-map");
-  const concepts = data.concepts || [];
+  const concepts = data.strongestAssociations?.length
+    ? data.strongestAssociations.map((association) => ({
+      word: association.cue,
+      predicate: association.predicate,
+      samples: association.evidenceCount,
+      weight: association.weight,
+    }))
+    : (data.concepts || []).map((concept) => ({ ...concept, weight: Math.min(1, concept.samples / 6) }));
   const words = [...new Set(concepts.map(({ word }) => word))].slice(0, 24);
   const senses = [...new Set(concepts.map(({ predicate }) => predicate))];
   const wordPositions = new Map(words.map((word, index) => [word, polar(index, words.length, words.length < 5 ? 125 : 160)]));
@@ -174,8 +181,8 @@ function renderBrainMap(data) {
   const edges = concepts.filter(({ word }) => wordPositions.has(word)).map((concept) => {
     const from = wordPositions.get(concept.word);
     const to = sensePositions.get(concept.predicate);
-    const width = Math.min(5, 0.7 + Math.log2(concept.samples + 1));
-    return `<line class="brain-edge" x1="${from.x}" y1="${from.y}" x2="${to.x}" y2="${to.y}" stroke-width="${width}" />`;
+    const width = 0.7 + concept.weight * 4.3;
+    return `<line class="brain-edge" x1="${from.x}" y1="${from.y}" x2="${to.x}" y2="${to.y}" stroke-width="${width}" opacity="${0.2 + concept.weight * 0.8}" />`;
   }).join("");
   const coreEdges = words.map((word) => {
     const point = wordPositions.get(word);
@@ -202,7 +209,8 @@ async function loadDevelopment() {
   const data = await response.json();
   organismDevelopment = data;
   const activity = Math.min(99, data.perceptions * 0.7 + data.lexicalEncounters * 0.18);
-  const plasticity = Math.min(1, (data.associations + data.semanticAssociations * 0.03) / 100);
+  const learnedStrength = (data.strongestAssociations || []).reduce((sum, association) => sum + association.weight, 0);
+  const plasticity = Math.min(1, learnedStrength / 8);
   $("#organ-activity").textContent = `${activity.toFixed(2)} Hz`;
   $("#organ-plasticity").textContent = plasticity.toFixed(2);
   $("#organ-activity-bar").style.setProperty("--vital", `${Math.min(100, activity * 2)}%`);
@@ -211,9 +219,10 @@ async function loadDevelopment() {
   $("#brain-injected").textContent = data.injectedConcepts.toLocaleString(window.AureliaI18n.locale);
   $("#brain-vocabulary").textContent = data.vocabulary.toLocaleString(window.AureliaI18n.locale);
   $("#brain-perceptions").textContent = data.perceptions.toLocaleString(window.AureliaI18n.locale);
-  $("#brain-associations").textContent = (data.semanticAssociations + data.associations).toLocaleString(window.AureliaI18n.locale);
+  $("#brain-memories").textContent = data.episodicMemories.toLocaleString(window.AureliaI18n.locale);
+  $("#brain-associations").textContent = data.plasticAssociations.toLocaleString(window.AureliaI18n.locale);
   $("#brain-diversity").textContent = `${data.sensoryChannels}/4`;
-  $("#brain-count").textContent = `${data.injectedConcepts} ${tr("conceptBase")} / ${data.vocabulary} ${tr("lived")}`;
+  $("#brain-count").textContent = `${data.episodicMemories} MEMORIAS / ${data.plasticAssociations} ENLACES`;
   $("#brain-live").textContent = `${tr("updated")} ${formatTime()}`;
   $("#development-trace").innerHTML = data.recent.slice(0, 10).map((item) => `<li>${item.kind === "word" ? "PALABRA" : "PERCEPCIÓN"}<b>${escapeHTML(item.label)}</b></li>`).join("");
   renderBrainMap(data);

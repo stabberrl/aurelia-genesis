@@ -100,6 +100,12 @@ adquirido.
 El servidor está limitado al equipo local. Los riesgos conocidos de dependencias
 y sus mitigaciones están documentados en `docs/security.md`.
 
+### Aprendizaje experiencial
+
+Las percepciones aceptadas crean recuerdos episódicos. Cuando una palabra aparece cerca de una percepción, Naia forma una conexión plástica cuya fuerza aumenta con la repetición y disminuye si no vuelve a utilizarse. El mapa cognitivo muestra esas conexiones en tiempo real mediante su grosor y brillo.
+
+El modelo, sus límites y el primer experimento reproducible con el concepto `luz` están descritos en [`docs/EXPERIENTIAL-LEARNING.md`](docs/EXPERIENTIAL-LEARNING.md).
+
 ### Primera población
 
 | Alma | Identificador | Tensión inicial |
