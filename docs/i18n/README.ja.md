@@ -2,6 +2,12 @@
 
 [Español](../../README.md) · [English](README.en.md) · **日本語** · [Русский](README.ru.md) · [Italiano](README.it.md) · [Français](README.fr.md)
 
+**[ライブ・ビジュアルデモを開く →](https://stabberrl.github.io/aurelia-genesis/)**
+
+[![Aurelia Genesis 科学インターフェース](../../assets/aurelia-genesis-dashboard.png)](https://stabberrl.github.io/aurelia-genesis/)
+
+公開版ではインターフェースと有機的な可視化を体験できます。AERA、ローカル辞書、永続的な認知メモリにはローカル実行が必要です。
+
 AERAを利用し、経験に基づいて成長する持続的な合成認知エージェントを研究するための実験環境です。
 
 > Aurelia Genesisは認知アーキテクチャと累積学習を研究します。意識、生物学的な魂、デジタル人格を作成したとは主張しません。

@@ -2,6 +2,12 @@
 
 [Español](README.md) · [English](docs/i18n/README.en.md) · [日本語](docs/i18n/README.ja.md) · [Русский](docs/i18n/README.ru.md) · [Italiano](docs/i18n/README.it.md) · [Français](docs/i18n/README.fr.md)
 
+**[Abrir la demostración visual en vivo →](https://stabberrl.github.io/aurelia-genesis/)**
+
+[![Interfaz científica de Aurelia Genesis](assets/aurelia-genesis-dashboard.png)](https://stabberrl.github.io/aurelia-genesis/)
+
+La versión pública demuestra la interfaz y la visualización orgánica. AERA, el diccionario local y la memoria cognitiva persistente requieren ejecutar el proyecto localmente.
+
 Entorno experimental para desarrollar agentes cognitivos sintéticos persistentes y fundamentados en experiencia mediante AERA.
 
 > Aurelia Genesis investiga arquitecturas cognitivas y aprendizaje acumulativo. No afirma crear consciencia, almas biológicas ni personas digitales.
