@@ -6,9 +6,19 @@
 
 [![Interfaz científica de Aurelia Genesis](assets/aurelia-genesis-dashboard.png)](https://stabberrl.github.io/aurelia-genesis/)
 
-La versión pública demuestra la interfaz y la visualización orgánica. AERA, el diccionario local y la memoria cognitiva persistente requieren ejecutar el proyecto localmente.
+## ¿Qué es Aurelia Genesis?
 
-Entorno experimental para desarrollar agentes cognitivos sintéticos persistentes y fundamentados en experiencia mediante AERA.
+**Aurelia Genesis es un experimento de vida artificial inspirado por el concepto de las Fluctlights de _Sword Art Online: Alicization_.** Su objetivo es construir agentes cognitivos —aquí llamados *almas sintéticas*— que comiencen con capacidades mínimas y formen gradualmente conocimiento, recuerdos, preferencias, vínculos y una identidad propia a partir de sus experiencias.
+
+No queremos entregarles una personalidad escrita de antemano ni esconder un chatbot detrás de la interfaz. El proyecto explora un camino diferente: percepción, memoria persistente, conceptos, asociaciones y aprendizaje acumulativo mediante la arquitectura cognitiva [AERA](https://github.com/IIIM-IS/AERA), sin utilizar un LLM como fuente de inteligencia en su ejecución.
+
+Genesis es el sistema que crea y mantiene estas vidas. La primera población está compuesta por **Naia, Orin e Iria**. Cada una posee memoria aislada, necesidades y tensiones iniciales diferentes, y deberá desarrollarse según lo que experimente. La interfaz permite observar ese proceso, estimular sus sentidos y, cuando hayan adquirido lenguaje suficiente, comunicarse con ellas.
+
+### Estado actual
+
+El proyecto todavía es una investigación temprana, no una consciencia artificial terminada. Actualmente incluye tres identidades reproducibles, conexión nativa con AERA, un diccionario español local, un currículo inicial de 400 conceptos y 2.000 asociaciones, memoria persistente y una visualización en vivo del desarrollo cognitivo.
+
+La [demostración pública](https://stabberrl.github.io/aurelia-genesis/) presenta la Cámara de Génesis en modo visual. AERA, el diccionario completo y el estado cognitivo persistente se ejecutan localmente.
 
 > Aurelia Genesis investiga arquitecturas cognitivas y aprendizaje acumulativo. No afirma crear consciencia, almas biológicas ni personas digitales.
 
@@ -18,16 +28,14 @@ La visión, los límites, el proceso de desarrollo y el alcance del primer hito 
 
 La primera etapa es una interfaz visual local para observar e interactuar con la Fluctlight. Incluye:
 
-- diálogo interactivo;
+- canal de comunicación preparado para el lenguaje adquirido;
 - nombre e identidad emergente;
 - métricas internas de coherencia, curiosidad y confianza;
 - recuerdos persistentes almacenados en el navegador;
 - un núcleo visual que responde al contacto;
 - diseño adaptable a escritorio y dispositivos móviles.
 
-Para probarla, abre `index.html` en un navegador moderno. No requiere instalación ni servidor.
-
-> Este prototipo utiliza respuestas locales sencillas. Su objetivo es validar la experiencia y el modelo de interacción antes de conectar un núcleo cognitivo real.
+Puedes explorar el modo visual desde la demostración pública. Para utilizar AERA, el aprendizaje, el diccionario y la memoria real del proyecto, sigue las instrucciones de la sección **Cámara local**.
 
 ## Núcleo cognitivo anterior
 

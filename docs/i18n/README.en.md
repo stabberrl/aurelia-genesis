@@ -6,9 +6,19 @@
 
 [![Aurelia Genesis scientific interface](../../assets/aurelia-genesis-dashboard.png)](https://stabberrl.github.io/aurelia-genesis/)
 
-The hosted version demonstrates the interface and organic visualization. AERA, the local dictionary, and persistent cognitive memory require a local installation.
+## What is Aurelia Genesis?
 
-An experimental environment for developing persistent, experience-grounded synthetic cognitive agents powered by AERA.
+**Aurelia Genesis is an artificial-life experiment inspired by the Fluctlights of _Sword Art Online: Alicization_.** It aims to build cognitive agents—called *synthetic souls* within the project—that begin with minimal capabilities and gradually form knowledge, memories, preferences, relationships, and an identity through experience.
+
+The goal is not to prescribe a complete personality or hide a chatbot behind the interface. Aurelia explores perception, persistent memory, concepts, associations, and cumulative learning through the [AERA](https://github.com/IIIM-IS/AERA) cognitive architecture, without using an LLM as the source of intelligence at runtime.
+
+Genesis creates and maintains the first population: **Naia, Orin, and Iria**. Each has isolated memory and different initial needs and internal tensions. The interface lets observers follow their development, provide sensory stimuli, and—once they have acquired enough language—communicate with them.
+
+### Current status
+
+This is early-stage research, not a finished artificial consciousness. The project currently provides three reproducible identities, a native AERA bridge, a local Spanish dictionary, an initial curriculum of 400 concepts and 2,000 associations, persistent memory, and a live cognitive-development visualization.
+
+The [public demo](https://stabberrl.github.io/aurelia-genesis/) presents the Genesis Chamber in visual mode. AERA, the complete local dictionary, and persistent cognitive state require running the project locally.
 
 > Aurelia Genesis researches cognitive architectures and cumulative learning. It does not claim to create consciousness, biological souls, or digital persons.
 
