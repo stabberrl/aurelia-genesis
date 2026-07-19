@@ -19,6 +19,7 @@ Le runtime n’utilise pas de LLM comme source d’intelligence. AERA constitue 
 - Apprentissage contrôlé de `je/tu/oui/non`, avec preuve publique reproductible.
 - Six lexiques cognitifs isolés : espagnol, anglais, japonais, russe, italien et français.
 - Battement cognitif sans LLM qui consolide l’expérience et propose uniquement des actions internes.
+- Chambre d’apprentissage Wiktionary limitée et auditable, séparant les observations externes de la compréhension démontrée.
 - Phases expérimentales : naissante, précoce, intermédiaire, avancée et haute.
 - Réglages persistants distincts pour la langue de l’interface, la langue cognitive et le mouvement organique.
 

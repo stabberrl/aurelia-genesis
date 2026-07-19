@@ -7,6 +7,7 @@ import { CognitiveGateway } from "./bridge/gateway.mjs";
 import { AeraTcpTransport } from "./bridge/aera-tcp-transport.mjs";
 import { LexiconRegistry } from "./lexicon/registry.mjs";
 import { validateLanguage } from "./lexicon/languages.mjs";
+import { LearningChamber } from "./learning/learning-chamber.mjs";
 import { CognitiveHeartbeat } from "./runtime/cognitive-heartbeat.mjs";
 import { readRegistry, validateSoulId } from "./runtime/registry.mjs";
 
@@ -17,13 +18,23 @@ const port = Number(process.env.FLUCTLIGHT_PORT || 4747);
 const awakeIds = (process.env.FLUCTLIGHT_AWAKE_SOULS || "soul-001-alba-0001").split(",").map((id) => id.trim()).filter(Boolean);
 const lexicons = new LexiconRegistry({ spanishPath: process.env.FLUCTLIGHT_LEXICON_PATH });
 const heartbeatByLanguage = new Map();
+const chamberByLanguage = new Map();
 function heartbeatFor(language = "es") {
   const languageCode = validateLanguage(language);
   if (!heartbeatByLanguage.has(languageCode)) heartbeatByLanguage.set(languageCode,
     new CognitiveHeartbeat(lexicons.get(languageCode), { intervalMs: Number(process.env.FLUCTLIGHT_HEARTBEAT_MS || 60_000) }));
   return heartbeatByLanguage.get(languageCode);
 }
+function chamberFor(language = "es") {
+  const languageCode = validateLanguage(language);
+  if (!chamberByLanguage.has(languageCode)) chamberByLanguage.set(languageCode,
+    new LearningChamber(lexicons.get(languageCode), {
+      minimumIntervalMs: Number(process.env.FLUCTLIGHT_LEARNING_INTERVAL_MS || 180_000),
+    }));
+  return chamberByLanguage.get(languageCode);
+}
 heartbeatFor("es").start(awakeIds);
+if (process.env.FLUCTLIGHT_LEARNING_CHAMBER === "1") chamberFor("es").start(awakeIds);
 
 const sensorySchema = {
   entities: ["naia", "human", "garden"],
@@ -134,6 +145,21 @@ const server = http.createServer(async (request, response) => {
       const language = validateLanguage(url.searchParams.get("language") || "es");
       return json(response, 200, { soulId, language, beats: heartbeatFor(language).status(soulId) });
     }
+    if (request.method === "GET" && url.pathname === "/api/learning/chamber") {
+      const soulId = url.searchParams.get("soulId") || "";
+      if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
+      const language = validateLanguage(url.searchParams.get("language") || "es");
+      return json(response, 200, {
+        soulId, language,
+        enabled: process.env.FLUCTLIGHT_LEARNING_CHAMBER === "1",
+        observations: lexicons.get(language).externalObservations(soulId),
+      });
+    }
+    if (request.method === "POST" && url.pathname === "/api/learning/chamber/tick") {
+      const { soulId, language = "es" } = await readJsonBody(request);
+      if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
+      return json(response, 200, await chamberFor(validateLanguage(language)).tick(soulId));
+    }
     if (request.method === "POST" && url.pathname === "/api/heartbeat") {
       const { soulId, language = "es" } = await readJsonBody(request);
       if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
@@ -193,6 +219,7 @@ server.listen(port, host, () => {
 async function shutdown() {
   server.close();
   for (const heartbeat of heartbeatByLanguage.values()) heartbeat.stop();
+  for (const chamber of chamberByLanguage.values()) chamber.stop();
   lexicons.close();
   await transport.close();
   process.exit(0);

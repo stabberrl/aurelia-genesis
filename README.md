@@ -112,6 +112,14 @@ Las almas despiertas ejecutan un latido interno periódico sin LLM. Cada ciclo r
 
 Este patrón está inspirado conceptualmente por G.R.I.L.L.O. de Synthetic Heart, pero fue implementado desde cero para AERA y Genesis. No incorpora su código, sus prompts, personajes ni motores LLM.
 
+### Prueba esencial: cámara de aprendizaje externo
+
+Genesis puede observar gradualmente entradas de Wiktionary mediante una cámara de sólo lectura. Cada muestra se limpia, limita, deduplica y registra con fuente, URL, idioma, hora y estado. El contenido externo permanece separado de los conceptos fundamentados: observar una definición **no equivale a comprenderla** ni aumenta directamente la fase de desarrollo.
+
+La cámara está apagada por defecto. Puede activarse localmente con `FLUCTLIGHT_LEARNING_CHAMBER=1`; el intervalo predeterminado es de tres minutos y puede ajustarse con `FLUCTLIGHT_LEARNING_INTERVAL_MS`. También existen un ciclo manual en `POST /api/learning/chamber/tick` y un registro auditable en `GET /api/learning/chamber`.
+
+El protocolo, los criterios de éxito y los límites de esta prueba esencial están documentados en [`docs/ESSENTIAL-LEARNING-EXPERIMENT.md`](docs/ESSENTIAL-LEARNING-EXPERIMENT.md).
+
 ### Fases de desarrollo
 
 Cada alma recibe una fase estimada: **naciente**, **desarrollo temprano**, **desarrollo medio**, **desarrollo avanzado** o **desarrollo alto**. La evaluación combina experiencia episódica, asociaciones fundamentadas, lenguaje fundacional demostrado, diversidad sensorial y latidos autónomos. El currículo precargado no eleva la fase por sí solo.

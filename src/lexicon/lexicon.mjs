@@ -129,6 +129,23 @@ export class Lexicon {
         consolidated_at INTEGER NOT NULL,
         PRIMARY KEY (soul_id, cue, predicate)
       );
+      CREATE TABLE IF NOT EXISTS external_observations (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        soul_id TEXT NOT NULL,
+        language_code TEXT NOT NULL,
+        term TEXT NOT NULL,
+        normalized TEXT NOT NULL,
+        source_name TEXT NOT NULL,
+        source_url TEXT NOT NULL,
+        excerpt TEXT NOT NULL,
+        content_hash TEXT NOT NULL,
+        status TEXT NOT NULL,
+        rejection_reason TEXT NOT NULL DEFAULT '',
+        observed_at INTEGER NOT NULL,
+        UNIQUE (soul_id, source_url, content_hash)
+      );
+      CREATE INDEX IF NOT EXISTS external_observations_soul_time_idx
+        ON external_observations(soul_id, observed_at DESC);
       CREATE TABLE IF NOT EXISTS metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL);
     `);
     this.findStatement = this.db.prepare(`
@@ -299,6 +316,33 @@ export class Lexicon {
     `).all(soulId, Math.max(1, Math.min(Number(limit) || 50, 200))).map((row) => ({ ...row }));
   }
 
+  recordExternalObservation(soulId, observation) {
+    const result = this.db.prepare(`INSERT OR IGNORE INTO external_observations
+      (soul_id, language_code, term, normalized, source_name, source_url, excerpt,
+       content_hash, status, rejection_reason, observed_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+      .run(soulId, this.languageCode, observation.term, this.normalize(observation.term),
+        observation.sourceName, observation.sourceUrl, observation.excerpt,
+        observation.contentHash, observation.status, observation.rejectionReason || "",
+        observation.observedAt);
+    return { recorded: Boolean(result.changes), ...observation };
+  }
+
+  externalObservations(soulId, limit = 50) {
+    return this.db.prepare(`SELECT id, language_code AS languageCode, term, normalized,
+      source_name AS sourceName, source_url AS sourceUrl, excerpt, status,
+      rejection_reason AS rejectionReason, observed_at AS observedAt
+      FROM external_observations WHERE soul_id = ? ORDER BY observed_at DESC, id DESC LIMIT ?`)
+      .all(soulId, Math.max(1, Math.min(Number(limit) || 50, 200)));
+  }
+
+  exposeExternalTerm(soulId, term, observedAt = new Date().toISOString()) {
+    const normalized = this.normalize(term);
+    if (!this.find(term, 1).length) return { exposed: false, reason: "term-not-in-local-lexicon", normalized };
+    this.exposeStatement.run(soulId, normalized, observedAt);
+    return { exposed: true, normalized };
+  }
+
   development(soulId) {
     const vocabulary = this.db.prepare("SELECT COUNT(*) AS count, COALESCE(SUM(seen_count), 0) AS encounters FROM exposures WHERE soul_id = ?").get(soulId);
     const perception = this.db.prepare("SELECT COUNT(*) AS count, COUNT(DISTINCT predicate) AS channels FROM perceptions WHERE soul_id = ?").get(soulId);
@@ -308,6 +352,9 @@ export class Lexicon {
     const episodes = this.db.prepare("SELECT COUNT(*) AS count FROM episodic_memories WHERE soul_id = ?").get(soulId);
     const plastic = this.db.prepare("SELECT COUNT(*) AS count FROM learned_associations WHERE soul_id = ?").get(soulId);
     const heartbeats = this.db.prepare("SELECT COUNT(*) AS count FROM cognitive_heartbeats WHERE soul_id = ?").get(soulId);
+    const external = this.db.prepare(`SELECT COUNT(*) AS observations,
+      COALESCE(SUM(status = 'accepted'), 0) AS accepted
+      FROM external_observations WHERE soul_id = ?`).get(soulId);
     const foundations = this.db.prepare(`SELECT COUNT(DISTINCT cue) AS count FROM contextual_associations
       WHERE soul_id = ? AND evidence_count >= 2 AND weight >= 0.45`).get(soulId);
     const recent = this.db.prepare(`
@@ -333,6 +380,8 @@ export class Lexicon {
       episodicMemories: Number(episodes.count),
       plasticAssociations: Number(plastic.count),
       heartbeatCount: Number(heartbeats.count),
+      externalObservations: Number(external.observations),
+      acceptedExternalObservations: Number(external.accepted),
       foundationalConcepts: Math.min(4, Number(foundations.count)),
       strongestAssociations: this.learnedAssociations(soulId, { limit: 12 }),
       concepts: this.concepts(soulId, 36),

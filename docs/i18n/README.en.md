@@ -19,6 +19,7 @@ The runtime does not use an LLM as its source of intelligence. AERA is the cogni
 - Controlled learning of `I/you/yes/no`, with public reproducible evidence.
 - Six isolated cognitive lexicons: Spanish, English, Japanese, Russian, Italian, and French.
 - A non-LLM cognitive heartbeat that consolidates experience and creates proposal-only internal actions.
+- A rate-limited, auditable Wiktionary learning chamber that keeps external observations separate from demonstrated understanding.
 - An experimental development phase indicator: nascent, early, middle, advanced, and high.
 - Separate persistent settings for interface language, cognitive language, and organic motion.
 

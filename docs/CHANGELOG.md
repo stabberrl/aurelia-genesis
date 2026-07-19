@@ -106,3 +106,16 @@ Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-0
 - Archivos: `docs/i18n/README.en.md`, `README.ja.md`, `README.ru.md`, `README.it.md`, `README.fr.md`.
 - Contenido sincronizado: aprendizaje fundacional, evidencia pública, léxicos aislados, latido, fases, configuración y limitaciones.
 - Verificación: enlaces relativos y `git diff --check`.
+
+## 2026-07-19T15:47:03.5005720-04:00 — EXP-ESSENTIAL-LEARNING-001
+
+- Tipo: `experiment`
+- Resumen: cámara de aprendizaje externo controlado y trazable, inicialmente conectada a Wiktionary.
+- Archivos: `src/learning/learning-chamber.mjs`, `src/lexicon/lexicon.mjs`, `src/server.mjs`, `tests/learning-chamber.test.mjs`, `docs/ESSENTIAL-LEARNING-EXPERIMENT.md`.
+- Seguridad: sólo lectura, ritmo limitado, limpieza, tamaño máximo, deduplicación SHA-256, procedencia completa, rechazo auditable y parada segura.
+- Separación epistemológica: una observación externa puede crear exposición léxica, pero no se transforma en comprensión, fundamentación sensorial ni puntuación de fase.
+- Corrección durante validación: se eliminó el uso de la ruta episódica para observaciones externas; una prueba de regresión exige ahora que la puntuación de fase permanezca idéntica.
+- Verificación: procedencia, separación, límite de ritmo, deduplicación y rechazo cubiertos; `npm test` — 34/34 PASS.
+- Evidencia real: a las `2026-07-19T15:50:42-04:00`, Naia aceptó `existir` desde `https://es.wiktionary.org/wiki/existir`; conservó extracto y huella SHA-256 sólo en su base local excluida de Git.
+- Fallo seguro observado: la consulta anterior sin extracto fue registrada como `insufficient-content` y no produjo exposición ni aprendizaje.
+- Limitaciones: Wiktionary puede contener errores; la prueba no demuestra comprensión general, autonomía humana ni consciencia.

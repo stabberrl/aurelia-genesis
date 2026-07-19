@@ -61,6 +61,8 @@ test("una palabra se fundamenta en percepciones temporalmente cercanas", async (
       episodicMemories: 2,
       plasticAssociations: 1,
       heartbeatCount: 0,
+      externalObservations: 0,
+      acceptedExternalObservations: 0,
       foundationalConcepts: 0,
       strongestAssociations: lexicon.development("soul-001-alba-0001").strongestAssociations,
       developmentAssessment: lexicon.development("soul-001-alba-0001").developmentAssessment,

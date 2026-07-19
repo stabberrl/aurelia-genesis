@@ -19,6 +19,7 @@ Il runtime non usa un LLM come fonte di intelligenza. AERA è il substrato cogni
 - Apprendimento controllato di `io/tu/sì/no`, con prova pubblica riproducibile.
 - Sei lessici cognitivi isolati: spagnolo, inglese, giapponese, russo, italiano e francese.
 - Battito cognitivo senza LLM che consolida l’esperienza e propone soltanto azioni interne.
+- Camera di apprendimento Wiktionary limitata e verificabile, che separa le osservazioni esterne dalla comprensione dimostrata.
 - Fasi sperimentali: nascente, iniziale, intermedia, avanzata e alta.
 - Impostazioni separate e persistenti per lingua dell’interfaccia, lingua cognitiva e movimento organico.
 
