@@ -12,6 +12,8 @@ An artificial-life research project inspired by the Fluctlights of *Sword Art On
 
 The runtime does not use an LLM as its source of intelligence. AERA is the cognitive substrate; Genesis manages isolated identities and reproducible births. The first population consists of **Naia, Orin, and Iria**.
 
+> **Interface and language notice:** the visual interface reflects the author's personal taste and is **not the project itself**. Aurelia Genesis is primarily its internal architecture: learning, memory, development, isolation, AERA, and reproducible experiments. The presentation may change according to the author's preferences, and forks are free to replace or adapt it to their own taste. Expect occasional language, grammar, and translation errors while the multilingual documentation remains under review.
+
 ## Current capabilities
 
 - Native AERA bridge and neutral event protocol.

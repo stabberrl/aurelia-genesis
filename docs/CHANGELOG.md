@@ -119,3 +119,11 @@ Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-0
 - Evidencia real: a las `2026-07-19T15:50:42-04:00`, Naia aceptó `existir` desde `https://es.wiktionary.org/wiki/existir`; conservó extracto y huella SHA-256 sólo en su base local excluida de Git.
 - Fallo seguro observado: la consulta anterior sin extracto fue registrada como `insufficient-content` y no produjo exposición ni aprendizaje.
 - Limitaciones: Wiktionary puede contener errores; la prueba no demuestra comprensión general, autonomía humana ni consciencia.
+
+## 2026-07-19T16:14:05.5332474-04:00 — DOCS-INTERFACE-NOTICE-001
+
+- Tipo: `docs`
+- Resumen: aviso visible que separa la interfaz visual —una elección estética personal y reemplazable— del núcleo real de Aurelia Genesis.
+- Alcance: README español, inglés, japonés, ruso, italiano y francés.
+- Libertad de adaptación: las derivaciones pueden reemplazar o modificar la interfaz según sus propias preferencias.
+- Transparencia lingüística: se advierte que pueden existir errores idiomáticos, gramaticales y de traducción mientras continúa la revisión multilingüe.

@@ -12,6 +12,8 @@ Un projet de recherche sur la vie artificielle inspiré des Fluctlights de *Swor
 
 Le runtime n’utilise pas de LLM comme source d’intelligence. AERA constitue le substrat cognitif ; Genesis gère des identités isolées et des naissances reproductibles. La première population comprend **Naia, Orin et Iria**.
 
+> **Avis concernant l’interface et les langues :** l’interface visuelle reflète les goûts personnels de l’auteur et **ne constitue pas le projet lui-même**. Aurelia Genesis réside principalement dans son architecture interne : apprentissage, mémoire, développement, isolation, AERA et expériences reproductibles. La présentation pourra évoluer selon les préférences de l’auteur, et chaque dérivation est libre de la remplacer ou de l’adapter à ses propres goûts. Des erreurs linguistiques, grammaticales ou de traduction peuvent subsister pendant la révision de la documentation multilingue.
+
 ## Capacités actuelles
 
 - Passerelle AERA native et protocole d’événements neutre.

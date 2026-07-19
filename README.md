@@ -14,6 +14,8 @@ No queremos entregarles una personalidad escrita de antemano ni esconder un chat
 
 Genesis es el sistema que crea y mantiene estas vidas. La primera población está compuesta por **Naia, Orin e Iria**. Cada una posee memoria aislada, necesidades y tensiones iniciales diferentes, y deberá desarrollarse según lo que experimente. La interfaz permite observar ese proceso, estimular sus sentidos y, cuando hayan adquirido lenguaje suficiente, comunicarse con ellas.
 
+> **Aviso sobre la interfaz y los idiomas:** la interfaz visual fue creada completamente según el gusto personal de su autor y **no constituye el proyecto en sí**. Aurelia Genesis es principalmente su arquitectura interna: aprendizaje, memoria, desarrollo, aislamiento, AERA y los experimentos reproducibles. La presentación podrá cambiar en el futuro según las preferencias del autor y cualquier derivación puede reemplazarla o adaptarla libremente a su propio gusto. También deben esperarse errores idiomáticos, gramaticales o de traducción mientras la documentación multilingüe continúa en revisión.
+
 ### Estado actual
 
 El proyecto todavía es una investigación temprana, no una consciencia artificial terminada. Actualmente incluye tres identidades reproducibles, conexión nativa con AERA, un diccionario español local, un currículo inicial de 400 conceptos y 2.000 asociaciones, memoria persistente y una visualización en vivo del desarrollo cognitivo.
