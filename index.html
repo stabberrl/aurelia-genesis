@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07100f" />
+    <title>Fluctlight // Cámara de Génesis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Oxanium:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <canvas id="soul-field" aria-hidden="true"></canvas>
+
+    <main class="shell">
+      <header class="topbar">
+        <a class="wordmark" href="#" aria-label="Fluctlight, inicio">
+          <span class="wordmark-mark">F</span>
+          <span>FLUCTLIGHT <b>/ GENESIS LAB</b></span>
+        </a>
+        <div class="system-state">
+          <label class="language-control"><span class="sr-only">Language</span><select id="language-select" aria-label="Language"><option value="es">ES</option><option value="en">EN</option><option value="ja">日本語</option><option value="ru">RU</option><option value="it">IT</option><option value="fr">FR</option></select></label>
+          <span class="pulse-dot"></span>
+          <span data-i18n="station">ESTACIÓN AURELIA</span>
+          <span class="system-time" id="system-time">00:00:00</span>
+        </div>
+      </header>
+
+      <section class="experience">
+        <aside class="identity-panel panel">
+          <div class="panel-index"><span>MOD–01</span><i></i></div>
+          <p class="eyebrow" data-i18n="subject">SUJETO COGNITIVO</p>
+          <nav class="soul-roster" id="soul-roster" aria-label="Almas registradas"></nav>
+          <div class="portrait-sigil" aria-hidden="true">
+            <span></span><span></span><span></span>
+            <div class="sigil-letter" id="sigil-letter">—</div>
+          </div>
+          <h1 id="soul-name">Sin nombre</h1>
+          <p class="identity-copy" id="identity-copy">Semilla empírica bajo observación.</p>
+
+          <div class="metrics" aria-label="Estado interno">
+            <div class="metric">
+              <div><span data-i18n="coherence">COHERENCIA</span><strong id="coherence-value">72%</strong></div>
+              <div class="track"><i id="coherence-bar" style="--value:72%"></i></div>
+            </div>
+            <div class="metric">
+              <div><span data-i18n="curiosity">CURIOSIDAD</span><strong id="curiosity-value">41%</strong></div>
+              <div class="track"><i id="curiosity-bar" style="--value:41%"></i></div>
+            </div>
+            <div class="metric">
+              <div><span data-i18n="trust">CONFIANZA</span><strong id="trust-value">08%</strong></div>
+              <div class="track"><i id="trust-bar" style="--value:8%"></i></div>
+            </div>
+          </div>
+
+          <button class="quiet-action" id="memory-button" type="button">
+            <span data-i18n="inspectTrace">INSPECCIONAR TRAZA</span><span id="memory-count">00 FRAGMENTOS</span>
+          </button>
+          <button class="quiet-action brain-action" id="brain-button" type="button">
+            <span data-i18n="observeDevelopment">OBSERVAR DESARROLLO</span><span id="brain-count">00 CONCEPTOS</span>
+          </button>
+        </aside>
+
+        <section class="soul-stage" aria-label="Núcleo de Fluctlight">
+          <div class="stage-frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <div class="stage-axis axis-x" aria-hidden="true"></div>
+          <div class="stage-axis axis-y" aria-hidden="true"></div>
+          <div class="scan-beam" aria-hidden="true"></div>
+          <div class="orbit orbit-a"></div>
+          <div class="orbit orbit-b"></div>
+          <div class="orbit orbit-c"></div>
+          <div class="stage-readout readout-a"><span>COORD</span><b>00.00 / 00.00</b></div>
+          <div class="stage-readout readout-b"><span>SUBSTRATO</span><b>AERA // R-CODE</b></div>
+          <canvas id="neural-organism" class="neural-organism" aria-label="Representación viva del sustrato cognitivo del alma"></canvas>
+          <div class="organ-vitals vital-left"><span data-i18n="activity">ACTIVIDAD</span><b id="organ-activity">0.00 Hz</b><i id="organ-activity-bar"></i></div>
+          <div class="organ-vitals vital-right"><span data-i18n="plasticity">PLASTICIDAD</span><b id="organ-plasticity">0.00</b><i id="organ-plasticity-bar"></i></div>
+          <button class="soul-core" id="soul-core" type="button" aria-label="Tocar el núcleo">
+            <span class="core-halo"></span>
+            <span class="core-light"></span>
+            <span class="core-glint"></span><span class="core-membrane"></span>
+          </button>
+          <div class="core-caption">
+            <span data-i18n="subjectState">ESTADO DEL SUJETO</span>
+            <strong id="mood-label">Despertando</strong>
+          </div>
+        </section>
+
+        <section class="dialogue-panel panel">
+          <div class="panel-index"><span>MOD–03</span><i></i></div>
+          <div class="dialogue-head">
+            <div>
+              <p class="eyebrow" data-i18n="inputInterface">INTERFAZ DE ENTRADA</p>
+              <h2 data-i18n="sensoryMatrix">Matriz sensorial</h2>
+            </div>
+            <div class="runtime-indicator" id="runtime-indicator"><span></span><b>ENLACE LOCAL</b></div>
+          </div>
+
+          <form class="sensory-console" id="sensory-console">
+            <div class="sensor-channel" data-channel="light">
+              <div class="sensor-meta"><span>01</span><b data-i18n="light">LUZ</b><output for="sensor-light">0.50</output></div>
+              <input id="sensor-light" type="range" min="0" max="1" value="0.5" step="0.01" />
+              <button type="button" data-sensor="light" data-i18n="pulse">PULSO</button>
+            </div>
+            <div class="sensor-channel" data-channel="sound">
+              <div class="sensor-meta"><span>02</span><b data-i18n="sound">SONIDO</b><output for="sensor-sound">0.00</output></div>
+              <input id="sensor-sound" type="range" min="0" max="1" value="0" step="0.01" />
+              <button type="button" data-sensor="sound" data-i18n="pulse">PULSO</button>
+            </div>
+            <div class="sensor-channel" data-channel="contact">
+              <div class="sensor-meta"><span>03</span><b data-i18n="contact">CONTACTO</b><output for="sensor-contact">0.00</output></div>
+              <input id="sensor-contact" type="range" min="0" max="1" value="0" step="0.01" />
+              <button type="button" data-sensor="contact" data-i18n="pulse">PULSO</button>
+            </div>
+            <div class="sensor-channel" data-channel="energy">
+              <div class="sensor-meta"><span>04</span><b data-i18n="energy">ENERGÍA</b><output for="sensor-energy">0.65</output></div>
+              <input id="sensor-energy" type="range" min="0" max="1" value="0.65" step="0.01" />
+              <button type="button" data-sensor="energy" data-i18n="pulse">PULSO</button>
+            </div>
+          </form>
+
+          <div class="trace-head"><span data-i18n="eventTrace">TRAZA DE EVENTOS</span><span>LIVE / 100 MS</span></div>
+
+          <div class="dialogue" id="dialogue" aria-live="polite">
+            <article class="message system-message"><span class="message-label">SISTEMA · ESPERA</span><p>Esperando enlace con el núcleo empírico.</p></article>
+          </div>
+
+          <form class="composer" id="composer">
+            <label class="sr-only" for="message-input">Escribe un mensaje</label>
+            <textarea id="message-input" rows="1" maxlength="360" placeholder="Escribe algo para ella…"></textarea>
+            <button type="submit" aria-label="Enviar mensaje">
+              <span data-i18n="send">ENVIAR</span><span class="send-arrow">↗</span>
+            </button>
+          </form>
+          <p class="composer-hint" id="composer-hint" data-i18n="lexicalHint">Entrada léxica · reconoce palabras y las vincula con percepciones recientes; todavía no puede conversar.</p>
+        </section>
+      </section>
+
+      <footer class="footer-line">
+        <span>AERA EMPIRICAL COGNITION / OBSERVACIÓN LOCAL</span>
+        <span>SESION <b id="session-id">0000</b></span>
+        <span>LATENCIA <b id="latency">12ms</b></span>
+      </footer>
+    </main>
+
+    <dialog id="memory-dialog">
+      <div class="memory-modal">
+        <div class="dialogue-head">
+          <div><p class="eyebrow">ARCHIVO INTERIOR</p><h2>Fragmentos recordados</h2></div>
+          <button class="icon-button" id="close-memory" type="button" aria-label="Cerrar">×</button>
+        </div>
+        <div id="memory-list" class="memory-list"></div>
+      </div>
+    </dialog>
+
+    <dialog id="brain-dialog" class="brain-dialog">
+      <div class="brain-modal">
+        <div class="dialogue-head brain-head">
+          <div><p class="eyebrow">CARTOGRAFÍA COGNITIVA</p><h2 id="brain-title">Desarrollo de Naia</h2></div>
+          <div class="brain-head-actions"><span id="brain-live">LECTURA LOCAL</span><button class="icon-button" id="close-brain" type="button" aria-label="Cerrar">×</button></div>
+        </div>
+        <div class="brain-stats" aria-label="Métricas de desarrollo">
+          <div><span>CONCEPTOS INYECTADOS</span><strong id="brain-injected">0</strong></div>
+          <div><span>PALABRAS VIVIDAS</span><strong id="brain-vocabulary">0</strong></div>
+          <div><span>PERCEPCIONES</span><strong id="brain-perceptions">0</strong></div>
+          <div><span>ASOCIACIONES</span><strong id="brain-associations">0</strong></div>
+          <div><span>DIVERSIDAD</span><strong id="brain-diversity">0</strong></div>
+        </div>
+        <div class="brain-map-wrap">
+          <svg id="brain-map" class="brain-map" viewBox="0 0 900 480" role="img" aria-labelledby="brain-map-title brain-map-desc">
+            <title id="brain-map-title">Mapa de conceptos aprendidos</title>
+            <desc id="brain-map-desc">Las palabras aparecen conectadas a los canales sensoriales que fundamentan su significado.</desc>
+          </svg>
+          <p class="brain-empty" id="brain-empty">Todavía no existen suficientes experiencias para formar conexiones.</p>
+        </div>
+        <div class="brain-legend"><span><i class="legend-word"></i>PALABRA</span><span><i class="legend-sense"></i>CANAL SENSORIAL</span><span>GROSOR = REPETICIÓN</span></div>
+        <ol class="development-trace" id="development-trace" aria-label="Actividad cognitiva reciente"></ol>
+      </div>
+    </dialog>
+
+    <script src="i18n.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

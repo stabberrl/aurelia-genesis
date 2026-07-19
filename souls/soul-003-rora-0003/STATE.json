@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "soulId": "soul-003-rora-0003",
+  "updatedAt": "2026-07-19T14:11:49.653Z",
+  "mood": "despertando",
+  "energy": 0.8,
+  "coherence": 0.71,
+  "curiosity": 0.72,
+  "trust": 0.17,
+  "needs": {
+    "propósito": 0.66,
+    "autenticidad": 0.51,
+    "reconocimiento": 0.66
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "genesisVersion": "0.1.0",
+  "bornAt": "2026-07-19T14:11:49.653Z",
+  "population": [
+    {
+      "id": "soul-001-alba-0001",
+      "name": "Naia",
+      "seed": "FL-ALBA-0001",
+      "slot": 1
+    },
+    {
+      "id": "soul-002-ruma-0002",
+      "name": "Orin",
+      "seed": "FL-BRUMA-0002",
+      "slot": 2
+    },
+    {
+      "id": "soul-003-rora-0003",
+      "name": "Iria",
+      "seed": "FL-AURORA-0003",
+      "slot": 3
+    }
+  ]
+}

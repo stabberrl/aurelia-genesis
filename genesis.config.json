@@ -1,0 +1,13 @@
+{
+  "genesisVersion": "0.1.0",
+  "world": {
+    "name": "Aurelia",
+    "originPlace": "el Jardín del Alba",
+    "firstPrinciple": "Toda vida comienza sin una respuesta completa sobre quién llegará a ser."
+  },
+  "births": [
+    { "seed": "FL-ALBA-0001", "slot": 1 },
+    { "seed": "FL-BRUMA-0002", "slot": 2 },
+    { "seed": "FL-AURORA-0003", "slot": 3 }
+  ]
+}

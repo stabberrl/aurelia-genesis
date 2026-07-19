@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "soulId": "soul-001-alba-0001",
+  "updatedAt": "2026-07-19T14:11:49.653Z",
+  "mood": "despertando",
+  "energy": 0.58,
+  "coherence": 0.79,
+  "curiosity": 0.72,
+  "trust": 0.13,
+  "needs": {
+    "pertenencia": 0.58,
+    "autonomía": 0.46,
+    "seguridad": 0.46
+  }
+}

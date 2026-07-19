@@ -1,0 +1,21 @@
+{
+  "name": "fluctlight-genesis",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Genesis runtime for reproducible synthetic identities",
+  "scripts": {
+    "genesis:birth": "node src/genesis/cli.mjs",
+    "genesis:preview": "node src/genesis/cli.mjs --dry-run",
+    "start": "node src/server.mjs",
+    "bridge": "node src/bridge/gateway.mjs",
+    "aera:build": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-aera.ps1",
+    "aera:start": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-aera.ps1",
+    "lexicon:import": "node scripts/import-spanish-lexicon.mjs --download",
+    "curriculum:basic": "node scripts/seed-basic-curriculum.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "protobufjs": "7.6.5"
+  }
+}

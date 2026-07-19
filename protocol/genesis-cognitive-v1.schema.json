@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://genesis.local/protocol/genesis-cognitive-v1.schema.json",
+  "title": "Genesis Cognitive Event v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["protocol", "id", "soulId", "type", "subject", "predicate", "value", "timestamp"],
+  "properties": {
+    "protocol": { "const": "genesis-cognitive/1" },
+    "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "soulId": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "type": { "enum": ["perception", "drive", "action", "outcome", "control"] },
+    "subject": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "predicate": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "value": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "data"],
+      "properties": {
+        "type": { "enum": ["number", "integer", "boolean", "string", "reference"] },
+        "data": {}
+      }
+    },
+    "timestamp": { "type": "integer", "minimum": 0 }
+  }
+}

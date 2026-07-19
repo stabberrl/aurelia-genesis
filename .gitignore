@@ -1,0 +1,12 @@
+.DS_Store
+Thumbs.db
+node_modules/
+.tools/
+dist/
+.env
+.env.*
+*.log
+souls/**/memory/.store/
+souls/**/memory/.meta/
+.server-pid
+var/lexicon/

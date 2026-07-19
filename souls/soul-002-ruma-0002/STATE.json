@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "soulId": "soul-002-ruma-0002",
+  "updatedAt": "2026-07-19T14:11:49.653Z",
+  "mood": "despertando",
+  "energy": 0.58,
+  "coherence": 0.78,
+  "curiosity": 0.55,
+  "trust": 0.11,
+  "needs": {
+    "honestidad": 0.57,
+    "conexión": 0.43,
+    "aceptación": 0.64
+  }
+}

@@ -1,0 +1,16 @@
+; Genesis: semilla sensorial mínima. No contiene lenguaje ni conocimiento del mundo.
+
+naia:(ent 1) [[SYNC_ONCE now 1 forever root nil]]
+human:(ent 1) [[SYNC_ONCE now 1 forever root nil]]
+garden:(ent 1) [[SYNC_ONCE now 1 forever root nil]]
+
+light:(ont 1) [[SYNC_ONCE now 1 forever root nil]]
+sound:(ont 1) [[SYNC_ONCE now 1 forever root nil]]
+contact:(ont 1) [[SYNC_ONCE now 1 forever root nil]]
+energy:(ont 1) [[SYNC_ONCE now 1 forever root nil]]
+
+; Reflejo de arranque: abre el flujo sensorial, sin prescribir una respuesta.
+genesis_start:(pgm |[] |[] |[] []
+   (cmd ready ["genesis" naia] 1)
+1) |[]
+igenesis_start:(ipgm genesis_start |[] RUN_ONCE sampling_period VOLATILE NOTIFY 1) [[SYNC_ONCE now 0 forever stdin nil 1]]

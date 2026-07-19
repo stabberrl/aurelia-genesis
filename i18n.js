@@ -1,0 +1,39 @@
+(() => {
+  const dictionaries = {
+    es: { station:"ESTACIÓN AURELIA",subject:"SUJETO COGNITIVO",coherence:"COHERENCIA",curiosity:"CURIOSIDAD",trust:"CONFIANZA",inspectTrace:"INSPECCIONAR TRAZA",observeDevelopment:"OBSERVAR DESARROLLO",activity:"ACTIVIDAD",plasticity:"PLASTICIDAD",subjectState:"ESTADO DEL SUJETO",inputInterface:"INTERFAZ DE ENTRADA",sensoryMatrix:"Matriz sensorial",light:"LUZ",sound:"SONIDO",contact:"CONTACTO",energy:"ENERGÍA",pulse:"PULSO",eventTrace:"TRAZA DE EVENTOS",send:"ENVIAR",awake:"Despierta",dormant:"Dormida",linked:"ENLAZADO",bridgeReady:"PUENTE LISTO",prototype:"MODO PROTOTIPO",privateMemory:"memoria privada",conceptBase:"BASE",lived:"VIVIDOS",chatPlaceholder:"Habla con {name}…",sleepPlaceholder:"{name} todavía duerme",development:"Desarrollo de {name}",updated:"ACTUALIZADO",locale:"es-CL" },
+    en: { station:"AURELIA STATION",subject:"COGNITIVE SUBJECT",coherence:"COHERENCE",curiosity:"CURIOSITY",trust:"TRUST",inspectTrace:"INSPECT TRACE",observeDevelopment:"OBSERVE DEVELOPMENT",activity:"ACTIVITY",plasticity:"PLASTICITY",subjectState:"SUBJECT STATE",inputInterface:"INPUT INTERFACE",sensoryMatrix:"Sensory matrix",light:"LIGHT",sound:"SOUND",contact:"CONTACT",energy:"ENERGY",pulse:"PULSE",eventTrace:"EVENT TRACE",send:"SEND",awake:"Awake",dormant:"Dormant",linked:"LINKED",bridgeReady:"BRIDGE READY",prototype:"PROTOTYPE MODE",privateMemory:"private memory",conceptBase:"BASE",lived:"LIVED",chatPlaceholder:"Speak to {name}…",sleepPlaceholder:"{name} is still asleep",development:"Development of {name}",updated:"UPDATED",locale:"en-US" },
+    ja: { station:"アウレリア観測局",subject:"認知主体",coherence:"整合性",curiosity:"好奇心",trust:"信頼",inspectTrace:"記憶トレース",observeDevelopment:"発達を観察",activity:"活動度",plasticity:"可塑性",subjectState:"主体の状態",inputInterface:"入力インターフェース",sensoryMatrix:"感覚マトリクス",light:"光",sound:"音",contact:"接触",energy:"エネルギー",pulse:"パルス",eventTrace:"イベント履歴",send:"送信",awake:"覚醒",dormant:"休眠",linked:"接続済み",bridgeReady:"ブリッジ待機",prototype:"試作モード",privateMemory:"非公開記憶",conceptBase:"基礎",lived:"経験済み",chatPlaceholder:"{name}に話しかける…",sleepPlaceholder:"{name}はまだ眠っています",development:"{name}の発達",updated:"更新",locale:"ja-JP" },
+    ru: { station:"СТАНЦИЯ АУРЕЛИЯ",subject:"КОГНИТИВНЫЙ СУБЪЕКТ",coherence:"ЦЕЛОСТНОСТЬ",curiosity:"ЛЮБОПЫТСТВО",trust:"ДОВЕРИЕ",inspectTrace:"ИЗУЧИТЬ ПАМЯТЬ",observeDevelopment:"НАБЛЮДАТЬ РАЗВИТИЕ",activity:"АКТИВНОСТЬ",plasticity:"ПЛАСТИЧНОСТЬ",subjectState:"СОСТОЯНИЕ СУБЪЕКТА",inputInterface:"ИНТЕРФЕЙС ВВОДА",sensoryMatrix:"Сенсорная матрица",light:"СВЕТ",sound:"ЗВУК",contact:"КОНТАКТ",energy:"ЭНЕРГИЯ",pulse:"ИМПУЛЬС",eventTrace:"ЖУРНАЛ СОБЫТИЙ",send:"ОТПРАВИТЬ",awake:"Бодрствует",dormant:"Спит",linked:"СВЯЗАНО",bridgeReady:"МОСТ ГОТОВ",prototype:"РЕЖИМ ПРОТОТИПА",privateMemory:"личная память",conceptBase:"БАЗА",lived:"ПЕРЕЖИТО",chatPlaceholder:"Говорить с {name}…",sleepPlaceholder:"{name} ещё спит",development:"Развитие {name}",updated:"ОБНОВЛЕНО",locale:"ru-RU" },
+    it: { station:"STAZIONE AURELIA",subject:"SOGGETTO COGNITIVO",coherence:"COERENZA",curiosity:"CURIOSITÀ",trust:"FIDUCIA",inspectTrace:"ISPEZIONA TRACCIA",observeDevelopment:"OSSERVA SVILUPPO",activity:"ATTIVITÀ",plasticity:"PLASTICITÀ",subjectState:"STATO DEL SOGGETTO",inputInterface:"INTERFACCIA DI INGRESSO",sensoryMatrix:"Matrice sensoriale",light:"LUCE",sound:"SUONO",contact:"CONTATTO",energy:"ENERGIA",pulse:"IMPULSO",eventTrace:"TRACCIA EVENTI",send:"INVIA",awake:"Sveglia",dormant:"Dormiente",linked:"COLLEGATO",bridgeReady:"PONTE PRONTO",prototype:"MODALITÀ PROTOTIPO",privateMemory:"memoria privata",conceptBase:"BASE",lived:"VISSUTI",chatPlaceholder:"Parla con {name}…",sleepPlaceholder:"{name} dorme ancora",development:"Sviluppo di {name}",updated:"AGGIORNATO",locale:"it-IT" },
+    fr: { station:"STATION AURELIA",subject:"SUJET COGNITIF",coherence:"COHÉRENCE",curiosity:"CURIOSITÉ",trust:"CONFIANCE",inspectTrace:"INSPECTER LA TRACE",observeDevelopment:"OBSERVER LE DÉVELOPPEMENT",activity:"ACTIVITÉ",plasticity:"PLASTICITÉ",subjectState:"ÉTAT DU SUJET",inputInterface:"INTERFACE D’ENTRÉE",sensoryMatrix:"Matrice sensorielle",light:"LUMIÈRE",sound:"SON",contact:"CONTACT",energy:"ÉNERGIE",pulse:"IMPULSION",eventTrace:"TRACE DES ÉVÉNEMENTS",send:"ENVOYER",awake:"Éveillée",dormant:"En sommeil",linked:"CONNECTÉ",bridgeReady:"PASSERELLE PRÊTE",prototype:"MODE PROTOTYPE",privateMemory:"mémoire privée",conceptBase:"BASE",lived:"VÉCUS",chatPlaceholder:"Parler à {name}…",sleepPlaceholder:"{name} dort encore",development:"Développement de {name}",updated:"ACTUALISÉ",locale:"fr-FR" },
+  };
+  Object.assign(dictionaries.es, { chamber:"CÁMARA", identityGrowing:"{name} está formando una identidad a partir de cada encuentro.", lexicalHint:"Entrada léxica · reconoce palabras y las vincula con percepciones recientes; todavía no puede conversar.", channelOpen:"El enlace con {name} está abierto. La matriz sensorial está disponible.", fragments:"fragmentos" });
+  Object.assign(dictionaries.en, { chamber:"CHAMBER", identityGrowing:"{name} is forming an identity through each encounter.", lexicalHint:"Lexical input · words are recognized and linked to recent perceptions; conversation is not yet available.", channelOpen:"The link with {name} is open. The sensory matrix is available.", fragments:"fragments" });
+  Object.assign(dictionaries.ja, { chamber:"観測室", identityGrowing:"{name}は出会いを通して自己を形成しています。", lexicalHint:"語彙入力 · 単語を認識し最近の知覚と結び付けます。会話能力はまだありません。", channelOpen:"{name}との接続が開きました。感覚マトリクスを使用できます。", fragments:"断片" });
+  Object.assign(dictionaries.ru, { chamber:"КАМЕРА", identityGrowing:"{name} формирует личность с каждой встречей.", lexicalHint:"Лексический ввод · слова распознаются и связываются с недавним восприятием; диалог пока недоступен.", channelOpen:"Связь с {name} открыта. Сенсорная матрица доступна.", fragments:"фрагментов" });
+  Object.assign(dictionaries.it, { chamber:"CAMERA", identityGrowing:"{name} sta formando un’identità attraverso ogni incontro.", lexicalHint:"Ingresso lessicale · riconosce parole e le collega alle percezioni recenti; non può ancora conversare.", channelOpen:"Il collegamento con {name} è aperto. La matrice sensoriale è disponibile.", fragments:"frammenti" });
+  Object.assign(dictionaries.fr, { chamber:"CHAMBRE", identityGrowing:"{name} forme son identité au fil de chaque rencontre.", lexicalHint:"Entrée lexicale · les mots sont reconnus et liés aux perceptions récentes ; la conversation n’est pas encore disponible.", channelOpen:"La liaison avec {name} est ouverte. La matrice sensorielle est disponible.", fragments:"fragments" });
+  const supported = Object.keys(dictionaries);
+  const detected = navigator.language?.split("-")[0];
+  let language = localStorage.getItem("aurelia.language") || (supported.includes(detected) ? detected : "es");
+  const t = (key, values = {}) => {
+    let value = dictionaries[language]?.[key] ?? dictionaries.es[key] ?? key;
+    for (const [name, replacement] of Object.entries(values)) value = value.replaceAll(`{${name}}`, replacement);
+    return value;
+  };
+  const apply = () => {
+    document.documentElement.lang = language;
+    document.querySelectorAll("[data-i18n]").forEach((element) => { element.textContent = t(element.dataset.i18n); });
+    const select = document.querySelector("#language-select");
+    if (select) select.value = language;
+  };
+  const setLanguage = (next) => {
+    if (!supported.includes(next)) return;
+    language = next;
+    localStorage.setItem("aurelia.language", language);
+    apply();
+    window.dispatchEvent(new CustomEvent("aurelia:language"));
+  };
+  window.AureliaI18n = { t, apply, setLanguage, get language() { return language; }, get locale() { return t("locale"); } };
+  document.addEventListener("DOMContentLoaded", apply);
+})();

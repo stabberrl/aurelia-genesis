@@ -1,0 +1,6 @@
+[submodule "vendor/agentos"]
+	path = vendor/agentos
+	url = https://github.com/framerslab/agentos.git
+[submodule "vendor/aera"]
+	path = vendor/aera
+	url = https://github.com/IIIM-IS/AERA.git

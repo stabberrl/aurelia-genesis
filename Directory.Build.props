@@ -1,0 +1,16 @@
+<Project>
+  <PropertyGroup>
+    <PlatformToolset>v143</PlatformToolset>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <VcpkgRoot>$(MSBuildThisFileDirectory).tools\vcpkg\</VcpkgRoot>
+    <VcpkgTriplet Condition="'$(Platform)' == 'Win32'">x86-windows</VcpkgTriplet>
+    <VcpkgEnabled>true</VcpkgEnabled>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(MSBuildProjectName)' == 'AERA'">
+    <ClCompile>
+      <PreprocessorDefinitions>ENABLE_PROTOBUF;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <ExceptionHandling>Sync</ExceptionHandling>
+    </ClCompile>
+  </ItemDefinitionGroup>
+</Project>
