@@ -22,6 +22,7 @@
         </a>
         <div class="system-state">
           <label class="language-control"><span class="sr-only">Language</span><select id="language-select" aria-label="Language"><option value="es">ES</option><option value="en">EN</option><option value="ja">日本語</option><option value="ru">RU</option><option value="it">IT</option><option value="fr">FR</option></select></label>
+          <button class="settings-trigger" id="settings-button" type="button" aria-label="Configuración">⌁</button>
           <span class="pulse-dot"></span>
           <span data-i18n="station">ESTACIÓN AURELIA</span>
           <span class="system-time" id="system-time">00:00:00</span>
@@ -152,6 +153,24 @@
         </div>
         <div id="memory-list" class="memory-list"></div>
       </div>
+    </dialog>
+
+    <dialog id="settings-dialog" class="settings-dialog">
+      <form id="settings-form" class="settings-modal">
+        <div class="dialogue-head">
+          <div><p class="eyebrow">SYSTEM / PREFERENCES</p><h2 data-i18n="settings">Configuración</h2></div>
+          <button class="icon-button" id="close-settings" type="button" aria-label="Cerrar">×</button>
+        </div>
+        <label class="settings-field"><span data-i18n="interfaceLanguage">Idioma de la interfaz</span>
+          <select id="settings-interface-language"><option value="es">Español</option><option value="en">English</option><option value="ja">日本語</option><option value="ru">Русский</option><option value="it">Italiano</option><option value="fr">Français</option></select>
+        </label>
+        <label class="settings-field"><span data-i18n="cognitiveLanguage">Idioma cognitivo</span>
+          <select id="settings-cognitive-language"><option value="es">Español</option><option value="en">English</option><option value="ja">日本語</option><option value="ru">Русский</option><option value="it">Italiano</option><option value="fr">Français</option></select>
+          <small data-i18n="cognitiveLanguageHint">Cambia el léxico y la memoria de aprendizaje; no traduce experiencias previas.</small>
+        </label>
+        <label class="settings-toggle"><input id="settings-motion" type="checkbox" checked /><span data-i18n="organicMotion">Movimiento orgánico</span></label>
+        <button class="settings-save" type="submit" data-i18n="saveSettings">APLICAR CONFIGURACIÓN</button>
+      </form>
     </dialog>
 
     <dialog id="brain-dialog" class="brain-dialog">

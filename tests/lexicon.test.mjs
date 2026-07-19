@@ -135,11 +135,33 @@ test("la asociación se refuerza con experiencia repetida y reconoce un caso nue
     lexicon.observe({ id: "light-2", soulId, type: "perception", subject: "garden", predicate: "light", value: { type: "number", data: 0.9 }, timestamp: 3_000_000 });
     lexicon.encounter(soulId, "luz", { timestamp: 4_000_000 });
     const second = lexicon.learnedAssociations(soulId, { cue: "luz", asOf: 4_000_000 })[0];
-    const recognition = lexicon.recognize(soulId, "luz", { subject: "garden", predicate: "light", value: 0.8 }, { asOf: 4_000_000 });
+    lexicon.observe({ id: "light-3", soulId, type: "perception", subject: "garden", predicate: "light", value: { type: "number", data: 0.8 }, timestamp: 5_000_000 });
+    lexicon.encounter(soulId, "luz", { timestamp: 6_000_000 });
+    const third = lexicon.learnedAssociations(soulId, { cue: "luz", asOf: 6_000_000 })[0];
+    const recognition = lexicon.recognize(soulId, "luz", { subject: "garden", predicate: "light", value: 0.8 }, { asOf: 6_000_000 });
     assert.ok(second.weight > first.weight);
-    assert.equal(second.evidenceCount, 3);
+    assert.ok(third.weight > second.weight);
+    assert.equal(third.evidenceCount, 3);
     assert.equal(recognition.recognized, true);
     assert.ok(recognition.confidence >= 0.45);
+  } finally {
+    lexicon.close();
+    await fs.rm(directory, { recursive: true, force: true });
+  }
+});
+
+test("una misma percepción no se cuenta dos veces como evidencia", async () => {
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "fluctlight-evidence-"));
+  const lexicon = new Lexicon(path.join(directory, "test.sqlite"));
+  try {
+    lexicon.db.prepare(`INSERT INTO entries
+      (word, normalized, pos, senses_json, forms_json, source_url) VALUES (?, ?, ?, ?, ?, ?)`)
+      .run("luz", "luz", "noun", "[]", "[]", "test");
+    const soulId = "soul-001-alba-0001";
+    lexicon.observe({ id: "unique-light", soulId, type: "perception", subject: "garden", predicate: "light", value: { type: "number", data: 0.8 }, timestamp: 1_000_000 });
+    lexicon.encounter(soulId, "luz", { timestamp: 2_000_000 });
+    lexicon.encounter(soulId, "luz", { timestamp: 3_000_000 });
+    assert.equal(lexicon.learnedAssociations(soulId, { cue: "luz", asOf: 3_000_000 })[0].evidenceCount, 1);
   } finally {
     lexicon.close();
     await fs.rm(directory, { recursive: true, force: true });

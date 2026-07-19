@@ -106,6 +106,24 @@ Las percepciones aceptadas crean recuerdos episódicos. Cuando una palabra apare
 
 El modelo, sus límites y el primer experimento reproducible con el concepto `luz` están descritos en [`docs/EXPERIENTIAL-LEARNING.md`](docs/EXPERIENTIAL-LEARNING.md).
 
+### Prueba fundacional: yo, tú, sí y no
+
+El protocolo `npm run experiment:foundations` entrena a Naia con ensayos explícitos y después evalúa casos reservados, estímulos ambiguos, persistencia, aislamiento de Orin y un control con etiquetas alteradas. La **[demostración visual de la evidencia](https://stabberrl.github.io/aurelia-genesis/proof.html)** y el [informe auditable](evidence/foundational-language-v1.md) son públicos; también se conserva la primera ejecución fallida.
+
+El resultado demuestra **discriminación asociativa de agencia propia/externa y confirmación/rechazo dentro de un entorno controlado**. No demuestra autoconciencia ni comprensión lingüística general.
+
+### Léxicos e idiomas
+
+La interfaz y el idioma cognitivo se configuran por separado desde el nuevo panel de preferencias. Español, inglés, japonés, ruso, italiano y francés poseen bases aisladas y tokens fundacionales. Cambiar de idioma cognitivo no traduce ni transfiere recuerdos.
+
+Los diccionarios completos son opcionales y se importan localmente, por ejemplo:
+
+```bash
+npm run lexicon:import-language -- --language=ja --download
+```
+
+Las bases generadas no se versionan. Sus fuentes y condiciones están documentadas en [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). Todos los cambios experimentales se registran con hora exacta en [`docs/CHANGELOG.md`](docs/CHANGELOG.md).
+
 ### Primera población
 
 | Alma | Identificador | Tensión inicial |

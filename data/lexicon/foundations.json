@@ -1,0 +1,8 @@
+{
+  "es": { "self": "yo", "other": "tú", "affirmed": "sí", "denied": "no" },
+  "en": { "self": "I", "other": "you", "affirmed": "yes", "denied": "no" },
+  "ja": { "self": "私", "other": "あなた", "affirmed": "はい", "denied": "いいえ" },
+  "ru": { "self": "я", "other": "ты", "affirmed": "да", "denied": "нет" },
+  "it": { "self": "io", "other": "tu", "affirmed": "sì", "denied": "no" },
+  "fr": { "self": "je", "other": "tu", "affirmed": "oui", "denied": "non" }
+}

@@ -1,4 +1,5 @@
 const STORAGE_KEY = "fluctlight.genesis.v1";
+const COGNITIVE_LANGUAGE_KEY = "aurelia.cognitiveLanguage";
 
 const defaultState = {
   name: null,
@@ -17,6 +18,7 @@ let soulRegistry = [];
 let developmentRefreshTimer = null;
 let organismPulse = 0;
 let organismDevelopment = { vocabulary: 0, associations: 0, injectedConcepts: 0 };
+let cognitiveLanguage = localStorage.getItem(COGNITIVE_LANGUAGE_KEY) || "es";
 const runtimeSessionId = localStorage.getItem("fluctlight.session") || crypto.randomUUID();
 localStorage.setItem("fluctlight.session", runtimeSessionId);
 
@@ -204,7 +206,7 @@ function renderBrainMap(data) {
 
 async function loadDevelopment() {
   if (!activeSoul) return;
-  const response = await fetch(`/api/development?soulId=${encodeURIComponent(activeSoul.id)}`);
+  const response = await fetch(`/api/development?soulId=${encodeURIComponent(activeSoul.id)}&language=${encodeURIComponent(cognitiveLanguage)}`);
   if (!response.ok) throw new Error("No fue posible leer el desarrollo cognitivo.");
   const data = await response.json();
   organismDevelopment = data;
@@ -260,7 +262,7 @@ $("#composer").addEventListener("submit", async (event) => {
       const lexicalResponse = await fetch("/api/lexicon/encounter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ soulId: activeSoul.id, text }),
+        body: JSON.stringify({ soulId: activeSoul.id, text, language: cognitiveLanguage }),
       });
       const lexical = lexicalResponse.ok ? await lexicalResponse.json() : { encountered: [] };
       const response = await fetch("/api/chat", {
@@ -327,6 +329,7 @@ document.querySelectorAll("[data-sensor]").forEach((button) => button.addEventLi
         protocol: "genesis-cognitive/1",
         id: crypto.randomUUID(),
         soulId: activeSoul.id,
+        languageCode: cognitiveLanguage,
         type: "perception",
         subject: sensorySubjects[sensor],
         predicate: sensor,
@@ -604,4 +607,25 @@ startParticleField();
 startNeuralOrganism();
 $("#language-select").addEventListener("change", (event) => window.AureliaI18n.setLanguage(event.target.value));
 window.addEventListener("aurelia:language", () => { if (activeSoul) selectSoul(activeSoul.id); });
+
+const settingsDialog = $("#settings-dialog");
+$("#settings-button").addEventListener("click", () => {
+  $("#settings-interface-language").value = window.AureliaI18n.language;
+  $("#settings-cognitive-language").value = cognitiveLanguage;
+  $("#settings-motion").checked = document.documentElement.dataset.motion !== "reduced";
+  settingsDialog.showModal();
+});
+$("#close-settings").addEventListener("click", () => settingsDialog.close());
+$("#settings-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  window.AureliaI18n.setLanguage($("#settings-interface-language").value);
+  cognitiveLanguage = $("#settings-cognitive-language").value;
+  localStorage.setItem(COGNITIVE_LANGUAGE_KEY, cognitiveLanguage);
+  const motion = $("#settings-motion").checked ? "full" : "reduced";
+  document.documentElement.dataset.motion = motion;
+  localStorage.setItem("aurelia.motion", motion);
+  settingsDialog.close();
+  if (activeSoul && runtimeConnected) await loadDevelopment();
+});
+document.documentElement.dataset.motion = localStorage.getItem("aurelia.motion") || "full";
 connectRuntime();

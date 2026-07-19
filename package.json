@@ -12,7 +12,10 @@
     "aera:build": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-aera.ps1",
     "aera:start": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-aera.ps1",
     "lexicon:import": "node scripts/import-spanish-lexicon.mjs --download",
+    "lexicon:import-language": "node scripts/import-lexicon.mjs",
     "curriculum:basic": "node scripts/seed-basic-curriculum.mjs",
+    "experiment:foundations": "node scripts/run-foundational-language-experiment.mjs",
+    "teach:foundations": "node scripts/teach-naia-foundations.mjs",
     "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {

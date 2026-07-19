@@ -1,21 +1,23 @@
 import fs from "node:fs";
 import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
+import { FoundationalLanguage } from "../learning/foundational-language.mjs";
+import { normalizeForLanguage, tokenizeForLanguage, validateLanguage } from "./languages.mjs";
 
 export const DEFAULT_LEXICON_PATH = path.resolve("var", "lexicon", "es.sqlite");
 
-export function normalizeWord(value) {
-  return String(value || "").normalize("NFC").trim().toLocaleLowerCase("es");
+export function normalizeWord(value, languageCode = "es") {
+  return normalizeForLanguage(value, languageCode);
 }
 
-export function wordsIn(text) {
-  return [...new Set((String(text || "").normalize("NFC").match(/[\p{L}\p{M}]+(?:['’-][\p{L}\p{M}]+)*/gu) || [])
-    .map(normalizeWord))];
+export function wordsIn(text, languageCode = "es") {
+  return [...new Set(tokenizeForLanguage(text, languageCode))];
 }
 
 export class Lexicon {
-  constructor(databasePath = DEFAULT_LEXICON_PATH, { readonly = false } = {}) {
+  constructor(databasePath = DEFAULT_LEXICON_PATH, { readonly = false, languageCode = "es" } = {}) {
     this.databasePath = path.resolve(databasePath);
+    this.languageCode = validateLanguage(languageCode);
     if (!readonly) fs.mkdirSync(path.dirname(this.databasePath), { recursive: true });
     this.db = new DatabaseSync(this.databasePath, { readOnly: readonly, allowExtension: false });
     this.db.exec("PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON;");
@@ -103,12 +105,18 @@ export class Lexicon {
         last_reinforced_at INTEGER NOT NULL,
         PRIMARY KEY (soul_id, cue, subject, predicate)
       );
+      CREATE TABLE IF NOT EXISTS learned_evidence (
+        soul_id TEXT NOT NULL,
+        cue TEXT NOT NULL,
+        perception_event_id TEXT NOT NULL,
+        PRIMARY KEY (soul_id, cue, perception_event_id)
+      );
       CREATE TABLE IF NOT EXISTS metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL);
     `);
     this.findStatement = this.db.prepare(`
       SELECT word, pos, language_code AS languageCode, etymology,
              senses_json AS sensesJson, forms_json AS formsJson, source_url AS sourceUrl
-      FROM entries WHERE normalized = ? ORDER BY pos, id LIMIT ?
+      FROM entries WHERE normalized = ? AND language_code = ? ORDER BY pos, id LIMIT ?
     `);
     this.exposeStatement = this.db.prepare(`
       INSERT INTO exposures (soul_id, normalized, first_seen_at, seen_count) VALUES (?, ?, ?, 1)
@@ -129,11 +137,14 @@ export class Lexicon {
         value_max = max(value_max, excluded.value_max),
         last_grounded_at = excluded.last_grounded_at
     `);
+    this.foundational = new FoundationalLanguage(this.db);
   }
 
+  normalize(word) { return normalizeWord(word, this.languageCode); }
+
   find(word, limit = 12) {
-    const normalized = normalizeWord(word);
-    return this.findStatement.all(normalized, Math.max(1, Math.min(Number(limit) || 12, 50))).map((row) => ({
+    const normalized = this.normalize(word);
+    return this.findStatement.all(normalized, this.languageCode, Math.max(1, Math.min(Number(limit) || 12, 50))).map((row) => ({
       ...row,
       senses: JSON.parse(row.sensesJson),
       forms: JSON.parse(row.formsJson),
@@ -156,17 +167,21 @@ export class Lexicon {
     const encounteredAt = new Date().toISOString();
     const results = [];
     const recent = this.db.prepare(`
-      SELECT subject, predicate, value, perceived_at AS perceivedAt
+      SELECT event_id AS eventId, subject, predicate, value, perceived_at AS perceivedAt
       FROM perceptions WHERE soul_id = ? AND perceived_at BETWEEN ? AND ?
       ORDER BY perceived_at DESC LIMIT 8
     `).all(soulId, timestamp - groundingWindowMs * 1000, timestamp);
     this.db.exec("BEGIN");
     try {
-      for (const word of wordsIn(text).slice(0, 64)) {
+      for (const word of wordsIn(text, this.languageCode).slice(0, 64)) {
         const entries = this.find(word);
         if (!entries.length) continue;
         this.exposeStatement.run(soulId, word, encounteredAt);
         for (const perception of recent) {
+          const evidence = this.db.prepare(`INSERT OR IGNORE INTO learned_evidence
+            (soul_id, cue, perception_event_id) VALUES (?, ?, ?)`)
+            .run(soulId, word, perception.eventId);
+          if (!evidence.changes) continue;
           this.groundStatement.run(soulId, word, perception.subject, perception.predicate, perception.value, perception.value, perception.value, encounteredAt);
           this.reinforceAssociation(soulId, word, perception, timestamp);
         }

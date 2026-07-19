@@ -5,7 +5,8 @@ import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { CognitiveGateway } from "./bridge/gateway.mjs";
 import { AeraTcpTransport } from "./bridge/aera-tcp-transport.mjs";
-import { Lexicon } from "./lexicon/lexicon.mjs";
+import { LexiconRegistry } from "./lexicon/registry.mjs";
+import { validateLanguage } from "./lexicon/languages.mjs";
 import { readRegistry, validateSoulId } from "./runtime/registry.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -13,7 +14,7 @@ const soulsDir = path.join(root, "souls");
 const host = process.env.FLUCTLIGHT_HOST || "127.0.0.1";
 const port = Number(process.env.FLUCTLIGHT_PORT || 4747);
 const awakeIds = (process.env.FLUCTLIGHT_AWAKE_SOULS || "soul-001-alba-0001").split(",").map((id) => id.trim()).filter(Boolean);
-const lexicon = new Lexicon(process.env.FLUCTLIGHT_LEXICON_PATH);
+const lexicons = new LexiconRegistry({ spanishPath: process.env.FLUCTLIGHT_LEXICON_PATH });
 
 const sensorySchema = {
   entities: ["naia", "human", "garden"],
@@ -91,47 +92,65 @@ const server = http.createServer(async (request, response) => {
       return json(response, 200, { souls: await readRegistry(soulsDir, awakeIds) });
     }
     if (request.method === "GET" && url.pathname === "/api/lexicon/status") {
-      return json(response, 200, lexicon.status());
+      const language = url.searchParams.get("language");
+      return json(response, 200, language ? lexicons.get(validateLanguage(language)).status() : lexicons.status());
     }
     if (request.method === "GET" && url.pathname === "/api/lexicon") {
       const word = url.searchParams.get("word") || "";
       if (!word.trim()) return json(response, 400, { error: "Falta la palabra que se desea consultar." });
-      return json(response, 200, { word, entries: lexicon.find(word) });
+      const language = validateLanguage(url.searchParams.get("language") || "es");
+      return json(response, 200, { word, language, entries: lexicons.get(language).find(word) });
     }
     if (request.method === "GET" && url.pathname === "/api/concepts") {
       const soulId = url.searchParams.get("soulId") || "";
       if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
-      return json(response, 200, { soulId, concepts: lexicon.concepts(soulId) });
+      const language = validateLanguage(url.searchParams.get("language") || "es");
+      return json(response, 200, { soulId, language, concepts: lexicons.get(language).concepts(soulId) });
     }
     if (request.method === "GET" && url.pathname === "/api/development") {
       const soulId = url.searchParams.get("soulId") || "";
       if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
-      return json(response, 200, lexicon.development(soulId));
+      const language = validateLanguage(url.searchParams.get("language") || "es");
+      return json(response, 200, { language, ...lexicons.get(language).development(soulId) });
     }
     if (request.method === "GET" && url.pathname === "/api/memory/episodes") {
       const soulId = url.searchParams.get("soulId") || "";
       if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
-      return json(response, 200, { soulId, episodes: lexicon.episodes(soulId) });
+      const language = validateLanguage(url.searchParams.get("language") || "es");
+      return json(response, 200, { soulId, language, episodes: lexicons.get(language).episodes(soulId) });
     }
     if (request.method === "POST" && url.pathname === "/api/learning/recognize") {
-      const { soulId, cue, subject, predicate, value } = await readJsonBody(request);
+      const { soulId, cue, subject, predicate, value, language = "es" } = await readJsonBody(request);
       if (!validateSoulId(soulId) || typeof cue !== "string" || !cue.trim()
         || typeof subject !== "string" || typeof predicate !== "string" || !Number.isFinite(value)) {
         return json(response, 400, { error: "La prueba de reconocimiento no es válida." });
       }
-      return json(response, 200, { soulId, cue, ...lexicon.recognize(soulId, cue, { subject, predicate, value }) });
+      return json(response, 200, { soulId, cue, language, ...lexicons.get(validateLanguage(language)).recognize(soulId, cue, { subject, predicate, value }) });
+    }
+    if (request.method === "POST" && url.pathname === "/api/learning/foundations/trial") {
+      const trial = await readJsonBody(request);
+      if (!validateSoulId(trial.soulId)) return json(response, 400, { error: "Alma no válida." });
+      const language = validateLanguage(trial.languageCode || "es");
+      return json(response, 200, lexicons.get(language).foundational.recordTrial({ ...trial, languageCode: language }));
+    }
+    if (request.method === "POST" && url.pathname === "/api/learning/foundations/infer") {
+      const { soulId, languageCode = "es", task, stimulus } = await readJsonBody(request);
+      if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
+      const language = validateLanguage(languageCode);
+      return json(response, 200, lexicons.get(language).foundational.inferTrial(soulId, language, task, stimulus));
     }
     if (request.method === "POST" && url.pathname === "/api/lexicon/encounter") {
-      const { soulId, text } = await readJsonBody(request);
+      const { soulId, text, language = "es" } = await readJsonBody(request);
       if (!validateSoulId(soulId) || typeof text !== "string" || !text.trim()) {
         return json(response, 400, { error: "Se requieren un alma válida y un texto no vacío." });
       }
-      return json(response, 200, { soulId, encountered: lexicon.encounter(soulId, text) });
+      const languageCode = validateLanguage(language);
+      return json(response, 200, { soulId, language: languageCode, encountered: lexicons.get(languageCode).encounter(soulId, text) });
     }
     if (request.method === "POST" && url.pathname === "/api/events") {
       const event = await readJsonBody(request);
       const result = await gateway.receive(event);
-      if (result.status === "accepted") lexicon.observe(event);
+      if (result.status === "accepted") lexicons.get(validateLanguage(event.languageCode || "es")).observe(event);
       return json(response, result.status === "accepted" ? 202 : 503, result);
     }
     if (request.method === "POST" && url.pathname === "/api/chat") {
@@ -153,7 +172,7 @@ server.listen(port, host, () => {
 
 async function shutdown() {
   server.close();
-  lexicon.close();
+  lexicons.close();
   await transport.close();
   process.exit(0);
 }

@@ -1,0 +1,423 @@
+{
+  "schemaVersion": 1,
+  "experiment": "foundational-deixis-polarity-v1",
+  "generatedAt": "2026-07-19T18:55:11.643Z",
+  "datasetHash": "1b7f606e9b4fef0fe7ea4a5f82495fe6ed9ee338601588cda0022d499ae1b6a4",
+  "claim": "Discriminación asociativa de agencia propia/externa y confirmación/rechazo en un entorno controlado.",
+  "criteria": {
+    "accuracy": 0.9,
+    "ambiguousAbstention": 1,
+    "pretestAbstention": true,
+    "isolation": true,
+    "shuffledControlMax": 0.6
+  },
+  "metrics": {
+    "accuracy": 1,
+    "ambiguousAbstention": 1,
+    "pretestAbstention": true,
+    "isolation": true,
+    "shuffledControlMean": 0
+  },
+  "passed": true,
+  "holdout": [
+    {
+      "task": "agency",
+      "expectedCue": "yo",
+      "stimulus": {
+        "motorCommand": 1,
+        "proprioceptiveChange": 0.7,
+        "externalMotion": 0.7,
+        "causalDelayMs": 70
+      },
+      "predictedCue": "yo",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "agency",
+      "expectedCue": "tú",
+      "stimulus": {
+        "motorCommand": 0,
+        "proprioceptiveChange": 0.01,
+        "externalMotion": 0.7,
+        "causalDelayMs": 460
+      },
+      "predictedCue": "tú",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "polarity",
+      "expectedCue": "sí",
+      "stimulus": {
+        "expected": 0.31,
+        "observed": 0.34
+      },
+      "predictedCue": "sí",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "polarity",
+      "expectedCue": "no",
+      "stimulus": {
+        "expected": 0.86,
+        "observed": 0.04
+      },
+      "predictedCue": "no",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "agency",
+      "expectedCue": "yo",
+      "stimulus": {
+        "motorCommand": 1,
+        "proprioceptiveChange": 0.72,
+        "externalMotion": 0.7,
+        "causalDelayMs": 73
+      },
+      "predictedCue": "yo",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "agency",
+      "expectedCue": "tú",
+      "stimulus": {
+        "motorCommand": 0,
+        "proprioceptiveChange": 0.014,
+        "externalMotion": 0.7,
+        "causalDelayMs": 463
+      },
+      "predictedCue": "tú",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "polarity",
+      "expectedCue": "sí",
+      "stimulus": {
+        "expected": 0.37,
+        "observed": 0.4
+      },
+      "predictedCue": "sí",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "polarity",
+      "expectedCue": "no",
+      "stimulus": {
+        "expected": 0.87,
+        "observed": 0.045
+      },
+      "predictedCue": "no",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "agency",
+      "expectedCue": "yo",
+      "stimulus": {
+        "motorCommand": 1,
+        "proprioceptiveChange": 0.74,
+        "externalMotion": 0.7,
+        "causalDelayMs": 76
+      },
+      "predictedCue": "yo",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "agency",
+      "expectedCue": "tú",
+      "stimulus": {
+        "motorCommand": 0,
+        "proprioceptiveChange": 0.018000000000000002,
+        "externalMotion": 0.7,
+        "causalDelayMs": 466
+      },
+      "predictedCue": "tú",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "polarity",
+      "expectedCue": "sí",
+      "stimulus": {
+        "expected": 0.43,
+        "observed": 0.46
+      },
+      "predictedCue": "sí",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "polarity",
+      "expectedCue": "no",
+      "stimulus": {
+        "expected": 0.88,
+        "observed": 0.05
+      },
+      "predictedCue": "no",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "agency",
+      "expectedCue": "yo",
+      "stimulus": {
+        "motorCommand": 1,
+        "proprioceptiveChange": 0.76,
+        "externalMotion": 0.7,
+        "causalDelayMs": 79
+      },
+      "predictedCue": "yo",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "agency",
+      "expectedCue": "tú",
+      "stimulus": {
+        "motorCommand": 0,
+        "proprioceptiveChange": 0.022,
+        "externalMotion": 0.7,
+        "causalDelayMs": 469
+      },
+      "predictedCue": "tú",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "polarity",
+      "expectedCue": "sí",
+      "stimulus": {
+        "expected": 0.49,
+        "observed": 0.52
+      },
+      "predictedCue": "sí",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "polarity",
+      "expectedCue": "no",
+      "stimulus": {
+        "expected": 0.89,
+        "observed": 0.055
+      },
+      "predictedCue": "no",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "agency",
+      "expectedCue": "yo",
+      "stimulus": {
+        "motorCommand": 1,
+        "proprioceptiveChange": 0.7799999999999999,
+        "externalMotion": 0.7,
+        "causalDelayMs": 82
+      },
+      "predictedCue": "yo",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "agency",
+      "expectedCue": "tú",
+      "stimulus": {
+        "motorCommand": 0,
+        "proprioceptiveChange": 0.026000000000000002,
+        "externalMotion": 0.7,
+        "causalDelayMs": 472
+      },
+      "predictedCue": "tú",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "polarity",
+      "expectedCue": "sí",
+      "stimulus": {
+        "expected": 0.55,
+        "observed": 0.5800000000000001
+      },
+      "predictedCue": "sí",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "polarity",
+      "expectedCue": "no",
+      "stimulus": {
+        "expected": 0.9,
+        "observed": 0.06
+      },
+      "predictedCue": "no",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "agency",
+      "expectedCue": "yo",
+      "stimulus": {
+        "motorCommand": 1,
+        "proprioceptiveChange": 0.7999999999999999,
+        "externalMotion": 0.7,
+        "causalDelayMs": 85
+      },
+      "predictedCue": "yo",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "agency",
+      "expectedCue": "tú",
+      "stimulus": {
+        "motorCommand": 0,
+        "proprioceptiveChange": 0.03,
+        "externalMotion": 0.7,
+        "causalDelayMs": 475
+      },
+      "predictedCue": "tú",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "polarity",
+      "expectedCue": "sí",
+      "stimulus": {
+        "expected": 0.61,
+        "observed": 0.64
+      },
+      "predictedCue": "sí",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    },
+    {
+      "task": "polarity",
+      "expectedCue": "no",
+      "stimulus": {
+        "expected": 0.91,
+        "observed": 0.065
+      },
+      "predictedCue": "no",
+      "confidence": 0.9542836760346624,
+      "passed": true
+    }
+  ],
+  "profiles": [
+    {
+      "cue": "yo",
+      "associations": [
+        {
+          "dimension": "agency",
+          "feature": "self",
+          "weight": 0.9542836760346624,
+          "evidenceCount": 8,
+          "contradictionCount": 0
+        },
+        {
+          "dimension": "polarity",
+          "feature": "affirmed",
+          "weight": 0.65340336095232,
+          "evidenceCount": 4,
+          "contradictionCount": 3
+        },
+        {
+          "dimension": "polarity",
+          "feature": "denied",
+          "weight": 0.5357907559809023,
+          "evidenceCount": 4,
+          "contradictionCount": 4
+        }
+      ]
+    },
+    {
+      "cue": "tú",
+      "associations": [
+        {
+          "dimension": "agency",
+          "feature": "other",
+          "weight": 0.9542836760346624,
+          "evidenceCount": 8,
+          "contradictionCount": 0
+        },
+        {
+          "dimension": "polarity",
+          "feature": "denied",
+          "weight": 0.65340336095232,
+          "evidenceCount": 4,
+          "contradictionCount": 3
+        },
+        {
+          "dimension": "polarity",
+          "feature": "affirmed",
+          "weight": 0.5357907559809023,
+          "evidenceCount": 4,
+          "contradictionCount": 4
+        }
+      ]
+    },
+    {
+      "cue": "sí",
+      "associations": [
+        {
+          "dimension": "agency",
+          "feature": "self",
+          "weight": 0.65340336095232,
+          "evidenceCount": 4,
+          "contradictionCount": 3
+        },
+        {
+          "dimension": "agency",
+          "feature": "other",
+          "weight": 0.5357907559809023,
+          "evidenceCount": 4,
+          "contradictionCount": 4
+        },
+        {
+          "dimension": "polarity",
+          "feature": "affirmed",
+          "weight": 0.9542836760346624,
+          "evidenceCount": 8,
+          "contradictionCount": 0
+        }
+      ]
+    },
+    {
+      "cue": "no",
+      "associations": [
+        {
+          "dimension": "agency",
+          "feature": "other",
+          "weight": 0.65340336095232,
+          "evidenceCount": 4,
+          "contradictionCount": 3
+        },
+        {
+          "dimension": "agency",
+          "feature": "self",
+          "weight": 0.5357907559809023,
+          "evidenceCount": 4,
+          "contradictionCount": 4
+        },
+        {
+          "dimension": "polarity",
+          "feature": "denied",
+          "weight": 0.9542836760346624,
+          "evidenceCount": 8,
+          "contradictionCount": 0
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Datos sintéticos y supervisados.",
+    "Los clasificadores de agencia y acuerdo son sesgos inductivos diseñados.",
+    "No demuestra consciencia, autoconciencia ni comprensión lingüística general."
+  ]
+}
