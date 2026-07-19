@@ -2,26 +2,29 @@
 
 [Español](../../README.md) · [English](README.en.md) · [日本語](README.ja.md) · [Русский](README.ru.md) · **Italiano** · [Français](README.fr.md)
 
-**[Apri la dimostrazione visiva dal vivo →](https://stabberrl.github.io/aurelia-genesis/)**
+**[Apri la demo dal vivo →](https://stabberrl.github.io/aurelia-genesis/)** · **[Visualizza la prova pubblica di apprendimento →](https://stabberrl.github.io/aurelia-genesis/proof.html)**
 
 [![Interfaccia scientifica di Aurelia Genesis](../../assets/aurelia-genesis-dashboard.png)](https://stabberrl.github.io/aurelia-genesis/)
 
-La versione pubblica mostra l’interfaccia e la visualizzazione organica. AERA, il dizionario locale e la memoria cognitiva persistente richiedono l’esecuzione locale.
+## Cos’è Aurelia Genesis?
 
-Ambiente sperimentale per sviluppare agenti cognitivi sintetici persistenti, fondati sull’esperienza e alimentati da AERA.
+Un progetto di ricerca sulla vita artificiale ispirato alle Fluctlight di *Sword Art Online: Alicization*. Studia agenti cognitivi sintetici che iniziano con capacità minime e formano gradualmente memoria, associazioni, preferenze e linguaggio operativo attraverso l’esperienza.
 
-> Aurelia Genesis studia architetture cognitive e apprendimento cumulativo. Non dichiara di creare coscienza, anime biologiche o persone digitali.
+Il runtime non usa un LLM come fonte di intelligenza. AERA è il substrato cognitivo; Genesis gestisce identità isolate e nascite riproducibili. La prima popolazione comprende **Naia, Orin e Iria**.
 
 ## Funzionalità attuali
 
-- Tre identità riproducibili e isolate: Naia, Orin e Iria.
-- Ponte AERA nativo senza LLM nel percorso di esecuzione.
-- Lessico spagnolo locale, esposizione lessicale graduale e associazione sensoriale.
-- Corso di base per Naia con 400 concetti e 2.000 relazioni semantiche.
-- Interfaccia scientifica in tempo reale e mappa dello sviluppo cognitivo.
-- Interfaccia in spagnolo, inglese, giapponese, russo, italiano e francese.
+- Ponte AERA nativo e protocollo neutrale degli eventi.
+- Memoria episodica, associazioni plastiche, decadimento, consolidamento e riconoscimento.
+- Apprendimento controllato di `io/tu/sì/no`, con prova pubblica riproducibile.
+- Sei lessici cognitivi isolati: spagnolo, inglese, giapponese, russo, italiano e francese.
+- Battito cognitivo senza LLM che consolida l’esperienza e propone soltanto azioni interne.
+- Fasi sperimentali: nascente, iniziale, intermedia, avanzata e alta.
+- Impostazioni separate e persistenti per lingua dell’interfaccia, lingua cognitiva e movimento organico.
 
-Il lessico cognitivo delle anime è attualmente solo in spagnolo. La traduzione dell’interfaccia non implica una cognizione multilingue.
+Le fasi sono stime sperimentali basate su esperienza osservabile, radicamento, linguaggio, diversità sensoriale e battiti autonomi. Non misurano coscienza, intelligenza generale o valore morale e saranno riviste con il progresso della ricerca.
+
+## Esecuzione locale
 
 ```bash
 git submodule update --init --recursive
@@ -30,4 +33,4 @@ npm test
 npm start
 ```
 
-Puoi studiare, modificare, creare fork ed estendere il progetto secondo Apache 2.0. Condividi i risultati tramite GitHub Issues, Discussions o pull request.
+Apri `http://127.0.0.1:4747`. I dizionari completi sono importazioni locali opzionali. Il progetto non afferma di aver creato coscienza, anime biologiche o persone digitali.

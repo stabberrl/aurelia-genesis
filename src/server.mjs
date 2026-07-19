@@ -7,6 +7,7 @@ import { CognitiveGateway } from "./bridge/gateway.mjs";
 import { AeraTcpTransport } from "./bridge/aera-tcp-transport.mjs";
 import { LexiconRegistry } from "./lexicon/registry.mjs";
 import { validateLanguage } from "./lexicon/languages.mjs";
+import { CognitiveHeartbeat } from "./runtime/cognitive-heartbeat.mjs";
 import { readRegistry, validateSoulId } from "./runtime/registry.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -15,6 +16,14 @@ const host = process.env.FLUCTLIGHT_HOST || "127.0.0.1";
 const port = Number(process.env.FLUCTLIGHT_PORT || 4747);
 const awakeIds = (process.env.FLUCTLIGHT_AWAKE_SOULS || "soul-001-alba-0001").split(",").map((id) => id.trim()).filter(Boolean);
 const lexicons = new LexiconRegistry({ spanishPath: process.env.FLUCTLIGHT_LEXICON_PATH });
+const heartbeatByLanguage = new Map();
+function heartbeatFor(language = "es") {
+  const languageCode = validateLanguage(language);
+  if (!heartbeatByLanguage.has(languageCode)) heartbeatByLanguage.set(languageCode,
+    new CognitiveHeartbeat(lexicons.get(languageCode), { intervalMs: Number(process.env.FLUCTLIGHT_HEARTBEAT_MS || 60_000) }));
+  return heartbeatByLanguage.get(languageCode);
+}
+heartbeatFor("es").start(awakeIds);
 
 const sensorySchema = {
   entities: ["naia", "human", "garden"],
@@ -119,6 +128,17 @@ const server = http.createServer(async (request, response) => {
       const language = validateLanguage(url.searchParams.get("language") || "es");
       return json(response, 200, { soulId, language, episodes: lexicons.get(language).episodes(soulId) });
     }
+    if (request.method === "GET" && url.pathname === "/api/heartbeat") {
+      const soulId = url.searchParams.get("soulId") || "";
+      if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
+      const language = validateLanguage(url.searchParams.get("language") || "es");
+      return json(response, 200, { soulId, language, beats: heartbeatFor(language).status(soulId) });
+    }
+    if (request.method === "POST" && url.pathname === "/api/heartbeat") {
+      const { soulId, language = "es" } = await readJsonBody(request);
+      if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
+      return json(response, 200, heartbeatFor(validateLanguage(language)).tick(soulId));
+    }
     if (request.method === "POST" && url.pathname === "/api/learning/recognize") {
       const { soulId, cue, subject, predicate, value, language = "es" } = await readJsonBody(request);
       if (!validateSoulId(soulId) || typeof cue !== "string" || !cue.trim()
@@ -172,6 +192,7 @@ server.listen(port, host, () => {
 
 async function shutdown() {
   server.close();
+  for (const heartbeat of heartbeatByLanguage.values()) heartbeat.stop();
   lexicons.close();
   await transport.close();
   process.exit(0);

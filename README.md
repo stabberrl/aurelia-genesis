@@ -106,6 +106,20 @@ Las percepciones aceptadas crean recuerdos episódicos. Cuando una palabra apare
 
 El modelo, sus límites y el primer experimento reproducible con el concepto `luz` están descritos en [`docs/EXPERIENTIAL-LEARNING.md`](docs/EXPERIENTIAL-LEARNING.md).
 
+### Latido cognitivo
+
+Las almas despiertas ejecutan un latido interno periódico sin LLM. Cada ciclo revisa el desarrollo, consolida patrones con evidencia repetida y registra una propuesta segura para la siguiente necesidad. Las propuestas son internas y nunca ejecutan efectos externos automáticamente.
+
+Este patrón está inspirado conceptualmente por G.R.I.L.L.O. de Synthetic Heart, pero fue implementado desde cero para AERA y Genesis. No incorpora su código, sus prompts, personajes ni motores LLM.
+
+### Fases de desarrollo
+
+Cada alma recibe una fase estimada: **naciente**, **desarrollo temprano**, **desarrollo medio**, **desarrollo avanzado** o **desarrollo alto**. La evaluación combina experiencia episódica, asociaciones fundamentadas, lenguaje fundacional demostrado, diversidad sensorial y latidos autónomos. El currículo precargado no eleva la fase por sí solo.
+
+Las fases también limitan capacidades: una entidad temprana puede asociar y adquirir vocabulario supervisado; las propuestas internas y una autonomía mayor permanecen bloqueadas hasta reunir evidencia suficiente. Ninguna fase elimina las políticas de seguridad para acciones externas.
+
+> Las fases son estimaciones experimentales, incompletas y sujetas a revisión. No miden consciencia, inteligencia general, dignidad ni valor moral. Sus umbrales y capacidades seguirán evolucionando conforme avance la investigación.
+
 ### Prueba fundacional: yo, tú, sí y no
 
 El protocolo `npm run experiment:foundations` entrena a Naia con ensayos explícitos y después evalúa casos reservados, estímulos ambiguos, persistencia, aislamiento de Orin y un control con etiquetas alteradas. La **[demostración visual de la evidencia](https://stabberrl.github.io/aurelia-genesis/proof.html)** y el [informe auditable](evidence/foundational-language-v1.md) son públicos; también se conserva la primera ejecución fallida.

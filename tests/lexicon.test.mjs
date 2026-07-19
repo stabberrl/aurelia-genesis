@@ -60,7 +60,10 @@ test("una palabra se fundamenta en percepciones temporalmente cercanas", async (
       semanticAssociations: 0,
       episodicMemories: 2,
       plasticAssociations: 1,
+      heartbeatCount: 0,
+      foundationalConcepts: 0,
       strongestAssociations: lexicon.development("soul-001-alba-0001").strongestAssociations,
+      developmentAssessment: lexicon.development("soul-001-alba-0001").developmentAssessment,
       concepts: lexicon.concepts("soul-001-alba-0001", 36),
       recent: [
         { kind: "word", label: "luz", occurredAt: lexicon.development("soul-001-alba-0001").recent[0].occurredAt },
@@ -90,6 +93,7 @@ test("el currículo inyectado permanece separado de la experiencia", async () =>
     assert.equal(development.associations, 0);
     assert.equal(development.episodicMemories, 0);
     assert.equal(development.plasticAssociations, 0);
+    assert.equal(development.heartbeatCount, 0);
   } finally {
     lexicon.close();
     await fs.rm(directory, { recursive: true, force: true });

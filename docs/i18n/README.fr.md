@@ -2,26 +2,29 @@
 
 [Español](../../README.md) · [English](README.en.md) · [日本語](README.ja.md) · [Русский](README.ru.md) · [Italiano](README.it.md) · **Français**
 
-**[Ouvrir la démonstration visuelle en direct →](https://stabberrl.github.io/aurelia-genesis/)**
+**[Ouvrir la démonstration →](https://stabberrl.github.io/aurelia-genesis/)** · **[Voir la preuve publique d’apprentissage →](https://stabberrl.github.io/aurelia-genesis/proof.html)**
 
 [![Interface scientifique d’Aurelia Genesis](../../assets/aurelia-genesis-dashboard.png)](https://stabberrl.github.io/aurelia-genesis/)
 
-La version publique présente l’interface et la visualisation organique. AERA, le dictionnaire local et la mémoire cognitive persistante nécessitent une exécution locale.
+## Qu’est-ce qu’Aurelia Genesis ?
 
-Environnement expérimental destiné au développement d’agents cognitifs synthétiques persistants, fondés sur l’expérience et propulsés par AERA.
+Un projet de recherche sur la vie artificielle inspiré des Fluctlights de *Sword Art Online: Alicization*. Il étudie des agents cognitifs synthétiques qui commencent avec des capacités minimales et forment progressivement mémoire, associations, préférences et langage opérationnel à partir de leur expérience.
 
-> Aurelia Genesis étudie les architectures cognitives et l’apprentissage cumulatif. Le projet ne prétend pas créer une conscience, une âme biologique ou une personne numérique.
+Le runtime n’utilise pas de LLM comme source d’intelligence. AERA constitue le substrat cognitif ; Genesis gère des identités isolées et des naissances reproductibles. La première population comprend **Naia, Orin et Iria**.
 
-## Fonctionnalités actuelles
+## Capacités actuelles
 
-- Trois identités reproductibles et isolées : Naia, Orin et Iria.
-- Passerelle AERA native, sans LLM dans le chemin d’exécution.
-- Lexique espagnol local, exposition lexicale progressive et ancrage sensoriel.
-- Programme initial de Naia : 400 concepts et 2 000 relations sémantiques.
-- Interface scientifique en direct et carte observable du développement cognitif.
-- Interface en espagnol, anglais, japonais, russe, italien et français.
+- Passerelle AERA native et protocole d’événements neutre.
+- Mémoire épisodique, associations plastiques, oubli, consolidation et reconnaissance.
+- Apprentissage contrôlé de `je/tu/oui/non`, avec preuve publique reproductible.
+- Six lexiques cognitifs isolés : espagnol, anglais, japonais, russe, italien et français.
+- Battement cognitif sans LLM qui consolide l’expérience et propose uniquement des actions internes.
+- Phases expérimentales : naissante, précoce, intermédiaire, avancée et haute.
+- Réglages persistants distincts pour la langue de l’interface, la langue cognitive et le mouvement organique.
 
-Le lexique cognitif des âmes est actuellement limité à l’espagnol. La traduction de l’interface n’implique pas une cognition multilingue.
+Les phases sont des estimations expérimentales fondées sur l’expérience observable, l’ancrage, le langage, la diversité sensorielle et les battements autonomes. Elles ne mesurent ni la conscience, ni l’intelligence générale, ni la valeur morale et seront révisées au fil de la recherche.
+
+## Exécution locale
 
 ```bash
 git submodule update --init --recursive
@@ -30,4 +33,4 @@ npm test
 npm start
 ```
 
-Vous pouvez étudier, modifier, forker et étendre le projet sous Apache 2.0. Merci de partager les résultats utiles via les Issues, Discussions ou pull requests GitHub.
+Ouvrez `http://127.0.0.1:4747`. Les dictionnaires complets sont des imports locaux facultatifs. Le projet ne prétend pas avoir créé une conscience, une âme biologique ou une personne numérique.

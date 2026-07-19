@@ -39,6 +39,7 @@
             <div class="sigil-letter" id="sigil-letter">—</div>
           </div>
           <h1 id="soul-name">Sin nombre</h1>
+          <div class="phase-chip"><span data-i18n="developmentPhase">FASE</span><strong id="soul-phase">NACIENTE</strong></div>
           <p class="identity-copy" id="identity-copy">Semilla empírica bajo observación.</p>
 
           <div class="metrics" aria-label="Estado interno">
@@ -179,6 +180,14 @@
           <div><p class="eyebrow">CARTOGRAFÍA COGNITIVA</p><h2 id="brain-title">Desarrollo de Naia</h2></div>
           <div class="brain-head-actions"><span id="brain-live">LECTURA LOCAL</span><button class="icon-button" id="close-brain" type="button" aria-label="Cerrar">×</button></div>
         </div>
+        <section class="phase-assessment" aria-labelledby="phase-assessment-title">
+          <div class="phase-primary"><span data-i18n="estimatedPhase">FASE ESTIMADA</span><strong id="phase-assessment-title">Naciente</strong><small id="phase-score">0.0%</small></div>
+          <div class="phase-progress"><i id="phase-progress-bar"></i></div>
+          <div class="phase-scale" aria-hidden="true"><span>NACIENTE</span><span>TEMPRANO</span><span>MEDIO</span><span>AVANZADO</span><span>ALTO</span></div>
+          <div class="phase-details"><p id="phase-limit"></p><p id="phase-next"></p></div>
+          <div class="phase-capabilities"><span data-i18n="observedCapabilities">CAPACIDADES OBSERVADAS</span><ul id="phase-capability-list"></ul></div>
+          <p class="phase-disclaimer" id="phase-disclaimer"></p>
+        </section>
         <div class="brain-stats" aria-label="Métricas de desarrollo">
           <div><span>CONCEPTOS INYECTADOS</span><strong id="brain-injected">0</strong></div>
           <div><span>PALABRAS VIVIDAS</span><strong id="brain-vocabulary">0</strong></div>
@@ -186,6 +195,7 @@
           <div><span>MEMORIAS EPISÓDICAS</span><strong id="brain-memories">0</strong></div>
           <div><span>ENLACES PLÁSTICOS</span><strong id="brain-associations">0</strong></div>
           <div><span>DIVERSIDAD</span><strong id="brain-diversity">0</strong></div>
+          <div><span>LATIDOS</span><strong id="brain-heartbeats">0</strong></div>
         </div>
         <div class="brain-map-wrap">
           <svg id="brain-map" class="brain-map" viewBox="0 0 900 480" role="img" aria-labelledby="brain-map-title brain-map-desc">

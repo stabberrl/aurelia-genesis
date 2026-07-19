@@ -72,3 +72,37 @@ Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-0
 - Archivos: `proof.html`, `proof.css`, `proof.js`.
 - Destino: `https://stabberrl.github.io/aurelia-genesis/proof.html` después del despliegue de GitHub Pages.
 - Verificación: generación del informe — PASS; validación pública pendiente del commit y despliegue.
+
+## 2026-07-19T15:20:54.3293405-04:00 — FEAT-HEARTBEAT-001
+
+- Tipo: `feat`
+- Resumen: latido cognitivo periódico sin LLM para consolidar patrones y registrar propuestas internas auditables.
+- Archivos: `src/runtime/cognitive-heartbeat.mjs`, `src/server.mjs`, `src/lexicon/lexicon.mjs`.
+- Seguridad: todas las intenciones son `proposal-only`; no existen efectos externos automáticos.
+- Inspiración: patrón conceptual G.R.I.L.L.O. de Synthetic Heart, reimplementado desde cero sin copiar código GPL, prompts ni personajes.
+- Verificación: Naia consolidó `luz → light` con seis evidencias y propuso `internalRest`; `npm test` — PASS.
+
+## 2026-07-19T15:20:54.3806191-04:00 — FEAT-DEVELOPMENT-PHASES-001
+
+- Tipo: `feat`
+- Resumen: fases naciente, temprana, media, avanzada y alta con límites de capacidades.
+- Archivos: `src/development/assessment.mjs`, `src/lexicon/lexicon.mjs`, `tests/development.test.mjs`.
+- Criterios: experiencia, fundamentación, lenguaje demostrado, diversidad sensorial y latidos; el currículo inyectado no puntúa directamente.
+- Resultado local: Naia alcanzó `Desarrollo medio` con una puntuación aproximada de `43%` después del primer latido.
+- Limitaciones: estimación experimental; no mide consciencia, inteligencia general ni valor moral.
+
+## 2026-07-19T15:20:54.4164300-04:00 — FEAT-PHASE-UI-001
+
+- Tipo: `feat`
+- Resumen: indicador de fase, progreso, próxima fase, límites, capacidades observadas, latidos y advertencia metodológica en la cartografía cognitiva.
+- Archivos: `index.html`, `styles.css`, `app.js`, `i18n.js`.
+- Idiomas: español, inglés, japonés, ruso, italiano y francés.
+- Verificación: inspección visual local — PASS.
+
+## 2026-07-19T15:20:54.4419882-04:00 — DOCS-I18N-SYNC-001
+
+- Tipo: `docs`
+- Resumen: reescritura y sincronización de los README inglés, japonés, ruso, italiano y francés.
+- Archivos: `docs/i18n/README.en.md`, `README.ja.md`, `README.ru.md`, `README.it.md`, `README.fr.md`.
+- Contenido sincronizado: aprendizaje fundacional, evidencia pública, léxicos aislados, latido, fases, configuración y limitaciones.
+- Verificación: enlaces relativos y `git diff --check`.

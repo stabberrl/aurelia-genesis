@@ -3,6 +3,7 @@ import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { FoundationalLanguage } from "../learning/foundational-language.mjs";
 import { normalizeForLanguage, tokenizeForLanguage, validateLanguage } from "./languages.mjs";
+import { assessDevelopment } from "../development/assessment.mjs";
 
 export const DEFAULT_LEXICON_PATH = path.resolve("var", "lexicon", "es.sqlite");
 
@@ -110,6 +111,23 @@ export class Lexicon {
         cue TEXT NOT NULL,
         perception_event_id TEXT NOT NULL,
         PRIMARY KEY (soul_id, cue, perception_event_id)
+      );
+      CREATE TABLE IF NOT EXISTS cognitive_heartbeats (
+        soul_id TEXT NOT NULL,
+        sequence INTEGER NOT NULL,
+        occurred_at INTEGER NOT NULL,
+        phase_id TEXT NOT NULL,
+        operations_json TEXT NOT NULL,
+        PRIMARY KEY (soul_id, sequence)
+      );
+      CREATE TABLE IF NOT EXISTS consolidated_patterns (
+        soul_id TEXT NOT NULL,
+        cue TEXT NOT NULL,
+        predicate TEXT NOT NULL,
+        strength REAL NOT NULL,
+        evidence_count INTEGER NOT NULL,
+        consolidated_at INTEGER NOT NULL,
+        PRIMARY KEY (soul_id, cue, predicate)
       );
       CREATE TABLE IF NOT EXISTS metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL);
     `);
@@ -289,6 +307,9 @@ export class Lexicon {
     const semantics = this.db.prepare("SELECT COUNT(*) AS associations FROM semantic_associations WHERE soul_id = ?").get(soulId);
     const episodes = this.db.prepare("SELECT COUNT(*) AS count FROM episodic_memories WHERE soul_id = ?").get(soulId);
     const plastic = this.db.prepare("SELECT COUNT(*) AS count FROM learned_associations WHERE soul_id = ?").get(soulId);
+    const heartbeats = this.db.prepare("SELECT COUNT(*) AS count FROM cognitive_heartbeats WHERE soul_id = ?").get(soulId);
+    const foundations = this.db.prepare(`SELECT COUNT(DISTINCT cue) AS count FROM contextual_associations
+      WHERE soul_id = ? AND evidence_count >= 2 AND weight >= 0.45`).get(soulId);
     const recent = this.db.prepare(`
       SELECT kind, label, occurred_at AS occurredAt FROM (
         SELECT 'word' AS kind, normalized AS label, CAST(strftime('%s', first_seen_at) AS INTEGER) * 1000000 AS occurred_at
@@ -298,7 +319,7 @@ export class Lexicon {
         FROM perceptions WHERE soul_id = ?
       ) ORDER BY occurred_at DESC LIMIT 24
     `).all(soulId, soulId).map((row) => ({ ...row }));
-    return {
+    const result = {
       soulId,
       vocabulary: Number(vocabulary.count),
       experiencedVocabulary: Number(vocabulary.count),
@@ -311,10 +332,14 @@ export class Lexicon {
       semanticAssociations: Number(semantics.associations),
       episodicMemories: Number(episodes.count),
       plasticAssociations: Number(plastic.count),
+      heartbeatCount: Number(heartbeats.count),
+      foundationalConcepts: Math.min(4, Number(foundations.count)),
       strongestAssociations: this.learnedAssociations(soulId, { limit: 12 }),
       concepts: this.concepts(soulId, 36),
       recent,
     };
+    result.developmentAssessment = assessDevelopment(result);
+    return result;
   }
 
   injectCurriculum(soulId, concepts, associations) {

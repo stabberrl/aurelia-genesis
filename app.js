@@ -224,6 +224,19 @@ async function loadDevelopment() {
   $("#brain-memories").textContent = data.episodicMemories.toLocaleString(window.AureliaI18n.locale);
   $("#brain-associations").textContent = data.plasticAssociations.toLocaleString(window.AureliaI18n.locale);
   $("#brain-diversity").textContent = `${data.sensoryChannels}/4`;
+  $("#brain-heartbeats").textContent = data.heartbeatCount.toLocaleString(window.AureliaI18n.locale);
+  const assessment = data.developmentAssessment;
+  const phaseName = tr(`phase_${assessment.phase.id}`);
+  $("#soul-phase").textContent = phaseName.toUpperCase();
+  $("#phase-assessment-title").textContent = phaseName;
+  $("#phase-score").textContent = `${(assessment.score * 100).toFixed(1)}%`;
+  $("#phase-progress-bar").style.width = `${assessment.score * 100}%`;
+  $("#phase-limit").textContent = tr(`phaseLimit_${assessment.phase.id}`);
+  $("#phase-next").textContent = assessment.nextPhase
+    ? tr("nextPhase", { name: tr(`phase_${assessment.nextPhase.id}`), remaining: (assessment.nextPhase.remaining * 100).toFixed(1) })
+    : tr("maximumObservedPhase");
+  $("#phase-capability-list").innerHTML = assessment.capabilities.map((capability) => `<li>${escapeHTML(tr(`capability_${capability}`))}</li>`).join("");
+  $("#phase-disclaimer").textContent = tr("phaseDisclaimer");
   $("#brain-count").textContent = `${data.episodicMemories} MEMORIAS / ${data.plasticAssociations} ENLACES`;
   $("#brain-live").textContent = `${tr("updated")} ${formatTime()}`;
   $("#development-trace").innerHTML = data.recent.slice(0, 10).map((item) => `<li>${item.kind === "word" ? "PALABRA" : "PERCEPCIÓN"}<b>${escapeHTML(item.label)}</b></li>`).join("");

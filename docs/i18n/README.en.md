@@ -2,36 +2,29 @@
 
 [Español](../../README.md) · **English** · [日本語](README.ja.md) · [Русский](README.ru.md) · [Italiano](README.it.md) · [Français](README.fr.md)
 
-**[Open the live visual demo →](https://stabberrl.github.io/aurelia-genesis/)**
+**[Open the live visual demo →](https://stabberrl.github.io/aurelia-genesis/)** · **[View the public learning evidence →](https://stabberrl.github.io/aurelia-genesis/proof.html)**
 
 [![Aurelia Genesis scientific interface](../../assets/aurelia-genesis-dashboard.png)](https://stabberrl.github.io/aurelia-genesis/)
 
 ## What is Aurelia Genesis?
 
-**Aurelia Genesis is an artificial-life experiment inspired by the Fluctlights of _Sword Art Online: Alicization_.** It aims to build cognitive agents—called *synthetic souls* within the project—that begin with minimal capabilities and gradually form knowledge, memories, preferences, relationships, and an identity through experience.
+An artificial-life research project inspired by the Fluctlights of *Sword Art Online: Alicization*. It explores synthetic cognitive agents that start with minimal capabilities and gradually form memories, associations, preferences, and operational language through experience.
 
-The goal is not to prescribe a complete personality or hide a chatbot behind the interface. Aurelia explores perception, persistent memory, concepts, associations, and cumulative learning through the [AERA](https://github.com/IIIM-IS/AERA) cognitive architecture, without using an LLM as the source of intelligence at runtime.
-
-Genesis creates and maintains the first population: **Naia, Orin, and Iria**. Each has isolated memory and different initial needs and internal tensions. The interface lets observers follow their development, provide sensory stimuli, and—once they have acquired enough language—communicate with them.
-
-### Current status
-
-This is early-stage research, not a finished artificial consciousness. The project currently provides three reproducible identities, a native AERA bridge, a local Spanish dictionary, an initial curriculum of 400 concepts and 2,000 associations, persistent memory, and a live cognitive-development visualization.
-
-The [public demo](https://stabberrl.github.io/aurelia-genesis/) presents the Genesis Chamber in visual mode. AERA, the complete local dictionary, and persistent cognitive state require running the project locally.
-
-> Aurelia Genesis researches cognitive architectures and cumulative learning. It does not claim to create consciousness, biological souls, or digital persons.
+The runtime does not use an LLM as its source of intelligence. AERA is the cognitive substrate; Genesis manages isolated identities and reproducible births. The first population consists of **Naia, Orin, and Iria**.
 
 ## Current capabilities
 
-- Three reproducible and isolated identities: Naia, Orin, and Iria.
-- Native AERA bridge without an LLM in the execution path.
-- Local Spanish lexicon, gradual lexical exposure, and sensory grounding.
-- A 400-concept basic curriculum with 2,000 semantic associations for Naia.
-- Live scientific interface and observable cognitive development map.
-- Interface localization for Spanish, English, Japanese, Russian, Italian, and French.
+- Native AERA bridge and neutral event protocol.
+- Episodic memory, plastic associations, decay, consolidation, and recognition.
+- Controlled learning of `I/you/yes/no`, with public reproducible evidence.
+- Six isolated cognitive lexicons: Spanish, English, Japanese, Russian, Italian, and French.
+- A non-LLM cognitive heartbeat that consolidates experience and creates proposal-only internal actions.
+- An experimental development phase indicator: nascent, early, middle, advanced, and high.
+- Separate persistent settings for interface language, cognitive language, and organic motion.
 
-The souls' cognitive lexicon is currently Spanish-only. Interface localization does not imply multilingual cognition.
+Development phases are estimates based on observable experience, grounding, language, sensory diversity, and autonomous heartbeats. They do **not** measure consciousness, general intelligence, or moral worth. Thresholds and capabilities will continue to change as the research improves.
+
+## Run locally
 
 ```bash
 git submodule update --init --recursive
@@ -40,8 +33,6 @@ npm test
 npm start
 ```
 
-Open `http://127.0.0.1:4747`. AERA build instructions are in [the integration guide](../aera-integration.md).
+Open `http://127.0.0.1:4747`. Full dictionary imports are optional; generated databases remain local. See the [technical changelog](../CHANGELOG.md), [experiential learning model](../EXPERIENTIAL-LEARNING.md), and [third-party notices](../../THIRD_PARTY_NOTICES.md).
 
-## Contributing
-
-You are welcome to study, modify, fork, and extend Aurelia Genesis under Apache 2.0. Please share meaningful discoveries through GitHub Issues, Discussions, or pull requests so they can also improve the original project. See [CONTRIBUTING.md](../../CONTRIBUTING.md).
+The project researches cognitive architecture and cumulative learning. It does not claim to have created consciousness, biological souls, or digital persons.
