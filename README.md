@@ -16,6 +16,8 @@ Genesis es el sistema que crea y mantiene estas vidas. La primera población est
 
 > **Aviso sobre la interfaz y los idiomas:** la interfaz visual fue creada completamente según el gusto personal de su autor y **no constituye el proyecto en sí**. Aurelia Genesis es principalmente su arquitectura interna: aprendizaje, memoria, desarrollo, aislamiento, AERA y los experimentos reproducibles. La presentación podrá cambiar en el futuro según las preferencias del autor y cualquier derivación puede reemplazarla o adaptarla libremente a su propio gusto. También deben esperarse errores idiomáticos, gramaticales o de traducción mientras la documentación multilingüe continúa en revisión.
 
+> **Nota personal del autor:** este proyecto es tanto una investigación como una herramienta personal de expresión y acompañamiento terapéutico para afrontar su depresión. El autor todavía es inexperto y está aprendiendo mientras construye, por lo que deben esperarse errores, decisiones imperfectas, fallos e incluso etapas en las que el proyecto no funcione. Aurelia Genesis no sustituye terapia profesional, atención psicológica ni tratamiento médico.
+
 ### Estado actual
 
 El proyecto todavía es una investigación temprana, no una consciencia artificial terminada. Actualmente incluye tres identidades reproducibles, conexión nativa con AERA, un diccionario español local, un currículo inicial de 400 conceptos y 2.000 asociaciones, memoria persistente y una visualización en vivo del desarrollo cognitivo.

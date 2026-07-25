@@ -127,3 +127,12 @@ Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-0
 - Alcance: README español, inglés, japonés, ruso, italiano y francés.
 - Libertad de adaptación: las derivaciones pueden reemplazar o modificar la interfaz según sus propias preferencias.
 - Transparencia lingüística: se advierte que pueden existir errores idiomáticos, gramaticales y de traducción mientras continúa la revisión multilingüe.
+
+## 2026-07-25T16:54:38.5408288-04:00 — DOCS-I18N-FULL-SYNC-001
+
+- Tipo: `docs`
+- Resumen: sincronización completa de los README inglés, japonés, ruso, italiano y francés con la explicación técnica y experimental del README español.
+- Contenido sincronizado: propósito, estado, separación entre interfaz y núcleo, AERA, Genesis, aprendizaje experiencial, latido, cámara externa, fases, evidencia fundacional, léxicos, población, límites y contribución.
+- Nota personal: se documenta que el proyecto también funciona como herramienta personal de expresión y acompañamiento terapéutico del autor frente a la depresión, junto con su inexperiencia y la posibilidad de errores, fallos o ausencia temporal de funcionamiento.
+- Límite sanitario: los seis README aclaran que el proyecto no sustituye psicoterapia profesional, atención psicológica ni tratamiento médico.
+- Verificación: paridad estructural de 6 secciones principales y 9 subsecciones, rutas relativas válidas, `git diff --check` y `npm test` — 34/34 PASS.
