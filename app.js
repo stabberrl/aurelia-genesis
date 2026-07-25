@@ -13,6 +13,8 @@ const defaultState = {
 
 let state = loadState();
 let runtimeConnected = false;
+let runtimeServiceAvailable = false;
+let runtimeEngine = "AERA";
 let activeSoul = null;
 let soulRegistry = [];
 let developmentRefreshTimer = null;
@@ -50,10 +52,19 @@ function formatTime(date = new Date()) {
   return date.toLocaleTimeString(window.AureliaI18n.locale, { hour: "2-digit", minute: "2-digit", hour12: false });
 }
 
+function updateRuntimeIndicator() {
+  const indicator = $("#runtime-indicator");
+  indicator.classList.toggle("online", runtimeConnected);
+  indicator.classList.toggle("error", runtimeServiceAvailable && !runtimeConnected);
+  indicator.querySelector("b").textContent = runtimeServiceAvailable
+    ? `${runtimeEngine} · ${runtimeConnected ? tr("linked") : tr("bridgeReady")}`
+    : tr("prototype");
+}
+
 function addMessage(role, text, persist = true) {
   const article = document.createElement("article");
   article.className = `message ${role === "soul" ? "soul-message" : "user-message"}`;
-  article.innerHTML = `<span class="message-label">${role === "soul" ? "FLUCTLIGHT" : "TÚ"} · ${formatTime()}</span><p>${escapeHTML(text)}</p>`;
+  article.innerHTML = `<span class="message-label">${role === "soul" ? "FLUCTLIGHT" : tr("you")} · ${formatTime()}</span><p>${escapeHTML(text)}</p>`;
   dialogue.append(article);
   dialogue.scrollTop = dialogue.scrollHeight;
   if (persist) {
@@ -143,12 +154,12 @@ function createResponse(text) {
 }
 
 function updateInterface() {
-  const name = state.name || "Sin nombre";
+  const name = state.name || tr("unnamed");
   $("#soul-name").textContent = name;
   $("#sigil-letter").textContent = state.name ? state.name[0] : "—";
   $("#identity-copy").textContent = state.name
     ? tr("identityGrowing", { name })
-    : "Una presencia acaba de despertar. Todavía no sabe quién es.";
+    : tr("unnamedPresence");
 
   const metrics = ["trust", "curiosity", "coherence"];
   metrics.forEach((metric) => {
@@ -157,7 +168,7 @@ function updateInterface() {
     $(`#${metric}-bar`).style.setProperty("--value", `${state[metric]}%`);
   });
   $("#memory-count").textContent = `${String(state.memories.length).padStart(2, "0")} ${tr("fragments")}`;
-  $("#mood-label").textContent = state.trust > 55 ? "Conectada" : state.curiosity > 60 ? "Expectante" : state.messages.length ? "Atenta" : "Despertando";
+  $("#mood-label").textContent = state.trust > 55 ? tr("moodConnected") : state.curiosity > 60 ? tr("moodExpectant") : state.messages.length ? tr("moodAttentive") : tr("moodAwakening");
   saveState();
 }
 
@@ -200,14 +211,14 @@ function renderBrainMap(data) {
     const point = sensePositions.get(sense);
     return `<g><rect class="brain-node-sense" x="${point.x - 35}" y="${point.y - 13}" width="70" height="26" /><text class="sense-label" x="${point.x}" y="${point.y + 3}">${escapeHTML(sense.toUpperCase())}</text></g>`;
   }).join("");
-  svg.innerHTML = `<title id="brain-map-title">Mapa cognitivo de ${escapeHTML(activeSoul?.name || "alma")}</title><desc id="brain-map-desc">${words.length} palabras conectadas con ${senses.length} canales sensoriales.</desc>${coreEdges}${edges}<circle class="brain-node-core" cx="450" cy="240" r="8" />${wordNodes}${senseNodes}`;
+  svg.innerHTML = `<title id="brain-map-title">${escapeHTML(tr("brainMapTitle", { name: activeSoul?.name || tr("soulGeneric") }))}</title><desc id="brain-map-desc">${escapeHTML(tr("brainMapDescription", { words: words.length, senses: senses.length }))}</desc>${coreEdges}${edges}<circle class="brain-node-core" cx="450" cy="240" r="8" />${wordNodes}${senseNodes}`;
   $("#brain-empty").hidden = words.length > 0;
 }
 
 async function loadDevelopment() {
   if (!activeSoul) return;
   const response = await fetch(`/api/development?soulId=${encodeURIComponent(activeSoul.id)}&language=${encodeURIComponent(cognitiveLanguage)}`);
-  if (!response.ok) throw new Error("No fue posible leer el desarrollo cognitivo.");
+  if (!response.ok) throw new Error(tr("developmentReadError"));
   const data = await response.json();
   organismDevelopment = data;
   const activity = Math.min(99, data.perceptions * 0.7 + data.lexicalEncounters * 0.18);
@@ -237,10 +248,32 @@ async function loadDevelopment() {
     : tr("maximumObservedPhase");
   $("#phase-capability-list").innerHTML = assessment.capabilities.map((capability) => `<li>${escapeHTML(tr(`capability_${capability}`))}</li>`).join("");
   $("#phase-disclaimer").textContent = tr("phaseDisclaimer");
-  $("#brain-count").textContent = `${data.episodicMemories} MEMORIAS / ${data.plasticAssociations} ENLACES`;
+  $("#brain-count").textContent = tr("memoryLinkCount", { memories: data.episodicMemories, links: data.plasticAssociations });
   $("#brain-live").textContent = `${tr("updated")} ${formatTime()}`;
-  $("#development-trace").innerHTML = data.recent.slice(0, 10).map((item) => `<li>${item.kind === "word" ? "PALABRA" : "PERCEPCIÓN"}<b>${escapeHTML(item.label)}</b></li>`).join("");
+  $("#development-trace").innerHTML = data.recent.slice(0, 10).map((item) => `<li>${tr(item.kind === "word" ? "eventWord" : "eventPerception")}<b>${escapeHTML(item.label)}</b></li>`).join("");
   renderBrainMap(data);
+}
+
+async function loadLearningChamber() {
+  if (!activeSoul) return;
+  const beacon = $("#learning-beacon");
+  try {
+    const response = await fetch(`/api/learning/chamber?soulId=${encodeURIComponent(activeSoul.id)}&language=${encodeURIComponent(cognitiveLanguage)}`);
+    if (!response.ok) throw new Error();
+    const data = await response.json();
+    const latest = data.observations?.[0];
+    beacon.classList.toggle("active", Boolean(data.enabled));
+    beacon.classList.toggle("rejected", latest?.status === "rejected");
+    $("#learning-count").textContent = String(data.observations?.length || 0).padStart(2, "0");
+    $("#learning-term").textContent = latest?.term || tr("waitingObservation");
+    $("#learning-status").textContent = latest
+      ? tr(latest.status === "accepted" ? "observationAccepted" : "observationRejected")
+      : tr("controlledChannel");
+  } catch {
+    beacon.classList.remove("active", "rejected");
+    $("#learning-term").textContent = tr("waitingObservation");
+    $("#learning-status").textContent = tr("controlledChannel");
+  }
 }
 
 function restoreConversation() {
@@ -252,7 +285,7 @@ function restoreConversation() {
 function showThinking() {
   const article = document.createElement("article");
   article.className = "message soul-message thinking";
-  article.innerHTML = `<span class="message-label">FLUCTLIGHT · PERCEPCIÓN</span><p>Transmitiendo una señal al núcleo</p>`;
+  article.innerHTML = `<span class="message-label">FLUCTLIGHT · ${tr("eventPerception")}</span><p>${tr("transmittingSignal")}</p>`;
   dialogue.append(article);
   dialogue.scrollTop = dialogue.scrollHeight;
   return article;
@@ -284,19 +317,19 @@ $("#composer").addEventListener("submit", async (event) => {
         body: JSON.stringify({ soulId: activeSoul.id, sessionId: runtimeSessionId, message: text }),
       });
       const result = await response.json();
-      if (!response.ok && response.status !== 409) throw new Error(result.error || "El enlace no respondió.");
+      if (!response.ok && response.status !== 409) throw new Error(result.error || tr("linkNoResponse"));
       thinking.remove();
       if (result.text) addMessage("soul", result.text);
       else {
         const learned = lexical.encountered.length;
         const grounded = lexical.encountered.filter((item) => item.groundedIn?.length).length;
-        addSystemMessage(`La señal fue recibida · ${learned} palabras reconocidas · ${grounded} vinculadas a percepción reciente.`);
+        addSystemMessage(tr("signalReceived", { words: learned, grounded }));
       }
       await loadDevelopment();
-      $("#composer-hint").textContent = "AERA · aprendizaje acumulativo desde experiencia";
+      $("#composer-hint").textContent = tr("cumulativeLearning");
     } catch (error) {
       thinking.remove();
-      addSystemMessage(`El enlace cognitivo se interrumpió: ${error.message}`);
+      addSystemMessage(tr("cognitiveLinkInterrupted", { error: error.message }));
     } finally {
       input.disabled = false;
       input.focus();
@@ -328,7 +361,7 @@ document.querySelectorAll("[data-sensor]").forEach((button) => button.addEventLi
   const value = Number(channel.querySelector("input").value);
   organismPulse = Math.max(.35, value);
   if (!runtimeConnected || !activeSoul) {
-    addSystemMessage("Canal rechazado · el enlace AERA no está disponible.");
+    addSystemMessage(tr("channelUnavailable"));
     return;
   }
   button.disabled = true;
@@ -351,18 +384,18 @@ document.querySelectorAll("[data-sensor]").forEach((button) => button.addEventLi
       }),
     });
     const result = await response.json();
-    if (!response.ok) throw new Error(result.error || result.reason || "Transmisión rechazada");
-    addSystemMessage(`${sensor.toUpperCase()} · ${value.toFixed(2)} · inyección confirmada por AERA`);
+    if (!response.ok) throw new Error(result.error || result.reason || tr("transmissionRejected"));
+    addSystemMessage(tr("injectionConfirmed", { sensor: tr(sensor).toUpperCase(), value: value.toFixed(2) }));
     await loadDevelopment();
-    $("#mood-label").textContent = "Procesando estímulo";
+    $("#mood-label").textContent = tr("moodProcessing");
   } catch (error) {
-    addSystemMessage(`FALLO DE CANAL · ${error.message}`);
+    addSystemMessage(tr("channelFailure", { error: error.message }));
   } finally {
     window.setTimeout(() => {
       button.disabled = false;
       channel.classList.remove("transmitting");
       soulCore.classList.remove("awake");
-      $("#mood-label").textContent = activeSoul?.status === "awake" ? "Observación activa" : "Dormida";
+      $("#mood-label").textContent = activeSoul?.status === "awake" ? tr("moodObserving") : tr("dormant");
     }, 650);
   }
 }));
@@ -383,17 +416,17 @@ soulCore.addEventListener("click", () => {
   organismPulse = 1;
   if (runtimeConnected) {
     soulCore.classList.add("awake");
-    $("#mood-label").textContent = activeSoul?.status === "awake" ? "Resonancia" : "Dormida";
+    $("#mood-label").textContent = activeSoul?.status === "awake" ? tr("moodResonance") : tr("dormant");
     window.setTimeout(() => {
       soulCore.classList.remove("awake");
-      $("#mood-label").textContent = activeSoul?.status === "awake" ? "Despierta" : "Dormida";
+      $("#mood-label").textContent = activeSoul?.status === "awake" ? tr("awake") : tr("dormant");
     }, 1000);
     return;
   }
   state.touches += 1;
   state.trust += 1;
   soulCore.classList.add("awake");
-  $("#mood-label").textContent = state.touches === 1 ? "Contacto" : "Te reconoce";
+  $("#mood-label").textContent = state.touches === 1 ? tr("moodContact") : tr("moodRecognizes");
   if (state.touches === 1) remember("Alguien tocó mi núcleo y permaneció ahí.", "sensación");
   window.setTimeout(() => soulCore.classList.remove("awake"), 1000);
   updateInterface();
@@ -402,10 +435,10 @@ soulCore.addEventListener("click", () => {
 const memoryDialog = $("#memory-dialog");
 $("#memory-button").addEventListener("click", () => {
   $("#memory-list").innerHTML = runtimeConnected
-    ? '<p class="memory-empty">La memoria de esta alma es privada y está siendo custodiada por su núcleo. Una vista con procedencia será incorporada en el próximo hito.</p>'
+    ? `<p class="memory-empty">${escapeHTML(tr("memoryProtected"))}</p>`
     : state.memories.length
     ? state.memories.map((memory) => `<article class="memory-fragment"><span>${escapeHTML(memory.kind.toUpperCase())} · ${new Date(memory.at).toLocaleString("es-CL")}</span><p>${escapeHTML(memory.text)}</p></article>`).join("")
-    : '<p class="memory-empty">La memoria aún está en silencio.</p>';
+    : `<p class="memory-empty">${escapeHTML(tr("memorySilent"))}</p>`;
   memoryDialog.showModal();
 });
 $("#close-memory").addEventListener("click", () => memoryDialog.close());
@@ -562,7 +595,10 @@ function startNeuralOrganism() {
 
 function renderRoster() {
   const roster = $("#soul-roster");
-  roster.innerHTML = soulRegistry.map((soul) => `<button class="soul-choice${soul.id === activeSoul?.id ? " active" : ""}" type="button" data-soul-id="${escapeHTML(soul.id)}" data-status="${soul.status}" aria-label="${escapeHTML(soul.name)}, ${soul.status === "awake" ? "despierta" : "dormida"}" title="${escapeHTML(soul.name)} · ${soul.status === "awake" ? "despierta" : "dormida"}">${escapeHTML(soul.name[0])}</button>`).join("");
+  roster.innerHTML = soulRegistry.map((soul) => {
+    const status = tr(soul.status === "awake" ? "awakeStatus" : "dormantStatus");
+    return `<button class="soul-choice${soul.id === activeSoul?.id ? " active" : ""}" type="button" data-soul-id="${escapeHTML(soul.id)}" data-status="${soul.status}" aria-label="${escapeHTML(soul.name)}, ${escapeHTML(status)}" title="${escapeHTML(soul.name)} · ${escapeHTML(status)}"><span>${escapeHTML(soul.name[0])}</span><small>${escapeHTML(soul.name)}</small></button>`;
+  }).join("");
   roster.querySelectorAll("button").forEach((button) => button.addEventListener("click", () => selectSoul(button.dataset.soulId)));
 }
 
@@ -586,30 +622,33 @@ function selectSoul(soulId) {
   } else {
     input.disabled = true;
     input.placeholder = tr("sleepPlaceholder", { name: activeSoul.name });
-    addSystemMessage(`${activeSoul.name} existe, pero su ciclo cognitivo todavía no ha comenzado.`);
+    addSystemMessage(tr("soulCycleDormant", { name: activeSoul.name }));
     $("#mood-label").textContent = tr("dormant");
   }
-  if (runtimeConnected) loadDevelopment().catch(() => {});
+  if (runtimeServiceAvailable) loadDevelopment().catch(() => {});
+  loadLearningChamber().catch(() => {});
 }
 
 async function connectRuntime() {
   const indicator = $("#runtime-indicator");
   try {
     const [healthResponse, soulsResponse] = await Promise.all([fetch("/api/health"), fetch("/api/souls")]);
-    if (!healthResponse.ok || !soulsResponse.ok) throw new Error("Servicio no disponible");
+    if (!healthResponse.ok || !soulsResponse.ok) throw new Error(tr("serviceUnavailable"));
     const health = await healthResponse.json();
     const registry = await soulsResponse.json();
     soulRegistry = registry.souls;
+    runtimeServiceAvailable = true;
     runtimeConnected = Boolean(health.connected);
-    indicator.classList.toggle("online", runtimeConnected);
-    indicator.classList.toggle("error", !runtimeConnected);
-    indicator.querySelector("b").textContent = `${health.engine.toUpperCase()} · ${health.connected ? tr("linked") : tr("bridgeReady")}`;
+    runtimeEngine = health.engine.toUpperCase();
+    updateRuntimeIndicator();
     selectSoul(soulRegistry.find((soul) => soul.status === "awake")?.id || soulRegistry[0]?.id);
+    window.setInterval(() => loadLearningChamber().catch(() => {}), 30_000);
     $("#memory-count").textContent = tr("privateMemory");
     document.querySelectorAll("[data-sensor]").forEach((button) => { button.disabled = !runtimeConnected; });
   } catch {
-    indicator.classList.add("error");
-    indicator.querySelector("b").textContent = tr("prototype");
+    runtimeServiceAvailable = false;
+    runtimeConnected = false;
+    updateRuntimeIndicator();
     restoreConversation();
     updateInterface();
   }
@@ -619,7 +658,10 @@ startClock();
 startParticleField();
 startNeuralOrganism();
 $("#language-select").addEventListener("change", (event) => window.AureliaI18n.setLanguage(event.target.value));
-window.addEventListener("aurelia:language", () => { if (activeSoul) selectSoul(activeSoul.id); });
+window.addEventListener("aurelia:language", () => {
+  updateRuntimeIndicator();
+  if (activeSoul) selectSoul(activeSoul.id);
+});
 
 const settingsDialog = $("#settings-dialog");
 $("#settings-button").addEventListener("click", () => {
@@ -639,6 +681,7 @@ $("#settings-form").addEventListener("submit", async (event) => {
   localStorage.setItem("aurelia.motion", motion);
   settingsDialog.close();
   if (activeSoul && runtimeConnected) await loadDevelopment();
+  if (activeSoul) await loadLearningChamber();
 });
 document.documentElement.dataset.motion = localStorage.getItem("aurelia.motion") || "full";
 connectRuntime();

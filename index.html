@@ -21,6 +21,7 @@
           <span>FLUCTLIGHT <b>/ GENESIS LAB</b></span>
         </a>
         <div class="system-state">
+          <span class="view-mode"><i></i><span data-i18n="observationMode">OBSERVACIÓN LOCAL</span></span>
           <label class="language-control"><span class="sr-only">Language</span><select id="language-select" aria-label="Language"><option value="es">ES</option><option value="en">EN</option><option value="ja">日本語</option><option value="ru">RU</option><option value="it">IT</option><option value="fr">FR</option></select></label>
           <button class="settings-trigger" id="settings-button" type="button" aria-label="Configuración">⌁</button>
           <span class="pulse-dot"></span>
@@ -66,6 +67,7 @@
         </aside>
 
         <section class="soul-stage" aria-label="Núcleo de Fluctlight">
+          <div class="stage-kicker"><span data-i18n="subjectField">CAMPO DEL SUJETO</span><b>OPTICAL SLICE / 07</b></div>
           <div class="stage-frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
           <div class="stage-axis axis-x" aria-hidden="true"></div>
           <div class="stage-axis axis-y" aria-hidden="true"></div>
@@ -87,6 +89,11 @@
             <span data-i18n="subjectState">ESTADO DEL SUJETO</span>
             <strong id="mood-label">Despertando</strong>
           </div>
+          <aside class="learning-beacon" id="learning-beacon" aria-live="polite">
+            <span class="learning-beacon-signal" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="learning-beacon-copy"><small data-i18n="externalLearning">APRENDIZAJE EXTERNO</small><strong id="learning-term" data-i18n="waitingObservation">ESPERANDO OBSERVACIÓN</strong></span>
+            <span class="learning-beacon-meta"><b id="learning-count">00</b><small id="learning-status" data-i18n="controlledChannel">CANAL CONTROLADO</small></span>
+          </aside>
         </section>
 
         <section class="dialogue-panel panel">
@@ -122,7 +129,7 @@
             </div>
           </form>
 
-          <div class="trace-head"><span data-i18n="eventTrace">TRAZA DE EVENTOS</span><span>LIVE / 100 MS</span></div>
+          <div class="trace-head"><span data-i18n="eventTrace">TRAZA DE EVENTOS</span><span data-i18n="liveTrace">EN DIRECTO / 100 MS</span></div>
 
           <div class="dialogue" id="dialogue" aria-live="polite">
             <article class="message system-message"><span class="message-label">SISTEMA · ESPERA</span><p>Esperando enlace con el núcleo empírico.</p></article>
@@ -140,17 +147,17 @@
       </section>
 
       <footer class="footer-line">
-        <span>AERA EMPIRICAL COGNITION / OBSERVACIÓN LOCAL</span>
-        <span>SESION <b id="session-id">0000</b></span>
-        <span>LATENCIA <b id="latency">12ms</b></span>
+        <span data-i18n="visualLayer">AERA / CAPA VISUAL REEMPLAZABLE</span>
+        <span><span data-i18n="session">SESIÓN</span> <b id="session-id">0000</b></span>
+        <span><span data-i18n="latency">LATENCIA</span> <b id="latency">12ms</b></span>
       </footer>
     </main>
 
     <dialog id="memory-dialog">
       <div class="memory-modal">
         <div class="dialogue-head">
-          <div><p class="eyebrow">ARCHIVO INTERIOR</p><h2>Fragmentos recordados</h2></div>
-          <button class="icon-button" id="close-memory" type="button" aria-label="Cerrar">×</button>
+          <div><p class="eyebrow" data-i18n="innerArchive">ARCHIVO INTERIOR</p><h2 data-i18n="rememberedFragments">Fragmentos recordados</h2></div>
+          <button class="icon-button" id="close-memory" type="button" data-i18n-aria="close" aria-label="Cerrar">×</button>
         </div>
         <div id="memory-list" class="memory-list"></div>
       </div>
@@ -159,8 +166,8 @@
     <dialog id="settings-dialog" class="settings-dialog">
       <form id="settings-form" class="settings-modal">
         <div class="dialogue-head">
-          <div><p class="eyebrow">SYSTEM / PREFERENCES</p><h2 data-i18n="settings">Configuración</h2></div>
-          <button class="icon-button" id="close-settings" type="button" aria-label="Cerrar">×</button>
+          <div><p class="eyebrow" data-i18n="systemPreferences">SISTEMA / PREFERENCIAS</p><h2 data-i18n="settings">Configuración</h2></div>
+          <button class="icon-button" id="close-settings" type="button" data-i18n-aria="close" aria-label="Cerrar">×</button>
         </div>
         <label class="settings-field"><span data-i18n="interfaceLanguage">Idioma de la interfaz</span>
           <select id="settings-interface-language"><option value="es">Español</option><option value="en">English</option><option value="ja">日本語</option><option value="ru">Русский</option><option value="it">Italiano</option><option value="fr">Français</option></select>
@@ -177,34 +184,34 @@
     <dialog id="brain-dialog" class="brain-dialog">
       <div class="brain-modal">
         <div class="dialogue-head brain-head">
-          <div><p class="eyebrow">CARTOGRAFÍA COGNITIVA</p><h2 id="brain-title">Desarrollo de Naia</h2></div>
-          <div class="brain-head-actions"><span id="brain-live">LECTURA LOCAL</span><button class="icon-button" id="close-brain" type="button" aria-label="Cerrar">×</button></div>
+          <div><p class="eyebrow" data-i18n="cognitiveCartography">CARTOGRAFÍA COGNITIVA</p><h2 id="brain-title">Desarrollo de Naia</h2></div>
+          <div class="brain-head-actions"><span id="brain-live" data-i18n="localReading">LECTURA LOCAL</span><button class="icon-button" id="close-brain" type="button" data-i18n-aria="close" aria-label="Cerrar">×</button></div>
         </div>
         <section class="phase-assessment" aria-labelledby="phase-assessment-title">
           <div class="phase-primary"><span data-i18n="estimatedPhase">FASE ESTIMADA</span><strong id="phase-assessment-title">Naciente</strong><small id="phase-score">0.0%</small></div>
           <div class="phase-progress"><i id="phase-progress-bar"></i></div>
-          <div class="phase-scale" aria-hidden="true"><span>NACIENTE</span><span>TEMPRANO</span><span>MEDIO</span><span>AVANZADO</span><span>ALTO</span></div>
+          <div class="phase-scale" aria-hidden="true"><span data-i18n="phase_nascent">NACIENTE</span><span data-i18n="phase_early">TEMPRANO</span><span data-i18n="phase_middle">MEDIO</span><span data-i18n="phase_advanced">AVANZADO</span><span data-i18n="phase_high">ALTO</span></div>
           <div class="phase-details"><p id="phase-limit"></p><p id="phase-next"></p></div>
           <div class="phase-capabilities"><span data-i18n="observedCapabilities">CAPACIDADES OBSERVADAS</span><ul id="phase-capability-list"></ul></div>
           <p class="phase-disclaimer" id="phase-disclaimer"></p>
         </section>
-        <div class="brain-stats" aria-label="Métricas de desarrollo">
-          <div><span>CONCEPTOS INYECTADOS</span><strong id="brain-injected">0</strong></div>
-          <div><span>PALABRAS VIVIDAS</span><strong id="brain-vocabulary">0</strong></div>
-          <div><span>PERCEPCIONES</span><strong id="brain-perceptions">0</strong></div>
-          <div><span>MEMORIAS EPISÓDICAS</span><strong id="brain-memories">0</strong></div>
-          <div><span>ENLACES PLÁSTICOS</span><strong id="brain-associations">0</strong></div>
-          <div><span>DIVERSIDAD</span><strong id="brain-diversity">0</strong></div>
-          <div><span>LATIDOS</span><strong id="brain-heartbeats">0</strong></div>
+        <div class="brain-stats" data-i18n-aria="developmentMetrics" aria-label="Métricas de desarrollo">
+          <div><span data-i18n="injectedConcepts">CONCEPTOS INYECTADOS</span><strong id="brain-injected">0</strong></div>
+          <div><span data-i18n="experiencedWords">PALABRAS VIVIDAS</span><strong id="brain-vocabulary">0</strong></div>
+          <div><span data-i18n="perceptions">PERCEPCIONES</span><strong id="brain-perceptions">0</strong></div>
+          <div><span data-i18n="episodicMemories">MEMORIAS EPISÓDICAS</span><strong id="brain-memories">0</strong></div>
+          <div><span data-i18n="plasticLinks">ENLACES PLÁSTICOS</span><strong id="brain-associations">0</strong></div>
+          <div><span data-i18n="diversity">DIVERSIDAD</span><strong id="brain-diversity">0</strong></div>
+          <div><span data-i18n="heartbeats">LATIDOS</span><strong id="brain-heartbeats">0</strong></div>
         </div>
         <div class="brain-map-wrap">
           <svg id="brain-map" class="brain-map" viewBox="0 0 900 480" role="img" aria-labelledby="brain-map-title brain-map-desc">
             <title id="brain-map-title">Mapa de conceptos aprendidos</title>
             <desc id="brain-map-desc">Las palabras aparecen conectadas a los canales sensoriales que fundamentan su significado.</desc>
           </svg>
-          <p class="brain-empty" id="brain-empty">Todavía no existen suficientes experiencias para formar conexiones.</p>
+          <p class="brain-empty" id="brain-empty" data-i18n="insufficientExperiences">Todavía no existen suficientes experiencias para formar conexiones.</p>
         </div>
-        <div class="brain-legend"><span><i class="legend-word"></i>PALABRA</span><span><i class="legend-sense"></i>CANAL SENSORIAL</span><span>GROSOR Y BRILLO = FUERZA APRENDIDA</span></div>
+        <div class="brain-legend"><span><i class="legend-word"></i><span data-i18n="word">PALABRA</span></span><span><i class="legend-sense"></i><span data-i18n="sensoryChannel">CANAL SENSORIAL</span></span><span data-i18n="learnedStrengthLegend">GROSOR Y BRILLO = FUERZA APRENDIDA</span></div>
         <ol class="development-trace" id="development-trace" aria-label="Actividad cognitiva reciente"></ol>
       </div>
     </dialog>
