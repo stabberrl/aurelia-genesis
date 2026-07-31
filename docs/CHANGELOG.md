@@ -2,6 +2,15 @@
 
 Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-04:00`). Una entrada describe el momento en que el bloque fue verificado; no pretende reconstruir una hora anterior.
 
+## 2026-07-31T10:05:00-04:00 — FIX-DECAY-RUNTIME-RESPONSIVENESS-001
+
+- Tipo: `fix`
+- Resumen: el contador de decaimiento procesa asociaciones por lotes acotados por alma en vez de recorrer todo el léxico durante una petición.
+- Motivo: un léxico local grande podía bloquear el hilo del runtime al llegar un heartbeat y dejar la consola sin respuesta.
+- Limitación: la detección de decaimiento se completa de manera incremental en lecturas sucesivas; el contador sigue siendo acumulativo y no duplica eventos.
+- Complemento: las vistas de desarrollo e identidad priorizan el último checkpoint íntegro disponible; así no fuerzan un recálculo completo durante la carga de la interfaz.
+- Verificación: validación de servicio correcta; `npm test` — 68/68 PASS.
+
 ## 2026-07-31T09:49:12-04:00 — FEAT-RESEARCH-INTERFACE-V3-001
 
 - Tipo: `feat`

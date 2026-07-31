@@ -269,13 +269,17 @@ export class Lexicon {
   }
 
   learnedAssociations(soulId, { cue, limit = 50, asOf = Date.now() * 1000 } = {}) {
+    const requestedLimit = Math.max(1, Math.min(Number(limit) || 50, 200));
+    // Esta consulta alimenta vistas y ciclos periódicos: no debe recorrer toda
+    // la memoria de un alma para mostrar sólo sus asociaciones relevantes.
+    const candidateLimit = Math.max(requestedLimit, Math.min(1_000, requestedLimit * 24));
     const rows = cue
       ? this.db.prepare(`SELECT cue, subject, predicate, weight, evidence_count AS evidenceCount,
           value_sum AS valueSum, last_reinforced_at AS lastReinforcedAt
-          FROM learned_associations WHERE soul_id = ? AND cue = ?`).all(soulId, normalizeWord(cue))
+          FROM learned_associations WHERE soul_id = ? AND cue = ? LIMIT ?`).all(soulId, normalizeWord(cue), candidateLimit)
       : this.db.prepare(`SELECT cue, subject, predicate, weight, evidence_count AS evidenceCount,
           value_sum AS valueSum, last_reinforced_at AS lastReinforcedAt
-          FROM learned_associations WHERE soul_id = ?`).all(soulId);
+          FROM learned_associations WHERE soul_id = ? LIMIT ?`).all(soulId, candidateLimit);
     return rows.map((row) => ({
       cue: row.cue,
       subject: row.subject,
@@ -284,13 +288,21 @@ export class Lexicon {
       evidenceCount: Number(row.evidenceCount),
       meanValue: row.valueSum / row.evidenceCount,
       lastReinforcedAt: Number(row.lastReinforcedAt),
-    })).sort((a, b) => b.weight - a.weight || b.evidenceCount - a.evidenceCount).slice(0, Math.max(1, Math.min(Number(limit) || 50, 200)));
+    })).sort((a, b) => b.weight - a.weight || b.evidenceCount - a.evidenceCount).slice(0, requestedLimit);
   }
 
-  measureDecay(soulId, { asOf = Date.now() * 1000, threshold = 0.45 } = {}) {
-    const rows = this.db.prepare(`SELECT cue, subject, predicate, weight,
+  measureDecay(soulId, { asOf = Date.now() * 1000, threshold = 0.45, batchSize = 64 } = {}) {
+    const batch = Math.max(1, Math.min(Number(batchSize) || 64, 512));
+    const cursorKey = `decay_cursor:${soulId}`;
+    const cursor = Number(this.db.prepare("SELECT value FROM metadata WHERE key = ?").get(cursorKey)?.value || 0);
+    let rows = this.db.prepare(`SELECT rowid AS rowId, cue, subject, predicate, weight,
       last_reinforced_at AS lastReinforcedAt
-      FROM learned_associations WHERE soul_id = ?`).all(soulId);
+      FROM learned_associations WHERE soul_id = ? AND rowid > ? ORDER BY rowid ASC LIMIT ?`).all(soulId, cursor, batch);
+    if (!rows.length && cursor > 0) rows = this.db.prepare(`SELECT rowid AS rowId, cue, subject, predicate, weight,
+      last_reinforced_at AS lastReinforcedAt
+      FROM learned_associations WHERE soul_id = ? ORDER BY rowid ASC LIMIT ?`).all(soulId, batch);
+    if (rows.length) this.db.prepare("INSERT OR REPLACE INTO metadata (key, value) VALUES (?, ?)")
+      .run(cursorKey, String(rows.at(-1).rowId));
     const recordDecay = this.db.prepare(`INSERT OR IGNORE INTO association_decay_events
       (soul_id, cue, subject, predicate, threshold, effective_weight, decayed_at)
       VALUES (?, ?, ?, ?, ?, ?, ?)`);

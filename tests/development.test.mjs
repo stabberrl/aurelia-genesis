@@ -57,3 +57,20 @@ test("el desarrollo registra una vez una asociación que cae bajo el umbral de r
     await fs.rm(directory, { recursive: true, force: true });
   }
 });
+
+test("el barrido de decaimiento es incremental para no bloquear el runtime", async () => {
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "aurelia-decay-batch-"));
+  const lexicon = new Lexicon(path.join(directory, "memory.sqlite"));
+  try {
+    const soulId = "soul-001-alba-0001";
+    const stale = Date.now() * 1000 - 30 * 86_400_000_000;
+    const insert = lexicon.db.prepare(`INSERT INTO learned_associations
+      (soul_id, cue, subject, predicate, weight, evidence_count, value_sum, last_reinforced_at)
+      VALUES (?, ?, ?, 'light', .8, 2, 1.6, ?)`);
+    for (let index = 0; index < 70; index += 1) insert.run(soulId, `luz-${index}`, `garden-${index}`, stale);
+    assert.equal(lexicon.measureDecay(soulId, { batchSize: 64 }).newlyDecayed, 64);
+    assert.equal(lexicon.measureDecay(soulId, { batchSize: 64 }).newlyDecayed, 6);
+  } finally {
+    lexicon.close(); await fs.rm(directory, { recursive: true, force: true });
+  }
+});

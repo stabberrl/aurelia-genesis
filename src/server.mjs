@@ -63,6 +63,11 @@ const checkpoints = new CheckpointManager({
   retention: Number(process.env.FLUCTLIGHT_CHECKPOINT_RETENTION || 24),
   stateProviders: [world, infancy],
 });
+async function developmentSnapshot(language, soulId) {
+  const checkpoint = await checkpoints.status();
+  const database = checkpoint.databases?.find((item) => item.language === language);
+  return database?.development?.[soulId] || null;
+}
 function heartbeatFor(language = "es") {
   const languageCode = validateLanguage(language);
   if (!heartbeatByLanguage.has(languageCode)) heartbeatByLanguage.set(languageCode,
@@ -223,13 +228,15 @@ const server = http.createServer(async (request, response) => {
       const soulId = url.searchParams.get("soulId") || "";
       if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
       const language = validateLanguage(url.searchParams.get("language") || "es");
-      return json(response, 200, { language, ...lexicons.get(language).development(soulId) });
+      const snapshot = await developmentSnapshot(language, soulId);
+      return json(response, 200, { language, ...(snapshot || lexicons.get(language).development(soulId)), snapshot: Boolean(snapshot) });
     }
     if (request.method === "GET" && url.pathname === "/api/identity/drift") {
       const soulId = url.searchParams.get("soulId") || "";
       if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
       const [genesis, state] = await Promise.all(["GENESIS.json", "STATE.json"].map(async (name) => JSON.parse(await fs.readFile(path.join(soulsDir, soulId, name), "utf8"))));
-      return json(response, 200, buildIdentityReport({ genesis, state, development: lexicons.get("es").development(soulId) }));
+      const development = await developmentSnapshot("es", soulId) || lexicons.get("es").development(soulId);
+      return json(response, 200, buildIdentityReport({ genesis, state, development }));
     }
     if (request.method === "GET" && url.pathname === "/api/identity/history") {
       const soulId = url.searchParams.get("soulId") || "";
