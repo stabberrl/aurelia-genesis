@@ -106,6 +106,16 @@ export class Lexicon {
         last_reinforced_at INTEGER NOT NULL,
         PRIMARY KEY (soul_id, cue, subject, predicate)
       );
+      CREATE TABLE IF NOT EXISTS association_decay_events (
+        soul_id TEXT NOT NULL,
+        cue TEXT NOT NULL,
+        subject TEXT NOT NULL,
+        predicate TEXT NOT NULL,
+        threshold REAL NOT NULL,
+        effective_weight REAL NOT NULL,
+        decayed_at INTEGER NOT NULL,
+        PRIMARY KEY (soul_id, cue, subject, predicate, threshold)
+      );
       CREATE TABLE IF NOT EXISTS learned_evidence (
         soul_id TEXT NOT NULL,
         cue TEXT NOT NULL,
@@ -277,6 +287,26 @@ export class Lexicon {
     })).sort((a, b) => b.weight - a.weight || b.evidenceCount - a.evidenceCount).slice(0, Math.max(1, Math.min(Number(limit) || 50, 200)));
   }
 
+  measureDecay(soulId, { asOf = Date.now() * 1000, threshold = 0.45 } = {}) {
+    const rows = this.db.prepare(`SELECT cue, subject, predicate, weight,
+      last_reinforced_at AS lastReinforcedAt
+      FROM learned_associations WHERE soul_id = ?`).all(soulId);
+    const recordDecay = this.db.prepare(`INSERT OR IGNORE INTO association_decay_events
+      (soul_id, cue, subject, predicate, threshold, effective_weight, decayed_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?)`);
+    let newlyDecayed = 0;
+    for (const row of rows) {
+      const effectiveWeight = this.associationWeight(row, asOf);
+      if (row.weight >= threshold && effectiveWeight < threshold) {
+        newlyDecayed += recordDecay.run(soulId, row.cue, row.subject, row.predicate,
+          threshold, effectiveWeight, asOf).changes;
+      }
+    }
+    const total = this.db.prepare(`SELECT COUNT(*) AS count FROM association_decay_events
+      WHERE soul_id = ? AND threshold = ?`).get(soulId, threshold).count;
+    return { newlyDecayed, total: Number(total) };
+  }
+
   episodes(soulId, limit = 50) {
     return this.db.prepare(`SELECT id, kind, cue, subject, predicate, value,
       source_event_id AS sourceEventId, occurred_at AS occurredAt
@@ -344,6 +374,7 @@ export class Lexicon {
   }
 
   development(soulId) {
+    const decay = this.measureDecay(soulId);
     const vocabulary = this.db.prepare("SELECT COUNT(*) AS count, COALESCE(SUM(seen_count), 0) AS encounters FROM exposures WHERE soul_id = ?").get(soulId);
     const perception = this.db.prepare("SELECT COUNT(*) AS count, COUNT(DISTINCT predicate) AS channels FROM perceptions WHERE soul_id = ?").get(soulId);
     const grounding = this.db.prepare("SELECT COUNT(*) AS count, COALESCE(SUM(samples), 0) AS samples FROM groundings WHERE soul_id = ?").get(soulId);
@@ -379,6 +410,7 @@ export class Lexicon {
       semanticAssociations: Number(semantics.associations),
       episodicMemories: Number(episodes.count),
       plasticAssociations: Number(plastic.count),
+      decayedAssociations: decay.total,
       heartbeatCount: Number(heartbeats.count),
       externalObservations: Number(external.observations),
       acceptedExternalObservations: Number(external.accepted),

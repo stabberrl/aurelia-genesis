@@ -23,7 +23,7 @@ const summary = Object.fromEntries(souls.map((soulId) => {
     associationsNew: Math.max(0, now.associations - (before.associations || 0)),
     consolidatedNew: Math.max(0, now.heartbeatCount - (before.heartbeatCount || 0)),
     vocabularyNew: Math.max(0, now.vocabulary - (before.vocabulary || 0)),
-    decayMeasured: "no disponible: el modelo actual no conserva un contador agregado de decaimiento",
+    decayedSinceLast: Math.max(0, now.decayedAssociations - (before.decayedAssociations || 0)),
   }];
 }));
 await fs.mkdir(path.dirname(baselinePath), { recursive: true });

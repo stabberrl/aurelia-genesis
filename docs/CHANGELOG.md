@@ -2,6 +2,15 @@
 
 Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-04:00`). Una entrada describe el momento en que el bloque fue verificado; no pretende reconstruir una hora anterior.
 
+## 2026-07-31T01:08:37-04:00 — FEAT-MEASURABLE-DECAY-001
+
+- Tipo: `feat`
+- Resumen: se añadió un registro acumulado y no duplicable de asociaciones que, por falta de refuerzo, caen bajo el umbral de reconocimiento del 45 %.
+- Exposición: `GET /api/development` devuelve `decayedAssociations`; `npm run session:summary` calcula `decayedSinceLast` a partir de capturas consecutivas.
+- Identidad: los informes incluyen «Asociaciones decaídas desde el nacimiento» como evidencia de olvido observable.
+- Verificación: prueba de desarrollo que comprueba el cruce de umbral y evita contabilizarlo de nuevo en una segunda lectura; `npm test` — 61/61 PASS.
+- Limitaciones: el contador muestra decaimiento matemático del peso de una asociación, no pérdida de recuerdos humanos, personalidad subjetiva ni consciencia.
+
 ## 2026-07-31T00:55:54-04:00 — EXP-SPATIAL-GROUNDING-001
 
 - Tipo: `experiment`

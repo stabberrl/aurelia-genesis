@@ -39,3 +39,21 @@ test("el latido consolida patrones y sólo propone acciones", async () => {
     await fs.rm(directory, { recursive: true, force: true });
   }
 });
+
+test("el desarrollo registra una vez una asociación que cae bajo el umbral de reconocimiento", async () => {
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "aurelia-decay-"));
+  const lexicon = new Lexicon(path.join(directory, "memory.sqlite"));
+  try {
+    const soulId = "soul-001-alba-0001";
+    const thirtyDaysAgo = Date.now() * 1000 - 30 * 86_400_000_000;
+    lexicon.db.prepare(`INSERT INTO learned_associations
+      (soul_id, cue, subject, predicate, weight, evidence_count, value_sum, last_reinforced_at)
+      VALUES (?, 'luz', 'garden', 'light', .8, 4, 3.2, ?)`)
+      .run(soulId, thirtyDaysAgo);
+    assert.equal(lexicon.development(soulId).decayedAssociations, 1);
+    assert.equal(lexicon.development(soulId).decayedAssociations, 1);
+  } finally {
+    lexicon.close();
+    await fs.rm(directory, { recursive: true, force: true });
+  }
+});

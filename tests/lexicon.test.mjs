@@ -60,6 +60,7 @@ test("una palabra se fundamenta en percepciones temporalmente cercanas", async (
       semanticAssociations: 0,
       episodicMemories: 2,
       plasticAssociations: 1,
+      decayedAssociations: 0,
       heartbeatCount: 0,
       externalObservations: 0,
       acceptedExternalObservations: 0,

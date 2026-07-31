@@ -8,7 +8,7 @@ export function buildIdentityReport({ genesis, state, development }) {
   return {
     soulId: blueprint.id, name: blueprint.name, world: blueprint.world, state, drift, driftMagnitude,
     strongestAssociations: development.strongestAssociations.slice(0, 5), recentEpisodes: development.recent.slice(0, 5),
-    observed: { vocabulary: development.vocabulary, episodes: development.episodicMemories, associations: development.plasticAssociations, phase: development.developmentAssessment.phase.id },
+    observed: { vocabulary: development.vocabulary, episodes: development.episodicMemories, associations: development.plasticAssociations, decayedAssociations: development.decayedAssociations, phase: development.developmentAssessment.phase.id },
   };
 }
 
@@ -22,5 +22,5 @@ export function renderSoul(report) {
 
 export function renderIdentity(report) {
   const driftLines = Object.entries(report.drift).map(([key, value]) => `- ${key}: ${value >= 0 ? "+" : ""}${value}`).join("\n");
-  return `# Registro de identidad — ${report.name}\n\n- Alma: ${report.soulId}\n- Fase observada: ${report.observed.phase}\n- Deriva cuantificada desde el estado inicial: ${pct(report.driftMagnitude)}\n\n## Deriva de estado\n\n${driftLines}\n\n## Evidencia\n\n- Vocabulario expuesto: ${report.observed.vocabulary}\n- Episodios: ${report.observed.episodes}\n- Asociaciones plásticas: ${report.observed.associations}\n\nLimitación: esta deriva mide cambios registrados, no personalidad humana, identidad subjetiva ni consciencia.\n`;
+  return `# Registro de identidad — ${report.name}\n\n- Alma: ${report.soulId}\n- Fase observada: ${report.observed.phase}\n- Deriva cuantificada desde el estado inicial: ${pct(report.driftMagnitude)}\n\n## Deriva de estado\n\n${driftLines}\n\n## Evidencia\n\n- Vocabulario expuesto: ${report.observed.vocabulary}\n- Episodios: ${report.observed.episodes}\n- Asociaciones plásticas: ${report.observed.associations}\n- Asociaciones decaídas desde el nacimiento: ${report.observed.decayedAssociations}\n\nLimitación: esta deriva mide cambios registrados, no personalidad humana, identidad subjetiva ni consciencia.\n`;
 }
