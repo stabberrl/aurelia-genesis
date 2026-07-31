@@ -10,3 +10,6 @@ souls/**/memory/.store/
 souls/**/memory/.meta/
 .server-pid
 var/lexicon/
+var/checkpoints/
+var/worlds/
+var/session-summary-baseline.json

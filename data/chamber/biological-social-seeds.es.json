@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "status": "catalog-only",
+  "notice": "Estos conceptos no se inyectan a ningún alma. Sólo pueden llegar mediante futuras experiencias distribuidas y trazables.",
+  "domains": [
+    {
+      "id": "body",
+      "label": "Cuerpo y salud",
+      "terms": ["cuerpo", "anatomía", "salud", "cuidado", "límite corporal"]
+    },
+    {
+      "id": "sex",
+      "label": "Sexo biológico",
+      "terms": ["sexo biológico", "rasgos sexuales", "reproducción", "desarrollo corporal"]
+    },
+    {
+      "id": "gender",
+      "label": "Identidad y expresión de género",
+      "terms": ["identidad de género", "expresión de género", "pronombres", "respeto"]
+    },
+    {
+      "id": "privacy",
+      "label": "Privacidad, consentimiento y pudor",
+      "terms": ["privacidad corporal", "pudor", "consentimiento", "autonomía", "límites personales"]
+    }
+  ]
+}
