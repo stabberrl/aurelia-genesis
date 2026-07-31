@@ -15,6 +15,7 @@
     "lexicon:import-language": "node scripts/import-lexicon.mjs",
     "curriculum:basic": "node scripts/seed-basic-curriculum.mjs",
     "experiment:foundations": "node scripts/run-foundational-language-experiment.mjs",
+    "experiment:spatial": "node scripts/run-spatial-grounding-experiment.mjs",
     "teach:foundations": "node scripts/teach-naia-foundations.mjs",
     "learn:observe": "node scripts/run-learning-chamber.mjs",
     "bootstrap": "node scripts/bootstrap.mjs",

@@ -2,6 +2,15 @@
 
 Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-04:00`). Una entrada describe el momento en que el bloque fue verificado; no pretende reconstruir una hora anterior.
 
+## 2026-07-31T00:55:54-04:00 — EXP-SPATIAL-GROUNDING-001
+
+- Tipo: `experiment`
+- Resumen: segundo experimento reproducible para relaciones espaciales corporales (`delante`, `detrás` y abstención lateral) en `GenesisWorld` determinista.
+- Resultado: PASS en entrenamiento, generalización a orientaciones reservadas y control lateral.
+- Evidencia: `evidence/spatial-grounding-v1.json`, `evidence/spatial-grounding-v1.md`; SHA-256 `4cbd92d96af4ec6a4c51a12c1c5c419cdf15df678d62a58e1c23e74f567c5010`.
+- Incidencia: la primera ejecución reveló una convención de orientación errónea; el conjunto fue corregido contra `DIRECTIONS` y vuelto a ejecutar.
+- Limitaciones: geometría y etiquetas diseñadas; no mide comprensión espacial abierta, pensamiento ni consciencia.
+
 ## 2026-07-31T00:52:00-04:00 — FEAT-IDENTITY-DRIFT-001
 
 - Tipo: `feat`
