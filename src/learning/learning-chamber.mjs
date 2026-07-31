@@ -71,24 +71,40 @@ export class LearningChamber {
     return { ...observation, exposure };
   }
 
-  async tick(soulId, { now = Date.now() * 1000 } = {}) {
+  availability(soulId, { now = Date.now() * 1000 } = {}) {
     const last = this.lastRun.get(soulId) || 0;
-    if (now - last < this.minimumIntervalMs * 1000) return { status: "rate-limited", soulId, nextAt: last + this.minimumIntervalMs * 1000 };
+    if (now - last < this.minimumIntervalMs * 1000) return { ready: false, status: "rate-limited", soulId, nextAt: last + this.minimumIntervalMs * 1000 };
+    return { ready: true, soulId };
+  }
+
+  motivation(soulId) {
     const development = this.lexicon.development(soulId);
-    const motivation = this.motivationFor?.(soulId, development) || {
+    return this.motivationFor?.(soulId, development) || {
       curiosity: development.externalObservations < this.terms.length ? .7 : .1,
       unresolvedNeed: development.sensoryChannels < 4 || development.externalObservations < this.terms.length ? .8 : .1,
     };
-    const budget = this.budgets.get(soulId) || new ExplorationBudget();
-    this.budgets.set(soulId, budget);
-    const permission = budget.request({ ...motivation, source: "learning-chamber" });
-    if (!permission.allowed) return { status: "awaiting-internal-drive", soulId, motivation, permission };
+  }
+
+  async exploreApproved(soulId, { now = Date.now() * 1000 } = {}) {
+    const availability = this.availability(soulId, { now });
+    if (!availability.ready) return availability;
     const index = this.sequence.get(soulId) || 0;
     const term = this.terms[index % this.terms.length];
     const result = await this.observe(soulId, term, { now });
     this.sequence.set(soulId, index + 1);
     this.lastRun.set(soulId, now);
     return { status: result.status, soulId, term, observation: result };
+  }
+
+  async tick(soulId, { now = Date.now() * 1000 } = {}) {
+    const availability = this.availability(soulId, { now });
+    if (!availability.ready) return availability;
+    const motivation = this.motivation(soulId);
+    const budget = this.budgets.get(soulId) || new ExplorationBudget();
+    this.budgets.set(soulId, budget);
+    const permission = budget.request({ ...motivation, source: "learning-chamber" });
+    if (!permission.allowed) return { status: "awaiting-internal-drive", soulId, motivation, permission };
+    return this.exploreApproved(soulId, { now });
   }
 
   start(soulIds) {

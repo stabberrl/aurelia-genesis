@@ -2,6 +2,15 @@
 
 Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-04:00`). Una entrada describe el momento en que el bloque fue verificado; no pretende reconstruir una hora anterior.
 
+## 2026-07-31T01:35:00-04:00 — FEAT-AUTONOMOUS-EXPLORATION-LOOP-001
+
+- Tipo: `feat`
+- Resumen: se conectó la propuesta `exploreConcept` del heartbeat con una observación real y trazable, sólo después de aprobar `ExplorationBudget`.
+- Seguridad: sin propuesta, con presupuesto agotado o durante rate limit, no hay solicitud externa ni observación nueva; la activación automática exige `FLUCTLIGHT_AUTONOMOUS_EXPLORATION=1`.
+- Runtime: `POST /api/autonomous-exploration/tick` permite comprobar un ciclo individual sin habilitar el proceso periódico.
+- Documentación: `docs/AUTONOMOUS-EXPLORATION.md` describe el recorrido y sus límites.
+- Verificación: pruebas de integración aprobada/bloqueada y `npm test` — 66/66 PASS.
+
 ## 2026-07-31T01:16:00-04:00 — FEAT-CROSS-PLATFORM-AERA-001
 
 - Tipo: `feat`

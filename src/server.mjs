@@ -9,6 +9,7 @@ import { LexiconRegistry } from "./lexicon/registry.mjs";
 import { validateLanguage } from "./lexicon/languages.mjs";
 import { LearningChamber } from "./learning/learning-chamber.mjs";
 import { CognitiveHeartbeat } from "./runtime/cognitive-heartbeat.mjs";
+import { AutonomousExploration } from "./runtime/autonomous-exploration.mjs";
 import { CheckpointManager } from "./runtime/checkpoint-manager.mjs";
 import { readRegistry, validateSoulId } from "./runtime/registry.mjs";
 import { ACTIONS } from "./world/genesis-world.mjs";
@@ -54,6 +55,7 @@ await infancy.initialize();
 const knowledgeChamber = new KnowledgeChamber({ worldRuntime: world, lexiconFor: (language) => lexicons.get(language) });
 const heartbeatByLanguage = new Map();
 const chamberByLanguage = new Map();
+const explorationByLanguage = new Map();
 const checkpoints = new CheckpointManager({
   lexicons,
   soulsDir,
@@ -78,8 +80,17 @@ function chamberFor(language = "es") {
     }));
   return chamberByLanguage.get(languageCode);
 }
-heartbeatFor("es").start(awakeIds);
-if (process.env.FLUCTLIGHT_LEARNING_CHAMBER === "1") chamberFor("es").start(awakeIds);
+function explorationFor(language = "es") {
+  const languageCode = validateLanguage(language);
+  if (!explorationByLanguage.has(languageCode)) explorationByLanguage.set(languageCode,
+    new AutonomousExploration({ heartbeat: heartbeatFor(languageCode), chamber: chamberFor(languageCode) }));
+  return explorationByLanguage.get(languageCode);
+}
+if (process.env.FLUCTLIGHT_AUTONOMOUS_EXPLORATION === "1") explorationFor("es").start(awakeIds);
+else {
+  heartbeatFor("es").start(awakeIds);
+  if (process.env.FLUCTLIGHT_LEARNING_CHAMBER === "1") chamberFor("es").start(awakeIds);
+}
 checkpoints.start();
 
 const sensorySchema = {
@@ -255,6 +266,11 @@ const server = http.createServer(async (request, response) => {
       if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
       return json(response, 200, await chamberFor(validateLanguage(language)).tick(soulId));
     }
+    if (request.method === "POST" && url.pathname === "/api/autonomous-exploration/tick") {
+      const { soulId, language = "es" } = await readJsonBody(request);
+      if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
+      return json(response, 200, await explorationFor(validateLanguage(language)).tick(soulId));
+    }
     if (request.method === "POST" && url.pathname === "/api/heartbeat") {
       const { soulId, language = "es" } = await readJsonBody(request);
       if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
@@ -317,6 +333,7 @@ async function shutdown() {
   world.stop();
   infancy.stopTimer();
   for (const heartbeat of heartbeatByLanguage.values()) heartbeat.stop();
+  for (const exploration of explorationByLanguage.values()) exploration.stop();
   for (const chamber of chamberByLanguage.values()) chamber.stop();
   try { await checkpoints.save({ reason: "shutdown", mode: "FULL" }); }
   catch (error) { console.error(`[checkpoint] cierre: ${error.message}`); }
