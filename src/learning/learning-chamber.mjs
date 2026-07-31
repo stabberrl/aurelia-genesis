@@ -85,6 +85,8 @@ export class LearningChamber {
     };
   }
 
+  budgetStatus(soulId) { return (this.budgets.get(soulId) || new ExplorationBudget()).snapshot(); }
+
   async exploreApproved(soulId, { now = Date.now() * 1000 } = {}) {
     const availability = this.availability(soulId, { now });
     if (!availability.ready) return availability;

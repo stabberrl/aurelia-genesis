@@ -48,6 +48,17 @@ test("la consola de investigación permanece separada y usa datos del runtime", 
   assert.match(js, /workspace\.focus/);
   assert.match(js, /\/api\/world\/controller/);
   assert.match(html, /chamber\.html/);
+  assert.match(html, /identity-magnitude/);
+  assert.match(html, /comparison-panel/);
+  assert.match(js, /\/api\/identity\/drift/);
+  assert.match(js, /\/api\/learning\/budget/);
+  assert.match(js, /decayedAssociations/);
+  assert.match(js, /foundational-language-v1\.json/);
+});
+
+test("la interfaz experiencial ofrece acceso a la observación 3D", async () => {
+  const html = await fs.readFile(new URL("../index.html", import.meta.url), "utf8");
+  assert.match(html, /chamber-3d\.html/);
 });
 
 test("la cámara de conocimiento se mantiene en una ventana y catálogo separados", async () => {

@@ -2,6 +2,15 @@
 
 Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-04:00`). Una entrada describe el momento en que el bloque fue verificado; no pretende reconstruir una hora anterior.
 
+## 2026-07-31T09:49:12-04:00 — FEAT-RESEARCH-INTERFACE-V3-001
+
+- Tipo: `feat`
+- Resumen: la Consola de investigación incorpora deriva de identidad, histórico de versiones, evidencia experimental, presupuesto de exploración, propuestas del heartbeat y comparación de población.
+- Separación: los datos cuantitativos se mantienen en `research.html`; `index.html` sólo recibe el acceso cruzado a la Cámara 3D.
+- Lectura: se añadieron endpoints de sólo lectura para histórico de identidad y presupuesto; la activación autónoma sigue determinada por el runtime, no por la interfaz.
+- Auditoría: la Cámara de Conocimiento ya completa la ruta mediada de descubrimiento y la Cámara 3D conserva telemetría independiente de WebGL; no se alteraron ambos flujos.
+- Verificación: `npm test` — 67/67 PASS. La inspección visual automatizada no se ejecutó porque el canal de control de navegador no está disponible en esta sesión.
+
 ## 2026-07-31T01:35:00-04:00 — FEAT-AUTONOMOUS-EXPLORATION-LOOP-001
 
 - Tipo: `feat`

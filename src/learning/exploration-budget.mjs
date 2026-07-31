@@ -22,4 +22,5 @@ export class ExplorationBudget {
 
   replenish(amount = .1) { this.state.remaining = clamp(this.state.remaining + amount, 0, 1); return this.status(); }
   status() { return structuredClone(this.state); }
+  snapshot() { return this.status(); }
 }

@@ -15,6 +15,8 @@ export class AutonomousExploration {
     return this.budgets.get(soulId);
   }
 
+  budgetStatus(soulId) { return this.budget(soulId).snapshot(); }
+
   async tick(soulId, { now = Date.now() * 1000 } = {}) {
     const heartbeat = this.heartbeat.tick(soulId, now);
     const proposal = heartbeat.operations.find(({ type, action }) => type === "proposal" && action === "exploreConcept");

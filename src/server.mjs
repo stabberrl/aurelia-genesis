@@ -231,6 +231,15 @@ const server = http.createServer(async (request, response) => {
       const [genesis, state] = await Promise.all(["GENESIS.json", "STATE.json"].map(async (name) => JSON.parse(await fs.readFile(path.join(soulsDir, soulId, name), "utf8"))));
       return json(response, 200, buildIdentityReport({ genesis, state, development: lexicons.get("es").development(soulId) }));
     }
+    if (request.method === "GET" && url.pathname === "/api/identity/history") {
+      const soulId = url.searchParams.get("soulId") || "";
+      if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
+      const versions = (await fs.readdir(path.join(soulsDir, soulId))).flatMap((name) => {
+        const match = /^(SOUL|IDENTITY)\.v(\d+)\.md$/.exec(name);
+        return match ? [{ kind: match[1], version: Number(match[2]), name }] : [];
+      }).sort((a, b) => b.version - a.version || a.kind.localeCompare(b.kind));
+      return json(response, 200, { soulId, versions });
+    }
     if (request.method === "GET" && url.pathname === "/api/memory/episodes") {
       const soulId = url.searchParams.get("soulId") || "";
       if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
@@ -252,6 +261,14 @@ const server = http.createServer(async (request, response) => {
         enabled: process.env.FLUCTLIGHT_LEARNING_CHAMBER === "1",
         observations: lexicons.get(language).externalObservations(soulId),
       });
+    }
+    if (request.method === "GET" && url.pathname === "/api/learning/budget") {
+      const soulId = url.searchParams.get("soulId") || "";
+      if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
+      const language = validateLanguage(url.searchParams.get("language") || "es");
+      const autonomous = process.env.FLUCTLIGHT_AUTONOMOUS_EXPLORATION === "1";
+      const budget = autonomous ? explorationFor(language).budgetStatus(soulId) : chamberFor(language).budgetStatus(soulId);
+      return json(response, 200, { soulId, language, autonomous, budget });
     }
     if (request.method === "GET" && url.pathname === "/api/knowledge-chamber/status") {
       return json(response, 200, knowledgeChamber.status());

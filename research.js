@@ -14,6 +14,9 @@ const state = {
   worldTimer: null,
   world: null,
   controller: null,
+  comparisonVisible: false,
+  evidenceLoaded: false,
+  lastHeartbeatSequence: 0,
 };
 
 const themeStorageKey = "aurelia-research-theme";
@@ -439,6 +442,7 @@ function renderCapabilities(development, concepts, episodes, beats) {
     const associations = firstNumber(development, ["plasticAssociations", "associations", "associationCount"]);
     const channels = firstNumber(development, ["sensoryChannels"]);
     const heartbeatCount = firstNumber(development, ["heartbeatCount"], beats.length);
+    const decayed = firstNumber(development, ["decayedAssociations"]);
     capabilities = [
       ["Vocabulario", Math.min(100, vocabulary / 4)],
       ["Percepciones", Math.min(100, perceptions / 5)],
@@ -446,12 +450,54 @@ function renderCapabilities(development, concepts, episodes, beats) {
       ["Asociaciones plásticas", Math.min(100, associations / 20)],
       ["Canales sensoriales", Math.min(100, channels * 25)],
       ["Actividad autónoma", Math.min(100, heartbeatCount * 4)],
+      ["Olvido medido", Math.min(100, decayed * 12)],
     ];
   }
   $("#capability-chart").innerHTML = capabilities.slice(0, 7).map(([label, raw]) => {
     const value = Math.max(0, Math.min(100, raw <= 1 ? raw * 100 : raw));
     return `<div class="capability-row"><span>${label}</span><div class="bar"><i style="--value:${value.toFixed(1)}%"></i></div><b>${value.toFixed(0)}%</b></div>`;
   }).join("");
+}
+
+function renderIdentity(identity, history) {
+  $("#identity-magnitude").textContent = `${Math.round(Number(identity.driftMagnitude || 0) * 100)}%`;
+  $("#identity-dimensions").innerHTML = Object.entries(identity.drift || {}).map(([name, value]) => `<div><span>${escapeMarkup(name)}</span><b class="${Number(value) >= 0 ? "positive" : "negative"}">${Number(value) >= 0 ? "+" : ""}${Number(value).toFixed(3)}</b></div>`).join("") || "<p>Sin dimensiones registradas.</p>";
+  const versions = history.versions || [];
+  $("#identity-history").innerHTML = versions.length ? versions.map(({ kind, version }) => `<li>${escapeMarkup(kind)} v${version}</li>`).join("") : "<li>No hay versiones históricas generadas.</li>";
+}
+
+function renderBudget(snapshot) {
+  const budget = snapshot.budget || {};
+  $("#autonomy-mode").textContent = snapshot.autonomous ? "Activo" : "Sólo propuesta";
+  $("#budget-remaining").textContent = `${Math.round(Number(budget.remaining || 0) * 100)}%`;
+  $("#budget-spent").textContent = `${Math.round(Number(budget.spent || 0) * 100)}%`;
+  $("#budget-decisions").textContent = formatNumber((budget.decisions || []).length);
+  const latest = budget.decisions?.[0];
+  $("#budget-reason").textContent = latest ? `Última decisión: ${latest.reason} · prioridad ${Number(latest.priority || 0).toFixed(2)}.` : "Sin decisiones de exploración registradas.";
+}
+
+function renderHeartbeatProposals(beats) {
+  const newest = beats[0];
+  if (!newest || newest.sequence === state.lastHeartbeatSequence) return;
+  state.lastHeartbeatSequence = newest.sequence;
+  const proposal = newest.operations?.find(({ type }) => type === "proposal");
+  if (proposal) log(`Propuesta #${newest.sequence}: ${proposal.action} (${proposal.reason || proposal.cue || "sin detalle"}).`);
+}
+
+async function loadEvidence() {
+  if (state.evidenceLoaded) return;
+  try {
+    const files = ["foundational-language-v1.json", "spatial-grounding-v1.json"];
+    const evidence = await Promise.all(files.map(async (file) => ({ file, ...(await fetch(`evidence/${file}`, { cache: "no-store" }).then((response) => response.json())) })));
+    $("#evidence-list").innerHTML = evidence.map((item) => `<article><b>${escapeMarkup(item.experiment || item.file)}</b><span class="${item.passed ? "positive" : "negative"}">${item.passed ? "PASS" : "Sin aprobar"}</span><small>SHA-256: ${escapeMarkup(item.datasetHash || "no disponible")}</small><p>${escapeMarkup((item.limitations || []).join(" "))}</p></article>`).join("");
+    state.evidenceLoaded = true;
+  } catch { $("#evidence-list").innerHTML = "<p>No fue posible cargar los artefactos de evidencia.</p>"; }
+}
+
+async function renderComparison() {
+  if (!state.comparisonVisible || !state.souls.length) return;
+  const rows = await Promise.all(state.souls.slice(0, 3).map(async (soul) => ({ soul, development: await api(`/api/development?soulId=${encodeURIComponent(soul.id)}&language=${encodeURIComponent(state.language)}`) })));
+  $("#comparison-grid").innerHTML = rows.map(({ soul, development }) => `<article><h3>${escapeMarkup(soul.name || soul.id)}</h3><dl><div><dt>Fase</dt><dd>${escapeMarkup(development.developmentAssessment?.phase?.label || "Sin clasificar")}</dd></div><div><dt>Vocabulario</dt><dd>${formatNumber(development.vocabulary)}</dd></div><div><dt>Asociaciones</dt><dd>${formatNumber(development.plasticAssociations)}</dd></div><div><dt>Olvido medido</dt><dd>${formatNumber(development.decayedAssociations)}</dd></div><div><dt>Pulsos</dt><dd>${formatNumber(development.heartbeatCount)}</dd></div></dl></article>`).join("");
 }
 
 const seriesConfig = {
@@ -652,13 +698,16 @@ async function refresh({ quiet = false } = {}) {
   if (!state.soulId) return;
   $("#refresh-button").disabled = true;
   try {
-    const [health, development, conceptResult, episodeResult, heartbeatResult, lexicon] = await Promise.all([
+    const [health, development, conceptResult, episodeResult, heartbeatResult, lexicon, identity, history, budget] = await Promise.all([
       api("/api/health"),
       api(query("/api/development")),
       api(query("/api/concepts")),
       api(query("/api/memory/episodes")),
       api(query("/api/heartbeat")),
       api(`/api/lexicon/status?language=${encodeURIComponent(state.language)}`),
+      api(query("/api/identity/drift")),
+      api(query("/api/identity/history")),
+      api(query("/api/learning/budget")),
     ]);
     const concepts = conceptResult.concepts || [];
     const episodes = episodeResult.episodes || [];
@@ -677,6 +726,7 @@ async function refresh({ quiet = false } = {}) {
     $("#subject-phase").textContent = assessment.phase?.label || phaseNames[phaseId] || development.phase?.label || development.phase || development.stage?.label || development.stage || "Sin clasificar";
     $("#metric-concepts").textContent = formatNumber(concepts.length || firstNumber(development, ["concepts", "conceptCount"]));
     $("#metric-associations").textContent = formatNumber(associations);
+    $("#metric-associations-note").textContent = `${formatNumber(development.decayedAssociations)} decaídas`;
     $("#metric-episodes").textContent = formatNumber(episodes.length);
     $("#metric-beats").textContent = formatNumber(beats.length);
     $("#metric-lexicon").textContent = formatNumber(entryCount);
@@ -685,6 +735,11 @@ async function refresh({ quiet = false } = {}) {
     renderConcepts(concepts);
     state.lastDevelopment = development;
     renderBrainNetwork(development);
+    renderIdentity(identity, history);
+    renderBudget(budget);
+    renderHeartbeatProposals(beats);
+    loadEvidence();
+    await renderComparison();
     $("#last-update").textContent = `Última actualización: ${new Date().toLocaleString("es-CL")}`;
     if (!quiet) log(`Datos actualizados para ${soul.name || state.soulId} (${state.language}).`);
   } catch (error) {
@@ -763,6 +818,13 @@ $("#language-select").addEventListener("change", (event) => {
 $("#approach-select").addEventListener("change", (event) => { state.approach = event.target.value; renderApproach(); log(`Línea de investigación: ${approaches[state.approach].subtitle}.`); });
 $("#refresh-button").addEventListener("click", () => refresh());
 $("#inspect-concepts").addEventListener("click", () => refresh());
+$("#compare-toggle").addEventListener("click", async () => {
+  state.comparisonVisible = !state.comparisonVisible;
+  $("#comparison-panel").hidden = !state.comparisonVisible;
+  $("#compare-toggle").setAttribute("aria-pressed", String(state.comparisonVisible));
+  $("#compare-toggle").textContent = state.comparisonVisible ? "Ocultar comparación" : "Comparar sujetos";
+  if (state.comparisonVisible) await renderComparison();
+});
 $("#heartbeat-button").addEventListener("click", runHeartbeat);
 $("#emergency-save").addEventListener("click", emergencySave);
 $("#world-pause").addEventListener("click", () => worldControl(state.world?.runtime?.paused ? "resume" : "pause"));

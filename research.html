@@ -81,6 +81,7 @@
             </div>
             <button id="refresh-button" type="button">Actualizar</button>
             <button id="heartbeat-button" type="button">Ejecutar pulso</button>
+            <button class="secondary" id="compare-toggle" type="button" aria-pressed="false">Comparar sujetos</button>
             <button class="emergency-save" id="emergency-save" type="button">Guardado de emergencia</button>
           </div>
         </section>
@@ -265,6 +266,14 @@
             <div id="protocol-content"></div>
           </section>
         </div>
+
+        <section class="research-detail-grid" aria-label="Evidencia e identidad observables">
+          <article class="panel identity-panel"><div class="panel-heading"><div><h2>Deriva de identidad</h2><p>Estado registrado frente al origen; no es identidad subjetiva.</p></div><span class="method-tag">Runtime</span></div><div class="identity-magnitude"><span>Magnitud</span><strong id="identity-magnitude">—</strong></div><div id="identity-dimensions" class="identity-dimensions"></div><div class="identity-history"><span>Versiones disponibles</span><ol id="identity-history"><li>Consultando…</li></ol></div></article>
+          <article class="panel exploration-panel"><div class="panel-heading"><div><h2>Exploración autónoma</h2><p>Presupuesto de lectura externa por sujeto, sólo observación.</p></div><span id="autonomy-mode" class="method-tag">—</span></div><dl class="budget-readout"><div><dt>Disponible</dt><dd id="budget-remaining">—</dd></div><div><dt>Consumido</dt><dd id="budget-spent">—</dd></div><div><dt>Decisiones</dt><dd id="budget-decisions">—</dd></div></dl><p id="budget-reason" class="budget-reason">Esperando snapshot del runtime.</p></article>
+          <article class="panel evidence-panel"><div class="panel-heading"><div><h2>Evidencia experimental</h2><p>Resultados reproducibles disponibles en el repositorio.</p></div><span class="method-tag hypothesis">No concluyente</span></div><div id="evidence-list" class="evidence-list"><p>Cargando artefactos…</p></div></article>
+        </section>
+
+        <section id="comparison-panel" class="panel comparison-panel" hidden><div class="panel-heading"><div><h2>Comparación de población</h2><p>Métricas observables de Naia, Orin e Iria; no una clasificación de valor.</p></div><span class="method-tag">Misma captura</span></div><div id="comparison-grid" class="comparison-grid"></div></section>
 
         <div class="analysis-grid lower">
           <section class="panel">
