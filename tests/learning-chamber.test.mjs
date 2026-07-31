@@ -48,3 +48,14 @@ test("la cámara limita el ritmo, deduplica y rechaza contenido insuficiente", a
   lexicon.close();
   fs.rmSync(directory, { recursive: true, force: true });
 });
+
+test("la cámara espera una necesidad interna antes de explorar", async () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "aurelia-chamber-"));
+  const lexicon = new Lexicon(path.join(directory, "lexicon.sqlite"));
+  const chamber = new LearningChamber(lexicon, { fetchFn: async () => fixtureResponse(), terms: ["existir"], minimumIntervalMs: 10_000,
+    motivationFor: () => ({ curiosity: .1, unresolvedNeed: .1 }) });
+  const result = await chamber.tick("soul-test", { now: 1_000_000_000 });
+  assert.equal(result.status, "awaiting-internal-drive");
+  assert.equal(lexicon.externalObservations("soul-test").length, 0);
+  lexicon.close(); fs.rmSync(directory, { recursive: true, force: true });
+});

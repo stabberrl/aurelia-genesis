@@ -21,7 +21,7 @@ export class CognitiveHeartbeat {
       operations.push({ type: "consolidate", cue: association.cue, predicate: association.predicate, evidenceCount: association.evidenceCount });
     }
     let proposal;
-    if (before.sensoryChannels < 4) proposal = { type: "requestObservation", reason: "sensoryDiversity" };
+    if (before.sensoryChannels < 4) proposal = { type: "exploreConcept", reason: "sensoryDiversity", execution: "proposal-only" };
     else if (!strongest) proposal = { type: "requestExperience", reason: "noGroundedAssociations" };
     else if (strongest.evidenceCount < 3) proposal = { type: "seekRepetition", cue: strongest.cue, predicate: strongest.predicate };
     else proposal = { type: "internalRest", reason: "consolidationComplete" };

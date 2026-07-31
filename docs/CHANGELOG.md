@@ -2,6 +2,16 @@
 
 Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-04:00`). Una entrada describe el momento en que el bloque fue verificado; no pretende reconstruir una hora anterior.
 
+## 2026-07-31T00:48:20-04:00 — FEAT-AUTONOMOUS-EXPLORATION-001
+
+- Tipo: `feat`
+- Resumen: la Cámara de Aprendizaje evalúa motivación interna y presupuesto antes de observar una fuente; el heartbeat puede proponer exploración sin ejecutarla.
+- Mecanismos: `ExplorationBudget` combina curiosidad, necesidad no resuelta y recurso restante; la cámara devuelve `awaiting-internal-drive` cuando no procede explorar.
+- Seguridad: ninguna propuesta del heartbeat ni decisión de presupuesto activa solicitudes externas por sí misma; la procedencia y el rate limit se conservan.
+- Archivos: `src/learning/exploration-budget.mjs`, `src/learning/learning-chamber.mjs`, `src/runtime/cognitive-heartbeat.mjs`, pruebas asociadas.
+- Verificación: `npm test` — 60/60 PASS.
+- Limitaciones: el presupuesto aún se mantiene dentro de la Cámara de Aprendizaje; la diferenciación estable entre Naia, Orin e Iria requiere conectar los estados individuales de necesidad como siguiente iteración.
+
 ## 2026-07-31T00:46:09-04:00 — FEAT-ITERATION-FOUNDATIONS-001
 
 - Tipo: `feat`

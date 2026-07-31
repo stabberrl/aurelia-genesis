@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { ExplorationBudget } from "./exploration-budget.mjs";
 
 const DEFAULT_TERMS = ["yo", "tú", "sí", "no", "ser", "existir", "hablar", "escuchar", "tiempo", "espacio"];
 const CONTROL_CHARACTERS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g;
@@ -25,6 +26,7 @@ export class LearningChamber {
     terms = DEFAULT_TERMS,
     minimumIntervalMs = 180_000,
     maximumExcerptLength = 900,
+    motivationFor = null,
   } = {}) {
     if (typeof fetchFn !== "function") throw new Error("La cámara necesita un transporte de lectura.");
     this.lexicon = lexicon;
@@ -32,6 +34,8 @@ export class LearningChamber {
     this.terms = [...new Set(terms.map((term) => clean(term, 64)).filter(Boolean))];
     this.minimumIntervalMs = Math.max(10_000, Number(minimumIntervalMs) || 180_000);
     this.maximumExcerptLength = Math.max(120, Math.min(Number(maximumExcerptLength) || 900, 2_000));
+    this.motivationFor = motivationFor;
+    this.budgets = new Map();
     this.sequence = new Map();
     this.lastRun = new Map();
     this.timers = new Map();
@@ -70,6 +74,15 @@ export class LearningChamber {
   async tick(soulId, { now = Date.now() * 1000 } = {}) {
     const last = this.lastRun.get(soulId) || 0;
     if (now - last < this.minimumIntervalMs * 1000) return { status: "rate-limited", soulId, nextAt: last + this.minimumIntervalMs * 1000 };
+    const development = this.lexicon.development(soulId);
+    const motivation = this.motivationFor?.(soulId, development) || {
+      curiosity: development.externalObservations < this.terms.length ? .7 : .1,
+      unresolvedNeed: development.sensoryChannels < 4 || development.externalObservations < this.terms.length ? .8 : .1,
+    };
+    const budget = this.budgets.get(soulId) || new ExplorationBudget();
+    this.budgets.set(soulId, budget);
+    const permission = budget.request({ ...motivation, source: "learning-chamber" });
+    if (!permission.allowed) return { status: "awaiting-internal-drive", soulId, motivation, permission };
     const index = this.sequence.get(soulId) || 0;
     const term = this.terms[index % this.terms.length];
     const result = await this.observe(soulId, term, { now });
