@@ -2,6 +2,15 @@
 
 Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-04:00`). Una entrada describe el momento en que el bloque fue verificado; no pretende reconstruir una hora anterior.
 
+## 2026-07-31T01:16:00-04:00 — FEAT-CROSS-PLATFORM-AERA-001
+
+- Tipo: `feat`
+- Resumen: `npm run aera:build` y `npm run aera:start` seleccionan PowerShell en Windows y Bash en Linux/macOS mediante un selector Node verificable.
+- Unix: se añadieron scripts para regenerar temporalmente Protobuf, compilar con CMake y publicar `vendor/aera/Release/AERA`; el arranque registra PID y logs dentro de `Release`.
+- Portabilidad: la copia temporal de CMake usa el paquete Protobuf del sistema; la opción `AERA_32BIT` queda disponible sólo para Linux y no fuerza la arquitectura de macOS. El submódulo de AERA no se modifica.
+- Requisitos Unix: CMake y Protobuf (`protoc` y biblioteca de desarrollo); no se descarga ni ejecuta software externo automáticamente.
+- Verificación: selector probado para Windows, Linux y macOS; `npm test` — 64/64 PASS. La sintaxis Bash no pudo ejecutarse en este equipo porque WSL local no puede montar su disco virtual; los scripts se mantienen sin dependencias de WSL y validan sus requisitos al iniciar.
+
 ## 2026-07-31T01:08:37-04:00 — FEAT-MEASURABLE-DECAY-001
 
 - Tipo: `feat`
