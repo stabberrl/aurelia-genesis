@@ -12,6 +12,7 @@ export class AeraCodec {
   constructor() {
     this.entities = new Map();
     this.objects = new Map();
+    this.commands = new Map();
     this.references = new Map();
     this.nextCommunicationId = 1;
   }
@@ -21,9 +22,10 @@ export class AeraCodec {
     return map.get(name);
   }
 
-  register({ entities = [], objects = [] }) {
+  register({ entities = [], objects = [], commands = [] }) {
     for (const entity of entities) this.#idFor(this.entities, entity);
     for (const object of objects) this.#idFor(this.objects, object);
+    for (const command of commands) this.#idFor(this.commands, command);
   }
 
   lockSchema() { this.schemaLocked = true; }
@@ -61,9 +63,13 @@ export class AeraCodec {
       setupMessage: {
         entities: Object.fromEntries(this.entities),
         objects: Object.fromEntries(this.objects),
-        commands: {},
+        commands: Object.fromEntries(this.commands),
         commandDescriptions: [],
       },
     };
+  }
+
+  commandFor(id) {
+    return [...this.commands.entries()].find(([, commandId]) => commandId === Number(id))?.[0] || null;
   }
 }

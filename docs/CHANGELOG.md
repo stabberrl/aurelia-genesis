@@ -2,6 +2,14 @@
 
 Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-04:00`). Una entrada describe el momento en que el bloque fue verificado; no pretende reconstruir una hora anterior.
 
+## 2026-07-31T10:30:00-04:00 — FEAT-AERA-PRIMARY-AUTHORITY-001
+
+- Tipo: `feat`
+- Resumen: AERA recibe las percepciones corporales, conoce el conjunto cerrado de acciones de Genesis y sus comandos TCP se decodifican para ejecutarse sólo tras validación.
+- Límite: la semilla inicial aún no contiene una política de exploración; por ello el enlace no inventa comandos. El siguiente experimento debe comprobar comandos expulsados por AERA antes de habilitar cualquier autonomía sostenida.
+- Trazabilidad: `GET /api/aera/commands` expone las últimas solicitudes y su resultado; `/api/health` identifica `aera-primary` o `aera-awaiting-link`.
+- Verificación: `npm test` — 69/69 PASS. La prueba de comandos contra el binario AERA requiere reiniciar ese proceso para cargar la semilla ampliada.
+
 ## 2026-07-31T10:05:00-04:00 — FIX-DECAY-RUNTIME-RESPONSIVENESS-001
 
 - Tipo: `fix`

@@ -35,6 +35,10 @@ const world = new WorldRuntime({
       contact: perceptions.ambient.contact,
     };
     for (const [predicate, data] of Object.entries(values)) {
+      await gateway.receive({
+        protocol: "genesis-cognitive/1", id: `${event.id}:aera:${predicate}`, type: "perception", soulId,
+        subject: soulId, predicate, value: { type: "number", data }, timestamp,
+      });
       lexicon.observe({
         id: `${event.id}:${predicate}`,
         type: "perception",
@@ -100,7 +104,8 @@ checkpoints.start();
 
 const sensorySchema = {
   entities: ["naia", "human", "garden"],
-  objects: ["light", "sound", "contact", "energy"],
+  objects: ["light", "sound", "contact", "energy", ...ACTIONS],
+  commands: ACTIONS,
 };
 const bootstrapGateway = new CognitiveGateway();
 bootstrapGateway.codec.register(sensorySchema);
@@ -113,6 +118,29 @@ const transport = new AeraTcpTransport({
 await transport.start();
 const gateway = new CognitiveGateway({ sink: (frame) => transport.send(frame) });
 gateway.codec = bootstrapGateway.codec;
+const aeraCommandHistory = [];
+const aeraActionNames = new Set(ACTIONS);
+transport.onData = async (message) => {
+  const action = gateway.codec.commandFor(message.id);
+  if (!action || !aeraActionNames.has(action)) return;
+  const soulId = awakeIds[0];
+  const record = { source: "aera", action, soulId, receivedAt: new Date().toISOString(), status: "received" };
+  try {
+    if (infancy.running) throw new Error("El controlador local está activo; AERA conserva la autoridad de acción.");
+    const result = await world.act(soulId, action);
+    record.status = "executed";
+    record.outcome = result.event?.details?.outcome || "accepted";
+    await gateway.receive({
+      protocol: "genesis-cognitive/1", id: `aera-outcome-${result.event.id}`, soulId, type: "outcome",
+      subject: soulId, predicate: action, value: { type: "string", data: record.outcome }, timestamp: Date.now() * 1000,
+    });
+  } catch (error) {
+    record.status = "rejected";
+    record.reason = error.message;
+  }
+  aeraCommandHistory.unshift(record);
+  aeraCommandHistory.splice(24);
+};
 
 const mimeTypes = {
   ".html": "text/html; charset=utf-8",
@@ -169,7 +197,7 @@ const server = http.createServer(async (request, response) => {
   const url = new URL(request.url, `http://${request.headers.host || `${host}:${port}`}`);
   try {
     if (request.method === "GET" && url.pathname === "/api/health") {
-      return json(response, 200, { ok: true, engine: "aera", connected: transport.ready, tcp: Boolean(transport.socket), lastMessageType: transport.lastMessageType, protocol: "genesis-cognitive/1", awakeSouls: awakeIds });
+      return json(response, 200, { ok: true, engine: "aera", mode: transport.ready ? "aera-primary" : "aera-awaiting-link", connected: transport.ready, tcp: Boolean(transport.socket), lastMessageType: transport.lastMessageType, protocol: "genesis-cognitive/1", awakeSouls: awakeIds });
     }
     if (request.method === "GET" && url.pathname === "/api/souls") {
       return json(response, 200, { souls: await readRegistry(soulsDir, awakeIds) });
@@ -258,6 +286,9 @@ const server = http.createServer(async (request, response) => {
       if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
       const language = validateLanguage(url.searchParams.get("language") || "es");
       return json(response, 200, { soulId, language, beats: heartbeatFor(language).status(soulId) });
+    }
+    if (request.method === "GET" && url.pathname === "/api/aera/commands") {
+      return json(response, 200, { connected: transport.ready, authority: "aera", commands: aeraCommandHistory });
     }
     if (request.method === "GET" && url.pathname === "/api/learning/chamber") {
       const soulId = url.searchParams.get("soulId") || "";

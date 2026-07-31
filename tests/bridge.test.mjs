@@ -25,6 +25,13 @@ test("los identificadores AERA son estables dentro de una sesión", () => {
   assert.equal(first.dataMessage.variables[0].metaData.entityID, second.dataMessage.variables[0].metaData.entityID);
 });
 
+test("las acciones del cuerpo se declaran como comandos de AERA", () => {
+  const codec = new AeraCodec();
+  codec.register({ commands: ["moveForward", "rest"] });
+  assert.deepEqual(codec.setup().setupMessage.commands, { moveForward: 1, rest: 2 });
+  assert.equal(codec.commandFor(2), "rest");
+});
+
 test("el gateway separa el protocolo del transporte", async () => {
   let received;
   const gateway = new CognitiveGateway({ sink: async (frame) => { received = frame; return { accepted: true }; } });

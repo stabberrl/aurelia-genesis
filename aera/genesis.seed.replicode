@@ -9,6 +9,20 @@ sound:(ont 1) [[SYNC_ONCE now 1 forever root nil]]
 contact:(ont 1) [[SYNC_ONCE now 1 forever root nil]]
 energy:(ont 1) [[SYNC_ONCE now 1 forever root nil]]
 
+; Símbolos de acción del cuerpo. No incluyen una política: AERA debe formar
+; modelos y sólo puede solicitar una de estas acciones a Genesis.
+observe:(ont 1) [[SYNC_ONCE now 1 forever root nil]]
+turnLeft:(ont 1) [[SYNC_ONCE now 1 forever root nil]]
+turnRight:(ont 1) [[SYNC_ONCE now 1 forever root nil]]
+moveForward:(ont 1) [[SYNC_ONCE now 1 forever root nil]]
+touch:(ont 1) [[SYNC_ONCE now 1 forever root nil]]
+consume:(ont 1) [[SYNC_ONCE now 1 forever root nil]]
+rest:(ont 1) [[SYNC_ONCE now 1 forever root nil]]
+wait:(ont 1) [[SYNC_ONCE now 1 forever root nil]]
+grip:(ont 1) [[SYNC_ONCE now 1 forever root nil]]
+push:(ont 1) [[SYNC_ONCE now 1 forever root nil]]
+signal:(ont 1) [[SYNC_ONCE now 1 forever root nil]]
+
 ; Reflejo de arranque: abre el flujo sensorial, sin prescribir una respuesta.
 genesis_start:(pgm |[] |[] |[] []
    (cmd ready ["genesis" naia] 1)

@@ -43,6 +43,16 @@ acciones y órdenes de ciclo de vida tipadas.
 Mientras el binario o su conexión TCP no estén disponibles, el gateway responde
 `unavailable` y nunca simula una respuesta cognitiva.
 
+## Autoridad de acción
+
+Cuando AERA completa el handshake, Genesis declara explícitamente las acciones
+corporales permitidas en el `SetupMessage`. Las percepciones y los resultados de
+acciones viajan hacia AERA; los comandos que AERA expulse vuelven por TCP y se
+validan contra esa lista cerrada antes de actuar en la cámara. Genesis no elige
+una acción alternativa ni interpreta comandos desconocidos: conserva el mundo,
+los límites y el historial auditable. Sin enlace, el estado es
+`aera-awaiting-link`, no un modo cognitivo de reemplazo.
+
 ## Operación local
 
 ```bash

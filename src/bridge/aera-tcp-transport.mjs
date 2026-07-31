@@ -20,8 +20,16 @@ function bytesFor(type, value) {
   return Buffer.from(value);
 }
 
+function valueFor(type, bytes) {
+  if (type === "DOUBLE" && bytes.length >= 8) return bytes.readDoubleLE(0);
+  if ((type === "INT64" || type === "COMMUNICATION_ID") && bytes.length >= 8) return Number(bytes.readBigInt64LE(0));
+  if (type === "BOOL") return Boolean(bytes[0]);
+  if (type === "STRING") return bytes.toString("utf8");
+  return Buffer.from(bytes);
+}
+
 export class AeraTcpTransport {
-  constructor({ host = "127.0.0.1", port = 8080, setup }) {
+  constructor({ host = "127.0.0.1", port = 8080, setup, onData = () => {} }) {
     this.host = host;
     this.port = port;
     this.setup = setup;
@@ -30,6 +38,7 @@ export class AeraTcpTransport {
     this.server = null;
     this.buffer = Buffer.alloc(0);
     this.lastMessageType = null;
+    this.onData = onData;
   }
 
   async start() {
@@ -62,6 +71,18 @@ export class AeraTcpTransport {
       this.lastMessageType = message.messageType;
       this.buffer = this.buffer.subarray(8 + size);
       if (message.messageType === messageTypes.START) this.ready = true;
+      if (message.messageType === messageTypes.DATA) {
+        for (const variable of message.dataMessage?.variables || []) {
+          const type = Object.entries(dataTypes).find(([, id]) => id === variable.metaData?.dataType)?.[0] || "BYTES";
+          this.onData({
+            timestamp: Number(message.timestamp || 0),
+            entityId: Number(variable.metaData?.entityID),
+            id: Number(variable.metaData?.ID),
+            dataType: type,
+            value: valueFor(type, Buffer.from(variable.data || [])),
+          });
+        }
+      }
     }
   }
 
