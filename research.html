@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f4f5f6" />
+    <title>Aurelia Genesis — Consola de investigación</title>
+    <link rel="stylesheet" href="research.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <strong>Aurelia Genesis</strong>
+        <span>Consola de investigación</span>
+      </div>
+      <nav aria-label="Vistas del proyecto">
+        <a href="index.html">Interfaz experimental</a>
+        <a href="proof.html">Evidencia pública</a>
+        <a href="chamber.html" target="_blank" rel="noopener">Cámara de conocimiento</a>
+        <a href="chamber-3d.html" target="_blank" rel="noopener">Cámara 3D</a>
+      </nav>
+      <div class="header-controls">
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">Modo oscuro</button>
+        <div class="connection" id="connection">
+          <span aria-hidden="true"></span>
+          <b>Comprobando sistema</b>
+        </div>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="sidebar">
+        <section>
+          <h2>Sujeto</h2>
+          <label for="soul-select">Identidad observada</label>
+          <select id="soul-select"></select>
+          <dl class="subject-meta">
+            <div><dt>Identificador</dt><dd id="subject-id">—</dd></div>
+            <div><dt>Estado</dt><dd id="subject-state">—</dd></div>
+            <div><dt>Fase estimada</dt><dd id="subject-phase">—</dd></div>
+          </dl>
+        </section>
+
+        <section>
+          <h2>Contexto</h2>
+          <label for="language-select">Idioma cognitivo</label>
+          <select id="language-select">
+            <option value="es">Español</option>
+            <option value="en">English</option>
+            <option value="fr">Français</option>
+            <option value="it">Italiano</option>
+            <option value="ja">日本語</option>
+            <option value="ru">Русский</option>
+          </select>
+          <label for="approach-select">Línea de investigación</label>
+          <select id="approach-select">
+            <option value="assistant">Asistente adaptativo</option>
+            <option value="consciousness">Consciencia sintética</option>
+            <option value="alife">Vida artificial desde cero</option>
+          </select>
+          <p class="definition" id="approach-definition"></p>
+        </section>
+
+        <section class="notice">
+          <h2>Alcance</h2>
+          <p>Las fases y métricas son indicadores experimentales. No demuestran consciencia ni equivalencia biológica.</p>
+        </section>
+      </aside>
+
+      <div class="main-column">
+        <section class="toolbar" aria-label="Controles de observación">
+          <div>
+            <h1>Observación del sistema</h1>
+            <p id="last-update">Sin datos</p>
+          </div>
+          <div class="toolbar-actions">
+            <label class="check-control"><input id="auto-refresh" type="checkbox" checked /> Actualizar cada 10 s</label>
+            <div class="save-status">
+              <span id="checkpoint-status">Consultando guardado…</span>
+              <small>Automático cada 5 min</small>
+            </div>
+            <button id="refresh-button" type="button">Actualizar</button>
+            <button id="heartbeat-button" type="button">Ejecutar pulso</button>
+            <button class="emergency-save" id="emergency-save" type="button">Guardado de emergencia</button>
+          </div>
+        </section>
+
+        <section class="metric-grid" aria-label="Métricas principales">
+          <article><span>Conceptos</span><strong id="metric-concepts">—</strong><small id="metric-concepts-note">registrados</small></article>
+          <article><span>Asociaciones</span><strong id="metric-associations">—</strong><small id="metric-associations-note">registradas</small></article>
+          <article><span>Episodios</span><strong id="metric-episodes">—</strong><small>memoria episódica</small></article>
+          <article><span>Pulsos</span><strong id="metric-beats">—</strong><small>actividad registrada</small></article>
+          <article><span>Léxico disponible</span><strong id="metric-lexicon">—</strong><small id="metric-lexicon-note">entradas</small></article>
+          <article><span>Progreso</span><strong id="metric-progress">—</strong><small>estimación, no diagnóstico</small></article>
+        </section>
+
+        <section class="panel world-panel" aria-labelledby="world-title">
+          <div class="panel-heading">
+            <div><h2 id="world-title">Habitación de Génesis</h2><p>Mundo lógico determinista · vista completa exclusiva del investigador</p></div>
+            <div class="world-clock"><span id="world-runtime-state">En pausa</span><strong id="world-tick">TICK 0</strong></div>
+          </div>
+          <div class="world-layout">
+            <div class="world-map-wrap">
+              <canvas id="world-map" aria-label="Mapa interactivo de la habitación experimental"></canvas>
+              <div class="world-map-key">
+                <span><i class="key-body"></i>Cuerpo</span>
+                <span><i class="key-visible"></i>Percepción actual</span>
+                <span><i class="key-learned"></i>Mapa aprendido</span>
+                <span><i class="key-object"></i>Objeto desconocido</span>
+                <span><i class="key-obstacle"></i>Obstáculo</span>
+              </div>
+            </div>
+            <div class="world-console">
+              <section>
+                <h3>Tiempo del mundo</h3>
+                <div class="world-control-row">
+                  <button id="world-pause" type="button">Reanudar</button>
+                  <button id="world-step" type="button">+1 paso</button>
+                  <label for="world-speed">Velocidad</label>
+                  <select id="world-speed">
+                    <option value="1">1×</option>
+                    <option value="10">10×</option>
+                    <option value="100">100×</option>
+                    <option value="1000">1000×</option>
+                  </select>
+                </div>
+              </section>
+              <section>
+                <h3>Acciones corporales</h3>
+                <div class="action-grid" id="world-actions">
+                  <button type="button" data-action="observe">Observar</button>
+                  <button type="button" data-action="turnLeft">Girar ←</button>
+                  <button type="button" data-action="moveForward">Avanzar</button>
+                  <button type="button" data-action="turnRight">Girar →</button>
+                  <button type="button" data-action="touch">Tocar</button>
+                  <button type="button" data-action="consume">Consumir</button>
+                  <button type="button" data-action="rest">Descansar</button>
+                  <button type="button" data-action="wait">Esperar</button>
+                </div>
+                <p class="action-warning">Intervención manual del investigador; cada acción queda registrada.</p>
+              </section>
+              <section class="autonomy-console">
+                <div class="autonomy-heading">
+                  <h3>Controlador de infancia</h3>
+                  <span id="infancy-state">Pausado</span>
+                </div>
+                <div class="world-control-row autonomy-controls">
+                  <button id="infancy-toggle" type="button">Iniciar</button>
+                  <button id="infancy-step" type="button">1 decisión</button>
+                  <label for="infancy-speed">Ritmo</label>
+                  <select id="infancy-speed">
+                    <option value="1">1×</option>
+                    <option value="5">5×</option>
+                    <option value="25">25×</option>
+                    <option value="100">100×</option>
+                  </select>
+                </div>
+                <dl class="autonomy-metrics">
+                  <div><dt>Decisiones</dt><dd id="infancy-decisions">0</dd></div>
+                  <div><dt>Celdas conocidas</dt><dd id="infancy-cells">0</dd></div>
+                  <div><dt>Obstáculos aprendidos</dt><dd id="infancy-blocked">0</dd></div>
+                  <div><dt>Descubrimientos</dt><dd id="infancy-discoveries">0</dd></div>
+                </dl>
+                <div class="decision-readout">
+                  <span>Última decisión autónoma</span>
+                  <strong id="infancy-last-action">—</strong>
+                  <p id="infancy-last-reason">Sin decisiones registradas.</p>
+                </div>
+                <div class="object-knowledge" id="object-knowledge">
+                  <p>No existe conocimiento adquirido sobre objetos.</p>
+                </div>
+                <div class="workspace-readout" aria-label="Espacio de trabajo global experimental">
+                  <span>Espacio de trabajo global experimental</span>
+                  <strong id="workspace-focus">Sin foco difundido.</strong>
+                  <p id="workspace-detail">Selecciona un contenido para memoria, predicción y acción; no demuestra consciencia.</p>
+                  <div id="workspace-candidates" class="workspace-candidates"></div>
+                </div>
+              </section>
+              <section class="body-readout">
+                <h3>Estado corporal</h3>
+                <dl>
+                  <div><dt>Energía</dt><dd id="body-energy">—</dd></div>
+                  <div><dt>Fatiga</dt><dd id="body-fatigue">—</dd></div>
+                  <div><dt>Integridad</dt><dd id="body-integrity">—</dd></div>
+                  <div><dt>Orientación</dt><dd id="body-direction">—</dd></div>
+                  <div><dt>Objetos visibles</dt><dd id="body-visible">—</dd></div>
+                  <div><dt>Último resultado</dt><dd id="body-outcome">—</dd></div>
+                  <div><dt>Forma corporal</dt><dd id="body-form">—</dd></div>
+                  <div><dt>Capacidades</dt><dd id="body-capabilities">—</dd></div>
+                  <div><dt>Señales al panel</dt><dd id="body-signals">—</dd></div>
+                </dl>
+              </section>
+            </div>
+          </div>
+        </section>
+
+        <section class="live-grid" aria-label="Monitor cognitivo en tiempo real">
+          <article class="panel brain-monitor">
+            <div class="panel-heading">
+              <div><h2>Grafo cognitivo observable</h2><p>Conceptos y asociaciones registradas; no es un escaneo neuronal.</p></div>
+              <div class="live-state"><i></i><span id="live-state-label">Muestreo activo</span></div>
+            </div>
+            <div class="brain-tools">
+              <label for="brain-filter">Filtrar nodo</label>
+              <input id="brain-filter" type="search" placeholder="Concepto o predicado" />
+              <label for="brain-zoom">Escala</label>
+              <input id="brain-zoom" type="range" min="70" max="150" value="100" />
+              <button class="secondary" id="brain-reset" type="button">Restablecer</button>
+            </div>
+            <div class="brain-viewport">
+              <svg id="brain-network" viewBox="0 0 760 390" role="img" aria-labelledby="brain-network-title brain-network-desc">
+                <title id="brain-network-title">Grafo cognitivo del sujeto</title>
+                <desc id="brain-network-desc">Los nodos representan conceptos y los enlaces representan asociaciones observadas.</desc>
+              </svg>
+              <div class="brain-tooltip" id="brain-tooltip" hidden></div>
+            </div>
+            <div class="node-inspector" id="node-inspector">
+              <div><span>Selección</span><strong>Ningún nodo</strong></div>
+              <div><span>Tipo</span><strong>—</strong></div>
+              <div><span>Evidencias</span><strong>—</strong></div>
+              <div><span>Peso máximo</span><strong>—</strong></div>
+            </div>
+          </article>
+
+          <article class="panel activity-monitor">
+            <div class="panel-heading">
+              <div><h2>Actividad temporal</h2><p>Contadores acumulados muestreados cada 2 segundos</p></div>
+              <span class="method-tag">Ventana: 2 min</span>
+            </div>
+            <div class="chart-legend" id="activity-legend">
+              <button type="button" data-series="vocabulary"><i class="series-vocabulary"></i>Vocabulario</button>
+              <button type="button" data-series="perceptions"><i class="series-perceptions"></i>Percepciones</button>
+              <button type="button" data-series="associations"><i class="series-associations"></i>Asociaciones</button>
+              <button type="button" data-series="heartbeats"><i class="series-heartbeats"></i>Pulsos</button>
+            </div>
+            <div class="timeline-wrap">
+              <svg id="activity-chart" viewBox="0 0 620 260" role="img" aria-labelledby="activity-title activity-desc">
+                <title id="activity-title">Actividad cognitiva temporal</title>
+                <desc id="activity-desc">Series temporales normalizadas con valores reales disponibles al inspeccionar.</desc>
+              </svg>
+              <div class="chart-cursor" id="chart-cursor" hidden></div>
+            </div>
+            <dl class="live-readout">
+              <div><dt>Última muestra</dt><dd id="sample-time">—</dd></div>
+              <div><dt>Cambios detectados</dt><dd id="sample-changes">0</dd></div>
+              <div><dt>Intervalo</dt><dd>2 s</dd></div>
+            </dl>
+          </article>
+        </section>
+
+        <div class="analysis-grid">
+          <section class="panel development-panel">
+            <div class="panel-heading">
+              <div><h2>Desarrollo observado</h2><p>Comparación de capacidades medibles</p></div>
+              <span class="method-tag">Datos del runtime</span>
+            </div>
+            <div id="capability-chart" class="capability-chart" role="img" aria-label="Capacidades observadas"></div>
+          </section>
+
+          <section class="panel protocol-panel">
+            <div class="panel-heading">
+              <div><h2>Protocolo activo</h2><p id="protocol-subtitle">Definición del enfoque</p></div>
+              <span class="method-tag hypothesis">Hipótesis</span>
+            </div>
+            <div id="protocol-content"></div>
+          </section>
+        </div>
+
+        <div class="analysis-grid lower">
+          <section class="panel">
+            <div class="panel-heading">
+              <div><h2>Conceptos recientes</h2><p>Contenido adquirido por el sujeto</p></div>
+              <button class="secondary" id="inspect-concepts" type="button">Recargar</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Concepto</th><th>Exposición</th><th>Confianza</th><th>Última observación</th></tr></thead>
+                <tbody id="concept-table"><tr><td colspan="4">Esperando datos…</td></tr></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <div><h2>Registro de operaciones</h2><p>Actividad de esta sesión de interfaz</p></div>
+              <button class="secondary" id="clear-log" type="button">Limpiar</button>
+            </div>
+            <ol class="operation-log" id="operation-log" aria-live="polite"></ol>
+          </section>
+        </div>
+
+        <section class="panel stimulus-panel">
+          <div class="panel-heading">
+            <div><h2>Entrada experimental controlada</h2><p>Registra una exposición léxica; no genera una conversación simulada.</p></div>
+            <span class="method-tag warning">Modifica memoria</span>
+          </div>
+          <form id="stimulus-form">
+            <label for="stimulus-input">Texto de exposición</label>
+            <div>
+              <textarea id="stimulus-input" rows="2" maxlength="500" placeholder="Introduzca una observación breve y verificable." required></textarea>
+              <button type="submit">Registrar exposición</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="research.js"></script>
+  </body>
+</html>

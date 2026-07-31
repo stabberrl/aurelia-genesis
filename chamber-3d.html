@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0d1114" />
+    <title>Aurelia Genesis — Cámara 3D</title>
+    <link rel="stylesheet" href="chamber-3d.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div><p class="eyebrow">Aurelia Genesis / observación incorporada</p><h1>Cámara 3D</h1></div>
+      <nav><a href="research.html">Consola</a><a href="chamber.html" target="_blank" rel="noopener">Conocimiento</a><a href="index.html">Interfaz experimental</a></nav>
+      <div class="connection" id="connection"><i></i><span>Conectando</span></div>
+    </header>
+    <main>
+      <section class="scene-shell" aria-label="Representación tridimensional del mundo de Naia">
+        <canvas id="world-3d"></canvas>
+        <div class="reticle" aria-hidden="true"></div>
+        <div class="scene-title"><span>GENESIS-ROOM-V2</span><b id="scene-tick">TICK —</b></div>
+        <p class="scene-note" id="scene-note">Cargando percepción corporal…</p>
+      </section>
+      <aside class="instrument-panel">
+        <section>
+          <p class="eyebrow">Sujeto observado</p><h2 id="subject-name">Naia</h2>
+          <dl><div><dt>Cuerpo</dt><dd id="body-form">—</dd></div><div><dt>Posición</dt><dd id="body-position">—</dd></div><div><dt>Orientación</dt><dd id="body-direction">—</dd></div></dl>
+        </section>
+        <section>
+          <p class="eyebrow">Perspectiva</p>
+          <div class="view-buttons"><button class="active" data-view="observer" type="button">Observador</button><button data-view="subject" type="button">Sensorial</button></div>
+          <p class="hint">La vista sensorial se sitúa detrás del cuerpo; no añade información a Naia.</p>
+        </section>
+        <section>
+          <p class="eyebrow">Estado interno</p>
+          <div class="meter"><label>Energía <output id="energy-value">—</output></label><span><i id="energy-meter"></i></span></div>
+          <div class="meter"><label>Fatiga <output id="fatigue-value">—</output></label><span><i id="fatigue-meter"></i></span></div>
+        </section>
+        <section>
+          <p class="eyebrow">Última experiencia</p><p class="event" id="latest-event">Esperando datos…</p>
+          <p class="eyebrow">Capacidades descubiertas</p><div class="capabilities" id="capabilities"></div>
+        </section>
+        <section class="legend"><span><i class="naia"></i>Naia</span><span><i class="knowledge"></i>Fragmento</span><span><i class="shell"></i>Cuerpo</span><span><i class="panel"></i>Panel</span></section>
+      </aside>
+    </main>
+    <footer>Representación 3D de datos del runtime. No es un motor de decisión ni una demostración de consciencia.</footer>
+    <script src="chamber-3d-data.js"></script>
+    <script type="module" src="chamber-3d.js"></script>
+  </body>
+</html>

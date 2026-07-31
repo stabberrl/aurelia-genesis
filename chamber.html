@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Aurelia Genesis — Cámara de conocimiento</title>
+    <link rel="stylesheet" href="chamber.css" />
+  </head>
+  <body>
+    <header class="chamber-header">
+      <div><span class="eyebrow">Aurelia Genesis / entorno separado</span><h1>Cámara de conocimiento</h1></div>
+      <nav aria-label="Navegación"><a href="research.html">Volver a la consola</a><a href="index.html">Interfaz experimental</a></nav>
+    </header>
+    <main>
+      <section class="intro">
+        <span class="status">PROTOCOLO EN DISEÑO</span>
+        <h2>La información externa no entra como una verdad inmediata.</h2>
+        <p>Las fuentes se conservarán con procedencia, se fragmentarán en estímulos y sólo podrán convertirse en exposición después de una interacción corporal registrada.</p>
+      </section>
+      <section class="chamber-grid">
+        <article class="source-panel">
+          <div class="panel-title"><span>01</span><h2>Fuente mediada</h2></div>
+          <label for="source-url">Enlace de investigación</label>
+          <input id="source-url" type="url" placeholder="https://ejemplo.org/artículo" />
+          <label for="source-language">Idioma de origen</label>
+          <select id="source-language"><option value="es">Español</option><option value="en">English</option><option value="fr">Français</option><option value="it">Italiano</option><option value="ja">日本語</option><option value="ru">Русский</option></select>
+          <label for="target-language">Idioma cognitivo</label>
+          <select id="target-language"><option value="es">Español</option><option value="en">English</option><option value="fr">Français</option><option value="it">Italiano</option><option value="ja">日本語</option><option value="ru">Русский</option></select>
+          <button id="ingest-source" type="button">Analizar y preparar</button>
+          <p class="hint" id="translation-status">Comprobando traductor local…</p>
+          <p class="hint">Ningún texto se envía a un alma desde esta pantalla: se distribuye en el mundo y exige una interacción registrada.</p>
+          <output id="ingest-result" class="hint"></output>
+        </article>
+        <article class="flow-panel">
+          <div class="panel-title"><span>02</span><h2>Ruta de descubrimiento</h2></div>
+          <ol class="flow">
+            <li><b>Fuente</b><small>URL, autoría, fecha y huella</small></li>
+            <li><b>Traducción local</b><small>al idioma cognitivo elegido</small></li>
+            <li><b>Fragmentos</b><small>piezas pequeñas con contexto</small></li>
+            <li><b>Entorno</b><small>distribución espacial, no inyección</small></li>
+            <li><b>Encuentro</b><small>percepción e interacción auditables</small></li>
+          </ol>
+        </article>
+      </section>
+      <section class="catalog" aria-labelledby="catalog-title">
+        <div><span class="eyebrow">Catálogo semilla</span><h2 id="catalog-title">Cuerpo, identidad y límites</h2><p>Vocabulario de investigación preparado para ser distribuido en el entorno. No representa sexo, género ni pudor reales de Naia; el mundo actual no simula fisiología humana ni sexualidad.</p></div>
+        <div id="seed-catalog" class="seed-catalog" aria-live="polite"></div>
+      </section>
+      <aside class="method-note"><b>Límite metodológico.</b> “Sexo biológico”, “identidad de género” y “pudor” son dimensiones distintas. El catálogo evita tratarlas como equivalentes y exige consentimiento, privacidad y trazabilidad antes de cualquier futura simulación social.</aside>
+    </main>
+    <script src="chamber.js"></script>
+  </body>
+</html>
