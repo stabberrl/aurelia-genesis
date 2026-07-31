@@ -30,6 +30,7 @@ test("las acciones del cuerpo se declaran como comandos de AERA", () => {
   codec.register({ commands: ["moveForward", "rest"] });
   assert.deepEqual(codec.setup().setupMessage.commands, { moveForward: 1, rest: 2 });
   assert.equal(codec.commandFor(2), "rest");
+  assert.equal(codec.setup().setupMessage.commandDescriptions[1].description.dataType, "BOOL");
 });
 
 test("el gateway separa el protocolo del transporte", async () => {

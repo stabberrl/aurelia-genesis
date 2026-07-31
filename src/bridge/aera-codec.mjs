@@ -58,13 +58,19 @@ export class AeraCodec {
   }
 
   setup() {
+    const commands = Object.fromEntries(this.commands);
     return {
       messageType: "SETUP",
       setupMessage: {
         entities: Object.fromEntries(this.entities),
         objects: Object.fromEntries(this.objects),
-        commands: Object.fromEntries(this.commands),
-        commandDescriptions: [],
+        commands,
+        // AERA necesita describir el mensaje de vuelta incluso para acciones
+        // sin argumento; Genesis valida el nombre, no el valor recibido.
+        commandDescriptions: [...this.commands.entries()].map(([name, id]) => ({
+          name,
+          description: { entityID: 0, ID: id, dataType: "BOOL", dimensions: [], opcode_string_handle: "" },
+        })),
       },
     };
   }

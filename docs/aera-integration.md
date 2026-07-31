@@ -53,6 +53,10 @@ una acción alternativa ni interpreta comandos desconocidos: conserva el mundo,
 los límites y el historial auditable. Sin enlace, el estado es
 `aera-awaiting-link`, no un modo cognitivo de reemplazo.
 
+Cada comando declarado incluye una `CommandDescription` Protobuf, incluso si no
+lleva argumento. Sin esa descripción el dispositivo TCP de AERA puede aceptar el
+nombre durante el handshake pero no puede construir el mensaje de salida.
+
 ## Operación local
 
 ```bash

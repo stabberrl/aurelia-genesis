@@ -6,6 +6,7 @@ Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-0
 
 - Tipo: `feat`
 - Resumen: AERA recibe las percepciones corporales, conoce el conjunto cerrado de acciones de Genesis y sus comandos TCP se decodifican para ejecutarse sólo tras validación.
+- Corrección de protocolo: cada acción declara su metadato Protobuf de salida; el dispositivo TCP de AERA necesita esa descripción para construir una devolución de comando.
 - Límite: la semilla inicial aún no contiene una política de exploración; por ello el enlace no inventa comandos. El siguiente experimento debe comprobar comandos expulsados por AERA antes de habilitar cualquier autonomía sostenida.
 - Trazabilidad: `GET /api/aera/commands` expone las últimas solicitudes y su resultado; `/api/health` identifica `aera-primary` o `aera-awaiting-link`.
 - Verificación: `npm test` — 69/69 PASS. El 2026-07-31T10:22:29-04:00 AERA inició con la semilla ampliada y completó el handshake TCP; `/api/health` confirmó `mode: aera-primary`. La expulsión de una acción requiere el siguiente experimento de política/modelado y no se simula mientras tanto.
