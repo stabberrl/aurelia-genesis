@@ -17,9 +17,12 @@
     "experiment:foundations": "node scripts/run-foundational-language-experiment.mjs",
     "teach:foundations": "node scripts/teach-naia-foundations.mjs",
     "learn:observe": "node scripts/run-learning-chamber.mjs",
+    "bootstrap": "node scripts/bootstrap.mjs",
+    "session:summary": "node scripts/session-summary.mjs",
     "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
-    "protobufjs": "7.6.5"
+    "protobufjs": "7.6.5",
+    "three": "^0.181.0"
   }
 }

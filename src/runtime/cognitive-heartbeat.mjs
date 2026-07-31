@@ -1,7 +1,8 @@
 export class CognitiveHeartbeat {
-  constructor(lexicon, { intervalMs = 60_000 } = {}) {
+  constructor(lexicon, { intervalMs = 60_000, fastForward = 0 } = {}) {
     this.lexicon = lexicon;
     this.intervalMs = Math.max(5_000, Number(intervalMs) || 60_000);
+    this.fastForward = Math.max(0, Math.min(10_000, Math.trunc(Number(fastForward) || 0)));
     this.timer = null;
   }
 
@@ -44,6 +45,9 @@ export class CognitiveHeartbeat {
 
   start(soulIds) {
     if (this.timer) return;
+    if (this.fastForward) queueMicrotask(() => {
+      for (let cycle = 0; cycle < this.fastForward; cycle += 1) for (const soulId of soulIds) this.tick(soulId);
+    });
     this.timer = setInterval(() => {
       for (const soulId of soulIds) {
         try { this.tick(soulId); } catch (error) { console.error(`[heartbeat] ${soulId}:`, error); }

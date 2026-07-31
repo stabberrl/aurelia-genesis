@@ -9,7 +9,12 @@ import { LexiconRegistry } from "./lexicon/registry.mjs";
 import { validateLanguage } from "./lexicon/languages.mjs";
 import { LearningChamber } from "./learning/learning-chamber.mjs";
 import { CognitiveHeartbeat } from "./runtime/cognitive-heartbeat.mjs";
+import { CheckpointManager } from "./runtime/checkpoint-manager.mjs";
 import { readRegistry, validateSoulId } from "./runtime/registry.mjs";
+import { ACTIONS } from "./world/genesis-world.mjs";
+import { WorldRuntime } from "./world/runtime.mjs";
+import { EmbodiedInfancyController } from "./world/infancy-controller.mjs";
+import { KnowledgeChamber } from "./learning/knowledge-chamber.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const soulsDir = path.join(root, "souls");
@@ -17,12 +22,51 @@ const host = process.env.FLUCTLIGHT_HOST || "127.0.0.1";
 const port = Number(process.env.FLUCTLIGHT_PORT || 4747);
 const awakeIds = (process.env.FLUCTLIGHT_AWAKE_SOULS || "soul-001-alba-0001").split(",").map((id) => id.trim()).filter(Boolean);
 const lexicons = new LexiconRegistry({ spanishPath: process.env.FLUCTLIGHT_LEXICON_PATH });
+const world = new WorldRuntime({
+  onPerceptions: async (soulId, perceptions, event) => {
+    const lexicon = lexicons.get("es");
+    const timestamp = Date.now() * 1000;
+    const values = {
+      energy: perceptions.internal.energy,
+      fatigue: perceptions.internal.fatigue,
+      light: perceptions.ambient.light,
+      contact: perceptions.ambient.contact,
+    };
+    for (const [predicate, data] of Object.entries(values)) {
+      lexicon.observe({
+        id: `${event.id}:${predicate}`,
+        type: "perception",
+        soulId,
+        subject: soulId,
+        predicate,
+        value: { type: "number", data },
+        timestamp,
+      });
+    }
+    const fragment = event.details?.knowledgeFragment;
+    if (fragment?.text) lexicon.encounter(soulId, fragment.text, { timestamp });
+  },
+});
+await world.initialize();
+const infancy = new EmbodiedInfancyController({ worldRuntime: world });
+await infancy.initialize();
+const knowledgeChamber = new KnowledgeChamber({ worldRuntime: world, lexiconFor: (language) => lexicons.get(language) });
 const heartbeatByLanguage = new Map();
 const chamberByLanguage = new Map();
+const checkpoints = new CheckpointManager({
+  lexicons,
+  soulsDir,
+  intervalMs: Number(process.env.FLUCTLIGHT_CHECKPOINT_MS || 300_000),
+  retention: Number(process.env.FLUCTLIGHT_CHECKPOINT_RETENTION || 24),
+  stateProviders: [world, infancy],
+});
 function heartbeatFor(language = "es") {
   const languageCode = validateLanguage(language);
   if (!heartbeatByLanguage.has(languageCode)) heartbeatByLanguage.set(languageCode,
-    new CognitiveHeartbeat(lexicons.get(languageCode), { intervalMs: Number(process.env.FLUCTLIGHT_HEARTBEAT_MS || 60_000) }));
+    new CognitiveHeartbeat(lexicons.get(languageCode), {
+      intervalMs: Number(process.env.FLUCTLIGHT_HEARTBEAT_MS || 60_000),
+      fastForward: Number(process.env.FLUCTLIGHT_HEARTBEAT_FASTFORWARD || 0),
+    }));
   return heartbeatByLanguage.get(languageCode);
 }
 function chamberFor(language = "es") {
@@ -35,6 +79,7 @@ function chamberFor(language = "es") {
 }
 heartbeatFor("es").start(awakeIds);
 if (process.env.FLUCTLIGHT_LEARNING_CHAMBER === "1") chamberFor("es").start(awakeIds);
+checkpoints.start();
 
 const sensorySchema = {
   entities: ["naia", "human", "garden"],
@@ -92,6 +137,7 @@ async function serveStatic(requestPath, response) {
     const content = await fs.readFile(resolved);
     response.writeHead(200, {
       "Content-Type": mimeTypes[path.extname(resolved)] || "application/octet-stream",
+      "Cache-Control": "no-store",
       "X-Content-Type-Options": "nosniff",
       "Content-Security-Policy": "default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self'; img-src 'self' data:; connect-src 'self'",
     });
@@ -110,6 +156,40 @@ const server = http.createServer(async (request, response) => {
     }
     if (request.method === "GET" && url.pathname === "/api/souls") {
       return json(response, 200, { souls: await readRegistry(soulsDir, awakeIds) });
+    }
+    if (request.method === "GET" && url.pathname === "/api/checkpoints/status") {
+      return json(response, 200, await checkpoints.status());
+    }
+    if (request.method === "POST" && url.pathname === "/api/checkpoints") {
+      return json(response, 201, await checkpoints.save({ reason: "manual", mode: "FULL" }));
+    }
+    if (request.method === "GET" && url.pathname === "/api/world") {
+      const soulId = url.searchParams.get("soulId") || awakeIds[0];
+      if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
+      return json(response, 200, { ...world.status(), perceptions: world.world.perceptions(soulId), actions: ACTIONS });
+    }
+    if (request.method === "POST" && url.pathname === "/api/world/control") {
+      const { command, value } = await readJsonBody(request);
+      return json(response, 200, world.control(command, value));
+    }
+    if (request.method === "POST" && url.pathname === "/api/world/action") {
+      const { soulId, action } = await readJsonBody(request);
+      if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
+      if (!ACTIONS.includes(action)) return json(response, 400, { error: "Acción no válida." });
+      if (infancy.running) return json(response, 409, { error: "Pausa el controlador autónomo antes de intervenir manualmente." });
+      return json(response, 200, await world.act(soulId, action));
+    }
+    if (request.method === "GET" && url.pathname === "/api/world/controller") {
+      return json(response, 200, infancy.status());
+    }
+    if (request.method === "POST" && url.pathname === "/api/world/controller") {
+      const { command, value } = await readJsonBody(request);
+      if (command === "step") {
+        if (infancy.running) return json(response, 409, { error: "El paso individual requiere pausar el controlador." });
+        await infancy.runSteps(Math.max(1, Math.min(100, Number(value) || 1)));
+        return json(response, 200, infancy.status());
+      }
+      return json(response, 200, infancy.control(command, value));
     }
     if (request.method === "GET" && url.pathname === "/api/lexicon/status") {
       const language = url.searchParams.get("language");
@@ -154,6 +234,14 @@ const server = http.createServer(async (request, response) => {
         enabled: process.env.FLUCTLIGHT_LEARNING_CHAMBER === "1",
         observations: lexicons.get(language).externalObservations(soulId),
       });
+    }
+    if (request.method === "GET" && url.pathname === "/api/knowledge-chamber/status") {
+      return json(response, 200, knowledgeChamber.status());
+    }
+    if (request.method === "POST" && url.pathname === "/api/knowledge-chamber/ingest") {
+      const { soulId, url: sourceUrl, sourceLanguage = "es", targetLanguage = "es" } = await readJsonBody(request);
+      if (!validateSoulId(soulId) || typeof sourceUrl !== "string") return json(response, 400, { error: "Se requieren un alma válida y una URL." });
+      return json(response, 201, await knowledgeChamber.ingest({ soulId, url: sourceUrl, sourceLanguage: validateLanguage(sourceLanguage), targetLanguage: validateLanguage(targetLanguage) }));
     }
     if (request.method === "POST" && url.pathname === "/api/learning/chamber/tick") {
       const { soulId, language = "es" } = await readJsonBody(request);
@@ -218,8 +306,13 @@ server.listen(port, host, () => {
 
 async function shutdown() {
   server.close();
+  checkpoints.stop();
+  world.stop();
+  infancy.stopTimer();
   for (const heartbeat of heartbeatByLanguage.values()) heartbeat.stop();
   for (const chamber of chamberByLanguage.values()) chamber.stop();
+  try { await checkpoints.save({ reason: "shutdown", mode: "FULL" }); }
+  catch (error) { console.error(`[checkpoint] cierre: ${error.message}`); }
   lexicons.close();
   await transport.close();
   process.exit(0);
