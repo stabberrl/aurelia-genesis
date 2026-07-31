@@ -15,6 +15,7 @@ import { ACTIONS } from "./world/genesis-world.mjs";
 import { WorldRuntime } from "./world/runtime.mjs";
 import { EmbodiedInfancyController } from "./world/infancy-controller.mjs";
 import { KnowledgeChamber } from "./learning/knowledge-chamber.mjs";
+import { buildIdentityReport } from "./identity/identity-report.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const soulsDir = path.join(root, "souls");
@@ -212,6 +213,12 @@ const server = http.createServer(async (request, response) => {
       if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
       const language = validateLanguage(url.searchParams.get("language") || "es");
       return json(response, 200, { language, ...lexicons.get(language).development(soulId) });
+    }
+    if (request.method === "GET" && url.pathname === "/api/identity/drift") {
+      const soulId = url.searchParams.get("soulId") || "";
+      if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
+      const [genesis, state] = await Promise.all(["GENESIS.json", "STATE.json"].map(async (name) => JSON.parse(await fs.readFile(path.join(soulsDir, soulId, name), "utf8"))));
+      return json(response, 200, buildIdentityReport({ genesis, state, development: lexicons.get("es").development(soulId) }));
     }
     if (request.method === "GET" && url.pathname === "/api/memory/episodes") {
       const soulId = url.searchParams.get("soulId") || "";

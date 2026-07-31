@@ -19,6 +19,7 @@
     "learn:observe": "node scripts/run-learning-chamber.mjs",
     "bootstrap": "node scripts/bootstrap.mjs",
     "session:summary": "node scripts/session-summary.mjs",
+    "identity:refresh": "node scripts/refresh-identity.mjs",
     "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {

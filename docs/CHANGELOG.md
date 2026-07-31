@@ -2,6 +2,14 @@
 
 Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-04:00`). Una entrada describe el momento en que el bloque fue verificado; no pretende reconstruir una hora anterior.
 
+## 2026-07-31T00:52:00-04:00 — FEAT-IDENTITY-DRIFT-001
+
+- Tipo: `feat`
+- Resumen: generador determinista de `SOUL.md` e `IDENTITY.md` desde estado, asociaciones y episodios observables; versiones `SOUL.vN.md` e `IDENTITY.vN.md`; endpoint `GET /api/identity/drift`.
+- Archivos: `src/identity/identity-report.mjs`, `scripts/refresh-identity.mjs`, `src/server.mjs`, `package.json`.
+- Límites: la deriva es una métrica de registros y estado, no una medición de personalidad humana, identidad subjetiva ni consciencia.
+- Verificación: sintaxis de generadores y `npm test` — 60/60 PASS.
+
 ## 2026-07-31T00:48:20-04:00 — FEAT-AUTONOMOUS-EXPLORATION-001
 
 - Tipo: `feat`
