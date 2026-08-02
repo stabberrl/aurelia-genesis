@@ -2,6 +2,13 @@
 
 Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-04:00`). Una entrada describe el momento en que el bloque fue verificado; no pretende reconstruir una hora anterior.
 
+## 2026-08-01T10:25:00-04:00 — FEAT-RESEARCH-DOSSIER-INTERFACE-001
+
+- Tipo: `feat`
+- Resumen: la Consola de Investigación adopta fichas técnicas oscuras, retícula instrumental, códigos de panel, tipografía Oxanium/IBM Plex Mono, barras con marcas de escala y acentos limitados a lectura activa o alerta.
+- Límite: se preservaron los datos, controles y rutas existentes; la conversión visual de las demás cámaras queda como trabajo posterior bajo la misma guía.
+- Verificación: `npm test` — 69/69 PASS; revisión de formato sin errores. La inspección visual interactiva queda pendiente de volver a iniciar la Cámara local.
+
 ## 2026-08-01T10:00:00-04:00 — DOC-FRONTEND-DESIGN-SYSTEM-001
 
 - Tipo: `docs`
