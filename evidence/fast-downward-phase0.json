@@ -1,22 +1,26 @@
 {
   "schemaVersion": 1,
   "experiment": "fast-downward-genesis-grid-phase0",
-  "executedAt": "2026-08-02T03:02:00-04:00",
-  "status": "blocked",
-  "passed": false,
-  "advanceToPhase1": false,
+  "executedAt": "2026-08-02T04:08:51-04:00",
+  "status": "completed-positive-limited",
+  "passed": true,
+  "advanceToPhase1": true,
   "planner": {
     "name": "Fast Downward",
     "sourceRevision": "6230635ccff53e1df38ead53b057a2a0e9160275",
     "search": "astar(lmcut())",
     "translation": "completed",
-    "searchExecution": "blocked"
+    "searchExecution": "completed",
+    "searchSeconds": 0.000601,
+    "totalSeconds": 0.047645,
+    "expandedStates": 12,
+    "evaluatedStates": 12
   },
   "scenario": {
     "worldSeed": "AURELIA-WORLD-0001",
     "soulId": "soul-001-alba-0001",
     "start": { "x": 1, "y": 3 },
-    "goal": { "x": 7, "y": 3, "role": "energy-source" },
+    "goal": { "x": 7, "y": 3, "role": "energy-source", "completion": "consume" },
     "obstacles": [{ "x": 4, "y": 2 }, { "x": 4, "y": 3 }, { "x": 4, "y": 4 }]
   },
   "baseline": {
@@ -26,13 +30,29 @@
     "energyReward": 0.37955
   },
   "plannerResult": {
-    "plan": null,
-    "steps": null,
-    "error": "WinError 4551: una directiva de Control de aplicaciones bloqueó downstream.exe antes de ejecutar la búsqueda."
+    "plan": [
+      "move c2-4 c2-3", "move c2-3 c3-3", "move c3-3 c3-2",
+      "move c3-2 c4-2", "move c4-2 c5-2", "move c5-2 c6-2",
+      "move c6-2 c7-2", "move c7-2 c8-2", "move c8-2 c8-3",
+      "move c8-3 c8-4", "consume c8-4"
+    ],
+    "steps": 11,
+    "cost": 11,
+    "reachedAndConsumed": true
+  },
+  "comparison": {
+    "baselineDecisions": 32,
+    "plannedActions": 11,
+    "fewerActions": 21,
+    "relativeActionReduction": 0.65625
+  },
+  "artifacts": {
+    "domainSha256": "4483D0AEF6A13023E1C6539EA87AF932C02C68ED8990747BFCE8B6EB517DA98A",
+    "problemSha256": "1D4E19F2B352069AC8584FBECE260D83FD7C5F01E3319EAE6C00459DD68E2BFB"
   },
   "limitations": [
-    "El traductor PDDL completó correctamente, pero no se ejecutó el componente de búsqueda.",
-    "No existe una medida de pasos ni tiempo de Fast Downward para comparar contra las 32 decisiones de exploración.",
-    "El resultado no demuestra que Fast Downward sea mejor o peor; sólo bloquea esta ejecución en el equipo actual."
+    "El planificador recibió un mapa, objetivo y transiciones ya conocidos; no descubre objetos ni aprende el modelo.",
+    "El PDDL abstrae orientación, percepción parcial y costes corporales; sólo compara una ruta discreta de estado conocido.",
+    "El resultado habilita investigar un puente de planificación, no demuestra aprendizaje general, identidad o consciencia."
   ]
 }

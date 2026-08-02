@@ -16,4 +16,4 @@
     (adjacent c4-2 c5-2) (adjacent c5-2 c4-2) (adjacent c5-2 c6-2) (adjacent c6-2 c5-2)
     (adjacent c6-2 c7-2) (adjacent c7-2 c6-2) (adjacent c7-2 c8-2) (adjacent c8-2 c7-2)
     (adjacent c8-2 c8-3) (adjacent c8-3 c8-2) (adjacent c8-3 c8-4) (adjacent c8-4 c8-3))
-  (:goal (at c8-4)))
+  (:goal (consumed)))

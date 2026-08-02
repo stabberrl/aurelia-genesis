@@ -5,8 +5,13 @@
     (at ?c - cell)
     (adjacent ?from - cell ?to - cell)
     (blocked ?c - cell)
-    (energy-source ?c - cell))
+    (energy-source ?c - cell)
+    (consumed))
   (:action move
     :parameters (?from - cell ?to - cell)
     :precondition (and (at ?from) (adjacent ?from ?to) (not (blocked ?to)))
-    :effect (and (not (at ?from)) (at ?to))))
+    :effect (and (not (at ?from)) (at ?to)))
+  (:action consume
+    :parameters (?c - cell)
+    :precondition (and (at ?c) (energy-source ?c))
+    :effect (consumed)))

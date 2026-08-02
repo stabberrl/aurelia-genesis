@@ -2,6 +2,14 @@
 
 Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-04:00`). Una entrada describe el momento en que el bloque fue verificado; no pretende reconstruir una hora anterior.
 
+## 2026-08-02T04:08:51-04:00 — EXP-FAST-DOWNWARD-PHASE0-RESULT-002
+
+- Tipo: `experiment`
+- Resultado: Fast Downward ejecutó `astar(lmcut())` sobre la semilla determinista y alcanzó/consumió la fuente de energía en 11 acciones (coste 11, 12 estados expandidos); la línea base exploratoria necesitó 32 decisiones.
+- Comparación: para este mapa conocido, el plan tiene 21 acciones menos (reducción del 65.625 %). No se extrapola a percepción, descubrimiento ni aprendizaje.
+- Decisión: la Fase 0 queda positiva y limitada; Fase 1 queda habilitada para diseñar un traductor y puente sin modificar todavía el runtime ni la autoridad de AERA.
+- Evidencia: `evidence/fast-downward-phase0.json`, `docs/experiments/FAST-DOWNWARD-PHASE0.md` y `experiments/fast-downward-phase0/`.
+
 ## 2026-08-02T03:02:00-04:00 — EXP-FAST-DOWNWARD-PHASE0-BLOCKED-001
 
 - Tipo: `experiment`
