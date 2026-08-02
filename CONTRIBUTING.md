@@ -21,6 +21,10 @@ Aunque mantengas una implementación independiente, agradeceremos que compartas 
 4. Documenta migraciones que alteren identidades o memoria persistente.
 5. Respeta las licencias independientes de AERA, AgentOS, Wikcionario y demás componentes externos.
 
+## Planificación local opcional
+
+Fast Downward es una dependencia externa opcional para reproducir o investigar propuestas `followPlan`; no se incluye en el repositorio ni se inicia con el runtime. Compílalo desde su fuente oficial y define `FAST_DOWNWARD_HOME` con la carpeta que contiene `fast-downward.py`. El puente sólo genera propuestas auditables: ni ejecuta acciones, ni elige objetivos, ni sustituye AERA o el presupuesto de exploración.
+
 ## Licencia de contribuciones
 
 Salvo que indiques explícitamente lo contrario, cualquier contribución enviada para incorporarse al repositorio se entenderá ofrecida bajo Apache License 2.0, sin términos adicionales, de acuerdo con la sección 5 de esa licencia.

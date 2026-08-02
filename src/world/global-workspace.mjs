@@ -3,7 +3,7 @@ function clamp(value, minimum = 0, maximum = 1) {
 }
 
 function initialState() {
-  return { schemaVersion: 1, cycleCount: 0, focus: null, candidates: [], broadcasts: [], lastOutcome: null };
+  return { schemaVersion: 1, cycleCount: 0, focus: null, candidates: [], broadcasts: [], proposals: [], lastOutcome: null };
 }
 
 /** Pizarra de integración funcional; no afirma experiencia subjetiva. */
@@ -13,6 +13,7 @@ export class GlobalWorkspace {
     this.state.schemaVersion = 1;
     this.state.broadcasts ||= [];
     this.state.candidates ||= [];
+    this.state.proposals ||= [];
   }
 
   cycle({ perceptions, cognition, knownObjects = {}, learnedObjects = {} }) {
@@ -40,6 +41,15 @@ export class GlobalWorkspace {
   recordOutcome({ event, surprise }) {
     this.state.lastOutcome = { tick: event.tick, outcome: event.outcome, reward: event.reward, surprise: clamp(surprise), focusId: this.state.focus?.id || null };
     return structuredClone(this.state.lastOutcome);
+  }
+
+  recordProposal(proposal, { tick = null } = {}) {
+    const entry = { ...structuredClone(proposal), tick, recordedAt: new Date().toISOString() };
+    this.state.proposals.unshift(entry);
+    this.state.proposals = this.state.proposals.slice(0, 50);
+    this.state.broadcasts.unshift({ ...entry, channels: ["planning", "action-selection"], proposal: true });
+    this.state.broadcasts = this.state.broadcasts.slice(0, 100);
+    return structuredClone(entry);
   }
 
   status() { return structuredClone(this.state); }

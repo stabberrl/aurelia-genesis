@@ -2,6 +2,14 @@
 
 Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-04:00`). Una entrada describe el momento en que el bloque fue verificado; no pretende reconstruir una hora anterior.
 
+## 2026-08-02T04:17:28-04:00 — FEAT-PLANNER-PROPOSAL-BRIDGE-001
+
+- Tipo: `feat`
+- Resumen: se incorpora un traductor de estado explícito de Genesis World a PDDL, un puente local de Fast Downward y la conversión validada de sus pasos a acciones corporales existentes.
+- Seguridad: `followPlan` es una propuesta registrada en Global Workspace y queda sujeta a `ExplorationBudget`; el coordinador no ejecuta acciones, no elige objetivos y no altera la autoridad de AERA.
+- Dependencia: Fast Downward continúa siendo externo y opcional; `CONTRIBUTING.md` documenta `FAST_DOWNWARD_HOME` para las reproducciones locales.
+- Verificación: prueba extremo a extremo local: 11 pasos PDDL, 15 acciones corporales y `consume` final; `npm test` — 72/72 PASS.
+
 ## 2026-08-02T04:08:51-04:00 — EXP-FAST-DOWNWARD-PHASE0-RESULT-002
 
 - Tipo: `experiment`
