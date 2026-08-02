@@ -2,6 +2,13 @@
 
 Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-04:00`). Una entrada describe el momento en que el bloque fue verificado; no pretende reconstruir una hora anterior.
 
+## 2026-08-02T13:27:24-04:00 — DOC-TECHNICAL-MANUAL-001
+
+- Tipo: `docs`
+- Resumen: se añade un manual técnico central con requisitos, configuración, arquitectura, persistencia, API local, operación de AERA y protocolo controlado de Fast Downward.
+- Seguridad: el manual conserva el carácter local del servidor y documenta las barreras de ejecución manual, presupuesto, pausa y cancelación de planes.
+- Referencias: `docs/TECHNICAL-MANUAL.md`, enlazado desde `README.md`.
+
 ## 2026-08-02T04:23:00-04:00 — FEAT-PLANNER-CONTROLLED-EXECUTION-001
 
 - Tipo: `feat`

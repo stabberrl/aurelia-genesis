@@ -28,6 +28,8 @@ La [demostración pública](https://stabberrl.github.io/aurelia-genesis/) presen
 
 La visión, los límites, el proceso de desarrollo y el alcance del primer hito están definidos en [`docs/objectives-and-process.md`](docs/objectives-and-process.md). Este documento es la referencia principal antes de introducir nuevas funciones o cambiar la arquitectura.
 
+Para instalación, configuración, endpoints, recuperación y operación de AERA/Fast Downward, consulta el [Manual técnico](docs/TECHNICAL-MANUAL.md).
+
 La base científica, las fuentes consultadas y los límites de la hipótesis de integración global están en [`docs/GLOBAL-WORKSPACE-V1.md`](docs/GLOBAL-WORKSPACE-V1.md). Las referencias describen teorías y arquitecturas en investigación; no validan que Aurelia Genesis sea consciente.
 
 La futura entrada de fuentes externas y el catálogo separado de cuerpo, identidad y privacidad se describen en [`docs/KNOWLEDGE-CHAMBER-FOUNDATIONS.md`](docs/KNOWLEDGE-CHAMBER-FOUNDATIONS.md). Ninguno de esos términos se inyecta automáticamente en un alma.
