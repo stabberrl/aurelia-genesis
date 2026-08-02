@@ -2,6 +2,8 @@
 
 Gracias por explorar, modificar o extender Aurelia Genesis. El proyecto recibe con interés correcciones, nuevas capacidades cognitivas, experimentos reproducibles, mejoras visuales, integraciones con otros lenguajes y críticas fundamentadas a su arquitectura.
 
+Las mejoras visuales y cualquier copy de interfaz deben seguir la [Guía de diseño frontend](docs/FRONTEND-DESIGN.md). La guía prioriza la trazabilidad, límites metodológicos y lectura instrumental sobre decoración o tono de producto.
+
 ## Cómo comunicar una mejora
 
 - Abre un **Issue** para errores, riesgos, preguntas de diseño o propuestas todavía no implementadas.

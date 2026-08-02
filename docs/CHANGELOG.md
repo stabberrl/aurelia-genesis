@@ -2,6 +2,13 @@
 
 Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-04:00`). Una entrada describe el momento en que el bloque fue verificado; no pretende reconstruir una hora anterior.
 
+## 2026-08-01T10:00:00-04:00 — DOC-FRONTEND-DESIGN-SYSTEM-001
+
+- Tipo: `docs`
+- Resumen: se incorpora la guía canónica de lenguaje visual y copy para las cuatro interfaces y vistas futuras.
+- Alcance: define tokens, tipografía, fichas instrumentales, campos redactados, sello de verificación, límites de animación y lista de comprobación responsive.
+- Verificación: revisión documental; no modifica aún una interfaz existente.
+
 ## 2026-07-31T10:30:00-04:00 — FEAT-AERA-PRIMARY-AUTHORITY-001
 
 - Tipo: `feat`
