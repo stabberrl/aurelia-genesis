@@ -2,6 +2,15 @@
 
 Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-04:00`). Una entrada describe el momento en que el bloque fue verificado; no pretende reconstruir una hora anterior.
 
+## 2026-08-02T04:23:00-04:00 — FEAT-PLANNER-CONTROLLED-EXECUTION-001
+
+- Tipo: `feat`
+- Resumen: se habilita la ejecución experimental manual de una propuesta `followPlan` mediante endpoints de propuesta, inspección y ejecución.
+- Seguridad: requiere presupuesto aprobado, mundo pausado, controlador detenido, pose y revisión del mundo sin cambios; cada acción se revalida y el plan se cancela en la primera discrepancia.
+- Recuperación: se solicita un checkpoint completo antes de comenzar una ejecución válida.
+- Verificación: `npm test` — 75/75 PASS; pruebas de cancelación por revisión, bloqueo por mundo activo y ejecución puntual aprobada.
+- Protocolo: `docs/experiments/FAST-DOWNWARD-PHASE3.md`.
+
 ## 2026-08-02T04:17:53-04:00 — DECISION-SECOND-CORE-PLANNING-001
 
 - Tipo: `decision`

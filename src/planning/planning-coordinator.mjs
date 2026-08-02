@@ -17,6 +17,7 @@ export class PlanningCoordinator {
     const proposal = {
       type: "proposal", action: "followPlan", execution: "proposal-only", source: "fast-downward",
       targetObjectId, actionCount: plan.embodiedActions.length, permitted: permission.allowed,
+      worldRevision: world.state.worldRevision, pose: structuredClone(translation.metadata.pose), completion,
     };
     this.workspace?.recordProposal?.(proposal, { tick: world.state.tick });
     return permission.allowed

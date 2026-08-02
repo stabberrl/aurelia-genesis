@@ -17,6 +17,11 @@ import { WorldRuntime } from "./world/runtime.mjs";
 import { EmbodiedInfancyController } from "./world/infancy-controller.mjs";
 import { KnowledgeChamber } from "./learning/knowledge-chamber.mjs";
 import { buildIdentityReport } from "./identity/identity-report.mjs";
+import { PlannerBridge } from "./planning/planner-bridge.mjs";
+import { PlanningCoordinator } from "./planning/planning-coordinator.mjs";
+import { PlanExecutor } from "./planning/plan-executor.mjs";
+import { GlobalWorkspace } from "./world/global-workspace.mjs";
+import { ExplorationBudget } from "./learning/exploration-budget.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const soulsDir = path.join(root, "souls");
@@ -67,6 +72,16 @@ const checkpoints = new CheckpointManager({
   retention: Number(process.env.FLUCTLIGHT_CHECKPOINT_RETENTION || 24),
   stateProviders: [world, infancy],
 });
+const plannerBridge = new PlannerBridge();
+const planningBudgets = new Map();
+const planningWorkspaces = new Map();
+const proposedPlans = new Map();
+const planExecutor = new PlanExecutor({ worldRuntime: world, checkpoint: checkpoints });
+function planningFor(soulId) {
+  if (!planningBudgets.has(soulId)) planningBudgets.set(soulId, new ExplorationBudget());
+  if (!planningWorkspaces.has(soulId)) planningWorkspaces.set(soulId, new GlobalWorkspace());
+  return new PlanningCoordinator({ planner: plannerBridge, budget: planningBudgets.get(soulId), workspace: planningWorkspaces.get(soulId) });
+}
 async function developmentSnapshot(language, soulId) {
   const checkpoint = await checkpoints.status();
   const database = checkpoint.databases?.find((item) => item.language === language);
@@ -223,6 +238,35 @@ const server = http.createServer(async (request, response) => {
       if (!ACTIONS.includes(action)) return json(response, 400, { error: "Acción no válida." });
       if (infancy.running) return json(response, 409, { error: "Pausa el controlador autónomo antes de intervenir manualmente." });
       return json(response, 200, await world.act(soulId, action));
+    }
+    if (request.method === "GET" && url.pathname === "/api/planning") {
+      const soulId = url.searchParams.get("soulId") || awakeIds[0];
+      if (!validateSoulId(soulId)) return json(response, 400, { error: "Alma no válida." });
+      const plans = [...proposedPlans.values()].filter((plan) => plan.soulId === soulId).map(({ plan, ...record }) => ({ ...record, actionCount: plan.embodiedActions.length }));
+      return json(response, 200, { soulId, fastDownwardConfigured: Boolean(plannerBridge.fastDownwardDir), budget: planningFor(soulId).budget.status(), workspace: planningWorkspaces.get(soulId).status(), plans });
+    }
+    if (request.method === "POST" && url.pathname === "/api/planning/propose") {
+      const { soulId = awakeIds[0], targetObjectId, completion = "consume", curiosity = 0, unresolvedNeed = 0, cost = .2 } = await readJsonBody(request);
+      if (!validateSoulId(soulId) || typeof targetObjectId !== "string") return json(response, 400, { error: "Se requieren alma y objetivo válidos." });
+      if (!plannerBridge.fastDownwardDir) return json(response, 409, { error: "Fast Downward no está configurado. Define FAST_DOWNWARD_HOME al iniciar el servidor." });
+      const result = await planningFor(soulId).propose({ world: world.world, soulId, targetObjectId, completion, curiosity, unresolvedNeed, cost });
+      if (result.status === "proposal-ready") {
+        const id = `plan:${soulId}:${world.world.state.tick}:${Date.now()}`;
+        proposedPlans.set(id, { id, soulId, createdAt: new Date().toISOString(), status: "ready", proposal: result.proposal, plan: result.plan });
+        return json(response, 201, { id, ...result, plan: { actionCount: result.plan.embodiedActions.length, pddlSteps: result.plan.pddlSteps } });
+      }
+      return json(response, 200, result);
+    }
+    if (request.method === "POST" && url.pathname === "/api/planning/execute") {
+      const { planId } = await readJsonBody(request);
+      const record = proposedPlans.get(planId);
+      if (!record) return json(response, 404, { error: "La propuesta de plan no existe." });
+      if (record.status !== "ready") return json(response, 409, { error: "La propuesta ya no está disponible para ejecución." });
+      if (infancy.running) return json(response, 409, { error: "Pausa el controlador antes de ejecutar una propuesta de planificación." });
+      const result = await planExecutor.execute({ soulId: record.soulId, proposal: record.proposal, plan: record.plan });
+      record.status = result.status;
+      record.result = result;
+      return json(response, result.status === "plan-executed" ? 200 : 409, result);
     }
     if (request.method === "GET" && url.pathname === "/api/world/controller") {
       return json(response, 200, infancy.status());
