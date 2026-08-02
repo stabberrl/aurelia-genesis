@@ -13,3 +13,6 @@ var/lexicon/
 var/checkpoints/
 var/worlds/
 var/session-summary-baseline.json
+# Herramienta local usada únicamente para reproducir experimentos de planificación.
+# No forma parte del runtime ni se vendoriza sin una decisión posterior.
+vendor/fast-downward/

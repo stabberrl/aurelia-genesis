@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "experiment": "fast-downward-genesis-grid-phase0",
+  "executedAt": "2026-08-02T03:02:00-04:00",
+  "status": "blocked",
+  "passed": false,
+  "advanceToPhase1": false,
+  "planner": {
+    "name": "Fast Downward",
+    "sourceRevision": "6230635ccff53e1df38ead53b057a2a0e9160275",
+    "search": "astar(lmcut())",
+    "translation": "completed",
+    "searchExecution": "blocked"
+  },
+  "scenario": {
+    "worldSeed": "AURELIA-WORLD-0001",
+    "soulId": "soul-001-alba-0001",
+    "start": { "x": 1, "y": 3 },
+    "goal": { "x": 7, "y": 3, "role": "energy-source" },
+    "obstacles": [{ "x": 4, "y": 2 }, { "x": 4, "y": 3 }, { "x": 4, "y": 4 }]
+  },
+  "baseline": {
+    "controller": "EmbodiedInfancyController",
+    "decisionsUntilConsumption": 32,
+    "reachedGoal": true,
+    "energyReward": 0.37955
+  },
+  "plannerResult": {
+    "plan": null,
+    "steps": null,
+    "error": "WinError 4551: una directiva de Control de aplicaciones bloqueó downstream.exe antes de ejecutar la búsqueda."
+  },
+  "limitations": [
+    "El traductor PDDL completó correctamente, pero no se ejecutó el componente de búsqueda.",
+    "No existe una medida de pasos ni tiempo de Fast Downward para comparar contra las 32 decisiones de exploración.",
+    "El resultado no demuestra que Fast Downward sea mejor o peor; sólo bloquea esta ejecución en el equipo actual."
+  ]
+}

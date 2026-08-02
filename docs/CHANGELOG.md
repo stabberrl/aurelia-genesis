@@ -2,6 +2,13 @@
 
 Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-04:00`). Una entrada describe el momento en que el bloque fue verificado; no pretende reconstruir una hora anterior.
 
+## 2026-08-02T03:02:00-04:00 — EXP-FAST-DOWNWARD-PHASE0-BLOCKED-001
+
+- Tipo: `experiment`
+- Resultado: la traducción del problema PDDL de Genesis World completó, con línea base de 32 decisiones para el controlador exploratorio; la búsqueda de Fast Downward fue bloqueada por Control de aplicaciones de Windows (`WinError 4551`).
+- Decisión: no avanzar a Fase 1 ni integrar planificación mientras no exista una comparación medible.
+- Evidencia: `evidence/fast-downward-phase0.json` y `docs/experiments/FAST-DOWNWARD-PHASE0.md`.
+
 ## 2026-08-01T10:25:00-04:00 — FEAT-RESEARCH-DOSSIER-INTERFACE-001
 
 - Tipo: `feat`
