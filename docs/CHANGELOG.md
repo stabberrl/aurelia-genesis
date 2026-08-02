@@ -2,6 +2,13 @@
 
 Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-04:00`). Una entrada describe el momento en que el bloque fue verificado; no pretende reconstruir una hora anterior.
 
+## 2026-08-02T04:17:53-04:00 — DECISION-SECOND-CORE-PLANNING-001
+
+- Tipo: `decision`
+- Decisión: Fast Downward queda definido como núcleo externo, opcional y especializado exclusivamente en planificación; AERA mantiene aprendizaje, identidad y autoridad cognitiva.
+- Control: los planes se registran como `followPlan`, pasan por `ExplorationBudget` y permanecen en `proposal-only`; no se habilita ejecución automática.
+- Referencia: `docs/decisions/DECISION-SECOND-CORE-PLANNING.md`, Fase 0 en `evidence/fast-downward-phase0.json` e implementación `d60f92d`.
+
 ## 2026-08-02T04:17:28-04:00 — FEAT-PLANNER-PROPOSAL-BRIDGE-001
 
 - Tipo: `feat`
