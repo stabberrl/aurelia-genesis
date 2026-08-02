@@ -206,7 +206,7 @@ Finaliza cuando dos implementadores puedan describir el mismo sistema sin contra
 
 Objetivo: crear almas reproducibles y separadas.
 
-- Implementar Genesis sobre AgentOS.
+- Implementar Genesis sobre un runtime local con frontera compatible con AERA. AgentOS queda sólo como referencia histórica y no forma parte de la ejecución.
 - Crear `SOUL.md` y archivo de origen.
 - Generar rasgos, preferencias, necesidades y conflictos.
 - Crear almacenamiento privado por alma.
@@ -237,6 +237,8 @@ Objetivo: permitir existencia entre conversaciones.
 - Evitar bucles infinitos y consumo descontrolado.
 
 Finaliza cuando el tiempo fuera de conversación produce cambios explicables sin intervención manual.
+
+> Esta fase de hoja de ruta no equivale a la «Fase 3» del experimento Fast Downward. Esta última ya implementa únicamente ejecución **manual y controlada** de planes, documentada en [`experiments/FAST-DOWNWARD-PHASE3.md`](experiments/FAST-DOWNWARD-PHASE3.md); no habilita vida autónoma ni ejecución ilimitada.
 
 ### Fase 4: mundo y relaciones
 

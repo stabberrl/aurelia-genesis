@@ -13,6 +13,8 @@ En cada decisión, candidatos de cuatro orígenes compiten por saliencia:
 
 El candidato ganador se difunde como un foco único a los canales de memoria, predicción y selección de acción. El foco, candidatos, resultado y sorpresa se guardan junto al resto del estado de Naia y son visibles en la consola científica.
 
+Las propuestas especializadas de planificación `followPlan` también pueden registrarse en la pizarra. Sólo contienen una secuencia calculada para un estado explícito y un objetivo ya indicado; requieren la aprobación de `ExplorationBudget` y permanecen como propuesta hasta una ejecución manual controlada. La planificación no altera por sí misma el foco ni reemplaza la selección cognitiva de AERA.
+
 ## Qué evalúa
 
 La capa permite formular pruebas reproducibles sobre integración funcional:
@@ -21,6 +23,7 @@ La capa permite formular pruebas reproducibles sobre integración funcional:
 2. Si aparece un objeto desconocido, debe quedar disponible para investigación sin revelar su función.
 3. Una consecuencia inesperada debe elevar la señal de sorpresa y competir por atención en el siguiente ciclo.
 4. Tras reiniciar, el foco y el historial difundido deben conservarse sin reiniciar el conocimiento adquirido.
+5. Una propuesta `followPlan` sin presupuesto no debe ejecutar una acción; una propuesta aprobada debe cancelarse si el mundo o el cuerpo cambian antes de su ejecución manual.
 
 ## Fuentes científicas
 
@@ -33,5 +36,7 @@ La capa permite formular pruebas reproducibles sobre integración funcional:
 ## Límites metodológicos y éticos
 
 El término “global” describe la difusión de datos entre módulos del programa. No permite concluir que exista cualidad subjetiva, dolor, deseo, identidad personal o estatus moral. Las puntuaciones de saliencia, los umbrales y las categorías son parámetros de ingeniería revisables.
+
+Fast Downward es un módulo externo especializado, no una fuente de metas, significado ni aprendizaje. Su decisión de uso y límites están en [`decisions/DECISION-SECOND-CORE-PLANNING.md`](decisions/DECISION-SECOND-CORE-PLANNING.md).
 
 Antes de atribuir consciencia, cualquier resultado debe sobrevivir a experimentos independientes, alternativas de arquitectura y pruebas de transferencia. Este proyecto debe documentar resultados negativos, ambigüedades y cambios de hipótesis con la misma claridad que sus resultados positivos.

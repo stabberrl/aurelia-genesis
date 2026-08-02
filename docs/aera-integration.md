@@ -57,6 +57,12 @@ Cada comando declarado incluye una `CommandDescription` Protobuf, incluso si no
 lleva argumento. Sin esa descripción el dispositivo TCP de AERA puede aceptar el
 nombre durante el handshake pero no puede construir el mensaje de salida.
 
+## Planificación especializada externa
+
+Fast Downward complementa, pero no sustituye, AERA. Sólo traduce una instantánea explícita de Genesis World y un objetivo ya indicado a una secuencia de acciones permitidas. La secuencia se registra como propuesta `followPlan`, pasa por `ExplorationBudget` y sólo puede ejecutarse manualmente con el mundo y el controlador detenidos. AERA mantiene aprendizaje asociativo, identidad y la autoridad cognitiva declarada; Fast Downward no crea objetivos ni ejecuta ciclos autónomos.
+
+La decisión, el experimento y el protocolo de ejecución están en [`decisions/DECISION-SECOND-CORE-PLANNING.md`](decisions/DECISION-SECOND-CORE-PLANNING.md), [`experiments/FAST-DOWNWARD-PHASE0.md`](experiments/FAST-DOWNWARD-PHASE0.md) y [`experiments/FAST-DOWNWARD-PHASE3.md`](experiments/FAST-DOWNWARD-PHASE3.md).
+
 ## Operación local
 
 ```bash

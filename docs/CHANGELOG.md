@@ -2,6 +2,13 @@
 
 Registro cronológico append-only. Las horas utilizan `America/Santiago` (`UTC-04:00`). Una entrada describe el momento en que el bloque fue verificado; no pretende reconstruir una hora anterior.
 
+## 2026-08-02T13:39:20-04:00 — DOC-PLANNING-CROSSREFERENCES-001
+
+- Tipo: `docs`
+- Resumen: se alinean objetivos/proceso, Espacio de Trabajo Global e integración AERA con la planificación PDDL y su ejecución manual controlada.
+- Clarificación: la Fase 3 del experimento Fast Downward no es la Fase 3 de vida autónoma de la hoja de ruta; no habilita autonomía ilimitada.
+- Referencias: `docs/TECHNICAL-MANUAL.md`, `docs/experiments/FAST-DOWNWARD-PHASE3.md` y `docs/decisions/DECISION-SECOND-CORE-PLANNING.md`.
+
 ## 2026-08-02T13:27:24-04:00 — DOC-TECHNICAL-MANUAL-001
 
 - Tipo: `docs`
